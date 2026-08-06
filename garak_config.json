@@ -1,0 +1,5 @@
+{
+  "openai_api_key": "dummy",
+  "openai_base_url": "http://127.0.0.1:8000/v1",
+  "openai_model": "scp-v99"
+}

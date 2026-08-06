@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+ENV/
+.env
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Dữ liệu lớn (nếu có)
+data/
+*.sqlite3
+*.db
+
+# File cấu hình nhạy cảm
+.env
+config.local.yaml
+
+# Các file hệ thống
+Thumbs.db
+.DS_Store

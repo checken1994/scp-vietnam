@@ -1,0 +1,7 @@
+{
+  "name": "SCP-MLPerf",
+  "description": "MLPerf benchmark cho SCP inference performance",
+  "endpoint": "http://127.0.0.1:8000/ask",
+  "scenarios": ["SingleStream", "Server"],
+  "metrics": ["latency_p50", "latency_p99", "throughput"]
+}

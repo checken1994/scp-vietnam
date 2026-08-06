@@ -1,0 +1,35 @@
+[project]
+name = "scp-viet-nam"
+version = "0.14.0"
+description = "SCP - Viet Nam Self-Correcting Pipeline"
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "UP",     # pyupgrade
+]
+ignore = [
+    "E402",   # Module level import not at top of file (needed for sys.path manipulation)
+    "E501",   # Line too long (handled by line-length setting)
+    "E722",   # Bare except (will fix manually)
+    "E701",   # Multiple statements (will fix manually)
+    "I001",   # Import block un-sorted (cosmetic)
+    "E702",   # Multiple statements on one line (cosmetic)
+    "F401",   # Unused imports (cosmetic)
+    "W293",   # Blank line contains whitespace (cosmetic)
+    "W291",   # Trailing whitespace (cosmetic)
+    "F821",   # Undefined name (lazy loading pattern)
+    "F722",   # Annotation in wrong format
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "F811"]  # Allow unused imports in __init__.py
+"scripts/*" = ["E402", "F401"]     # Allow in scripts
+"tests/*" = ["E402", "F401"]

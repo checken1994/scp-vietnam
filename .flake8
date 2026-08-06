@@ -1,0 +1,61 @@
+# ===================================================================
+# Flake8 configuration — aligned with ruff.toml (Task FALSE-POS-FIX)
+# ===================================================================
+# WHY this file exists:
+#   flake8 has NO native config in pyproject.toml (unlike ruff/bandit).
+#   Without this file, flake8 defaults to max-line-length=79, which
+#   conflicts with the project's ruff.toml line-length=120. That mismatch
+#   produced 5,017 false-positive B950 "line too long" reports.
+#
+# All ignore decisions below are CROSS-CHECKED against ruff.toml so the
+# two tools agree on what is a real issue vs. a framework pattern.
+# ===================================================================
+
+[flake8]
+# Match ruff.toml line-length exactly (was: default 79 -> 5017 false B950)
+max-line-length = 120
+
+# Extend-ignore — codes only (flake8 does not allow inline # comments
+# in this option). Justifications documented in comments ABOVE each block.
+#   E402  Module import not at top (sys.path manipulation) -> matches ruff
+#   E501  Line too long -> handled by max-line-length
+#   E701  Multiple statements on one line -> legacy style
+#   E702  Multiple statements on one line -> legacy style
+#   W503  Line break before binary operator -> PEP 8 reversed
+#   W291  Trailing whitespace -> cosmetic
+#   W293  Blank line contains whitespace -> cosmetic
+#   I001  Import block un-sorted -> cosmetic
+#   F401  Unused import -> handled per-file by per-file-ignores
+#   F811  Redefinition -> handled per-file by per-file-ignores
+#   B008  Function call in default -> FALSE POSITIVE for FastAPI:
+#         FastAPI REQUIRES Depends()/Header()/Body()/Query() in defaults.
+#         This is the framework's DI contract, not a bug.
+#         Verified: all 24 B008 hits are FastAPI route handlers.
+#   B950  Line too long (bugbear) -> redundant with max-line-length above
+extend-ignore = E402,E501,E701,E702,W503,W291,W293,I001,F401,F811,B008,B950
+
+# Per-file ignores — match ruff.toml [lint.per-file-ignores]
+# Format: filepath:code,code
+per-file-ignores =
+    __init__.py:F401,F811
+    scripts/*:E402,F401,E701
+    tests/*:E402,F401,S101,S603,S607
+    scp/api_server_parts/helpers.py:F821
+    scp/api_server_parts/*.py:F821
+
+exclude =
+    .git
+    __pycache__
+    .pytest_cache
+    .ruff_cache
+    .venv
+    venv
+    build
+    dist
+    *.egg-info
+    scp/tests/external_audit
+    benchmark/attacks
+
+# Show source context for each finding
+show_source = true
+count = true

@@ -1,0 +1,530 @@
+2026-08-04 20:18:33,633 [PID 3994] INFO No binary specified, looking for `pyre.bin` in PATH
+2026-08-04 20:18:33,634 [PID 3994] INFO Pyre binary is located at `/home/z/.venv/bin/pyre.bin`
+2026-08-04 20:18:33,634 [PID 3994] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 1.
+2026-08-04 20:18:33,634 [PID 3994] INFO Consider setting the `--sequential` flag instead when the number of parallel workers is not greater than 1.
+2026-08-04 20:18:33,634 [PID 3994] INFO No typeshed specified, looking for it...
+2026-08-04 20:18:33,634 [PID 3994] INFO Found: `/home/z/.venv/lib/pyre_check/typeshed`
+2026-08-04 20:18:33,635 [PID 3994] INFO Writing arguments into /tmp/pyre_arguments_e15mvokx.json...
+2026-08-04 20:18:33,635 [PID 3994] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+    ]
+  },
+  "search_paths": [
+    "/home/z/my-project/audit_workspace/scp-vietnam/scp",
+    "/home/z/.venv/lib/pyre_check/typeshed/stdlib",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/z/my-project/audit_workspace/scp-vietnam/.pyre",
+  "global_root": "/home/z/my-project/audit_workspace/scp-vietnam",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 13
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 1,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2026-08-04 20:18:33,666 [PID 3994] PERFORMANCE  Initialized shared memory (heap size: 8589934592, dep table pow: 1, hash table pow: 26): 0.002s
+2026-08-04 20:18:33,666 [PID 3994] PERFORMANCE  Initialized multiprocessing workers (workers: 1): 0.000s
+2026-08-04 20:18:33,666 [PID 3994] INFO  Building module tracker...
+2026-08-04 20:18:33,686 [PID 3994] PERFORMANCE  Module tracker built: 0.027s
+2026-08-04 20:18:33,686 [PID 3994] PERFORMANCE  Full environment built: 0.027s
+2026-08-04 20:18:33,686 [PID 3994] INFO  Collecting all definitions...
+2026-08-04 20:18:35,865 [PID 3994] PERFORMANCE  Collected definitions (defines: 3683): 2.171s
+2026-08-04 20:18:35,866 [PID 3994] INFO  Checking 3683 functions...
+2026-08-04 20:18:40,970 [PID 3994] INFO  Processed 1842 of 3683 functions
+2026-08-04 20:18:44,681 [PID 3994] INFO  Processed 3683 of 3683 functions
+2026-08-04 20:18:44,681 [PID 3994] PERFORMANCE  Check_TypeCheck: 8.820s
+2026-08-04 20:18:44,681 [PID 3994] MEMORY  Shared memory size post-typecheck (size: 17)
+2026-08-04 20:18:44,681 [PID 3994] INFO  Postprocessing 333 sources...
+2026-08-04 20:18:45,075 [PID 3994] INFO  Postprocessed 333 of 333 sources
+2026-08-04 20:18:45,075 [PID 3994] PERFORMANCE  Check_Postprocessing: 0.391s
+2026-08-04 20:18:45,075 [PID 3994] PERFORMANCE  Check (request kind: FullCheck): 11.410s
+2026-08-04 20:18:45,168 [PID 3994] ERROR Found 1606 type errors!
+2026-08-04 20:18:51,088 [PID 4015] INFO No binary specified, looking for `pyre.bin` in PATH
+2026-08-04 20:18:51,088 [PID 4015] INFO Pyre binary is located at `/home/z/.venv/bin/pyre.bin`
+2026-08-04 20:18:51,088 [PID 4015] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 1.
+2026-08-04 20:18:51,088 [PID 4015] INFO Consider setting the `--sequential` flag instead when the number of parallel workers is not greater than 1.
+2026-08-04 20:18:51,088 [PID 4015] INFO No typeshed specified, looking for it...
+2026-08-04 20:18:51,088 [PID 4015] INFO Found: `/home/z/.venv/lib/pyre_check/typeshed`
+2026-08-04 20:18:51,089 [PID 4015] INFO Writing arguments into /tmp/pyre_arguments_wc19nxsw.json...
+2026-08-04 20:18:51,089 [PID 4015] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+    ]
+  },
+  "search_paths": [
+    "/home/z/my-project/audit_workspace/scp-vietnam/scp",
+    "/home/z/.venv/lib/pyre_check/typeshed/stdlib",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/z/my-project/audit_workspace/scp-vietnam/.pyre",
+  "global_root": "/home/z/my-project/audit_workspace/scp-vietnam",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 13
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 1,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2026-08-04 20:18:51,120 [PID 4015] PERFORMANCE  Initialized shared memory (heap size: 8589934592, dep table pow: 1, hash table pow: 26): 0.002s
+2026-08-04 20:18:51,120 [PID 4015] PERFORMANCE  Initialized multiprocessing workers (workers: 1): 0.000s
+2026-08-04 20:18:51,120 [PID 4015] INFO  Building module tracker...
+2026-08-04 20:18:51,141 [PID 4015] PERFORMANCE  Module tracker built: 0.027s
+2026-08-04 20:18:51,141 [PID 4015] PERFORMANCE  Full environment built: 0.027s
+2026-08-04 20:18:51,141 [PID 4015] INFO  Collecting all definitions...
+2026-08-04 20:18:53,297 [PID 4015] PERFORMANCE  Collected definitions (defines: 3683): 2.152s
+2026-08-04 20:18:53,297 [PID 4015] INFO  Checking 3683 functions...
+2026-08-04 20:18:58,347 [PID 4015] INFO  Processed 1842 of 3683 functions
+2026-08-04 20:19:01,965 [PID 4015] INFO  Processed 3683 of 3683 functions
+2026-08-04 20:19:01,965 [PID 4015] PERFORMANCE  Check_TypeCheck: 8.671s
+2026-08-04 20:19:01,965 [PID 4015] MEMORY  Shared memory size post-typecheck (size: 17)
+2026-08-04 20:19:01,965 [PID 4015] INFO  Postprocessing 333 sources...
+2026-08-04 20:19:02,358 [PID 4015] INFO  Postprocessed 333 of 333 sources
+2026-08-04 20:19:02,359 [PID 4015] PERFORMANCE  Check_Postprocessing: 0.386s
+2026-08-04 20:19:02,359 [PID 4015] PERFORMANCE  Check (request kind: FullCheck): 11.239s
+2026-08-04 20:19:02,448 [PID 4015] ERROR Found 1606 type errors!
+2026-08-04 20:19:03,321 [PID 4026] INFO No binary specified, looking for `pyre.bin` in PATH
+2026-08-04 20:19:03,321 [PID 4026] INFO Pyre binary is located at `/home/z/.venv/bin/pyre.bin`
+2026-08-04 20:19:03,321 [PID 4026] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 1.
+2026-08-04 20:19:03,322 [PID 4026] INFO Consider setting the `--sequential` flag instead when the number of parallel workers is not greater than 1.
+2026-08-04 20:19:03,322 [PID 4026] INFO No typeshed specified, looking for it...
+2026-08-04 20:19:03,322 [PID 4026] INFO Found: `/home/z/.venv/lib/pyre_check/typeshed`
+2026-08-04 20:19:03,322 [PID 4026] INFO Writing arguments into /tmp/pyre_arguments_imhdoyj0.json...
+2026-08-04 20:19:03,323 [PID 4026] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+    ]
+  },
+  "search_paths": [
+    "/home/z/my-project/audit_workspace/scp-vietnam/scp",
+    "/home/z/.venv/lib/pyre_check/typeshed/stdlib",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/z/my-project/audit_workspace/scp-vietnam/.pyre",
+  "global_root": "/home/z/my-project/audit_workspace/scp-vietnam",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 13
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 1,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2026-08-04 20:19:03,353 [PID 4026] PERFORMANCE  Initialized shared memory (heap size: 8589934592, dep table pow: 1, hash table pow: 26): 0.002s
+2026-08-04 20:19:03,354 [PID 4026] PERFORMANCE  Initialized multiprocessing workers (workers: 1): 0.000s
+2026-08-04 20:19:03,354 [PID 4026] INFO  Building module tracker...
+2026-08-04 20:19:03,384 [PID 4026] PERFORMANCE  Module tracker built: 0.028s
+2026-08-04 20:19:03,384 [PID 4026] PERFORMANCE  Full environment built: 0.028s
+2026-08-04 20:19:03,384 [PID 4026] INFO  Collecting all definitions...
+2026-08-04 20:19:05,521 [PID 4026] PERFORMANCE  Collected definitions (defines: 3683): 2.145s
+2026-08-04 20:19:05,521 [PID 4026] INFO  Checking 3683 functions...
+2026-08-04 20:19:10,548 [PID 4026] INFO  Processed 1842 of 3683 functions
+2026-08-04 20:19:14,194 [PID 4026] INFO  Processed 3683 of 3683 functions
+2026-08-04 20:19:14,195 [PID 4026] PERFORMANCE  Check_TypeCheck: 8.668s
+2026-08-04 20:19:14,195 [PID 4026] MEMORY  Shared memory size post-typecheck (size: 17)
+2026-08-04 20:19:14,195 [PID 4026] INFO  Postprocessing 333 sources...
+2026-08-04 20:19:14,594 [PID 4026] INFO  Postprocessed 333 of 333 sources
+2026-08-04 20:19:14,594 [PID 4026] PERFORMANCE  Check_Postprocessing: 0.399s
+2026-08-04 20:19:14,594 [PID 4026] PERFORMANCE  Check (request kind: FullCheck): 11.242s
+2026-08-04 20:19:14,685 [PID 4026] ERROR Found 1606 type errors!
+2026-08-04 20:19:15,569 [PID 4041] INFO No binary specified, looking for `pyre.bin` in PATH
+2026-08-04 20:19:15,569 [PID 4041] INFO Pyre binary is located at `/home/z/.venv/bin/pyre.bin`
+2026-08-04 20:19:15,569 [PID 4041] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 1.
+2026-08-04 20:19:15,569 [PID 4041] INFO Consider setting the `--sequential` flag instead when the number of parallel workers is not greater than 1.
+2026-08-04 20:19:15,569 [PID 4041] INFO No typeshed specified, looking for it...
+2026-08-04 20:19:15,569 [PID 4041] INFO Found: `/home/z/.venv/lib/pyre_check/typeshed`
+2026-08-04 20:19:15,570 [PID 4041] INFO Writing arguments into /tmp/pyre_arguments_iinby4wm.json...
+2026-08-04 20:19:15,570 [PID 4041] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+    ]
+  },
+  "search_paths": [
+    "/home/z/my-project/audit_workspace/scp-vietnam/scp",
+    "/home/z/.venv/lib/pyre_check/typeshed/stdlib",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/z/my-project/audit_workspace/scp-vietnam/.pyre",
+  "global_root": "/home/z/my-project/audit_workspace/scp-vietnam",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 13
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 1,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2026-08-04 20:19:15,601 [PID 4041] PERFORMANCE  Initialized shared memory (heap size: 8589934592, dep table pow: 1, hash table pow: 26): 0.002s
+2026-08-04 20:19:15,601 [PID 4041] PERFORMANCE  Initialized multiprocessing workers (workers: 1): 0.000s
+2026-08-04 20:19:15,601 [PID 4041] INFO  Building module tracker...
+2026-08-04 20:19:15,622 [PID 4041] PERFORMANCE  Module tracker built: 0.026s
+2026-08-04 20:19:15,622 [PID 4041] PERFORMANCE  Full environment built: 0.026s
+2026-08-04 20:19:15,622 [PID 4041] INFO  Collecting all definitions...
+2026-08-04 20:19:17,788 [PID 4041] PERFORMANCE  Collected definitions (defines: 3683): 2.163s
+2026-08-04 20:19:17,788 [PID 4041] INFO  Checking 3683 functions...
+2026-08-04 20:19:22,977 [PID 4041] INFO  Processed 1842 of 3683 functions
+2026-08-04 20:19:26,727 [PID 4041] INFO  Processed 3683 of 3683 functions
+2026-08-04 20:19:26,727 [PID 4041] PERFORMANCE  Check_TypeCheck: 8.937s
+2026-08-04 20:19:26,727 [PID 4041] MEMORY  Shared memory size post-typecheck (size: 17)
+2026-08-04 20:19:26,727 [PID 4041] INFO  Postprocessing 333 sources...
+2026-08-04 20:19:27,122 [PID 4041] INFO  Postprocessed 333 of 333 sources
+2026-08-04 20:19:27,122 [PID 4041] PERFORMANCE  Check_Postprocessing: 0.395s
+2026-08-04 20:19:27,122 [PID 4041] PERFORMANCE  Check (request kind: FullCheck): 11.522s
+2026-08-04 20:19:27,241 [PID 4041] ERROR Found 1606 type errors!
+2026-08-04 20:19:35,621 [PID 4064] INFO No binary specified, looking for `pyre.bin` in PATH
+2026-08-04 20:19:35,621 [PID 4064] INFO Pyre binary is located at `/home/z/.venv/bin/pyre.bin`
+2026-08-04 20:19:35,621 [PID 4064] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 1.
+2026-08-04 20:19:35,621 [PID 4064] INFO Consider setting the `--sequential` flag instead when the number of parallel workers is not greater than 1.
+2026-08-04 20:19:35,621 [PID 4064] INFO No typeshed specified, looking for it...
+2026-08-04 20:19:35,621 [PID 4064] INFO Found: `/home/z/.venv/lib/pyre_check/typeshed`
+2026-08-04 20:19:35,622 [PID 4064] INFO Writing arguments into /tmp/pyre_arguments_vyp901hn.json...
+2026-08-04 20:19:35,622 [PID 4064] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+    ]
+  },
+  "search_paths": [
+    "/home/z/my-project/audit_workspace/scp-vietnam/scp",
+    "/home/z/.venv/lib/pyre_check/typeshed/stdlib",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/z/my-project/audit_workspace/scp-vietnam/.pyre",
+  "global_root": "/home/z/my-project/audit_workspace/scp-vietnam",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 13
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 1,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2026-08-04 20:19:35,653 [PID 4064] PERFORMANCE  Initialized shared memory (heap size: 8589934592, dep table pow: 1, hash table pow: 26): 0.002s
+2026-08-04 20:19:35,654 [PID 4064] PERFORMANCE  Initialized multiprocessing workers (workers: 1): 0.000s
+2026-08-04 20:19:35,654 [PID 4064] INFO  Building module tracker...
+2026-08-04 20:19:35,674 [PID 4064] PERFORMANCE  Module tracker built: 0.027s
+2026-08-04 20:19:35,674 [PID 4064] PERFORMANCE  Full environment built: 0.027s
+2026-08-04 20:19:35,674 [PID 4064] INFO  Collecting all definitions...
+2026-08-04 20:19:37,913 [PID 4064] PERFORMANCE  Collected definitions (defines: 3683): 2.230s
+2026-08-04 20:19:37,913 [PID 4064] INFO  Checking 3683 functions...
+2026-08-04 20:19:42,896 [PID 4064] INFO  Processed 1842 of 3683 functions
+2026-08-04 20:19:46,522 [PID 4064] INFO  Processed 3683 of 3683 functions
+2026-08-04 20:19:46,522 [PID 4064] PERFORMANCE  Check_TypeCheck: 8.610s
+2026-08-04 20:19:46,522 [PID 4064] MEMORY  Shared memory size post-typecheck (size: 17)
+2026-08-04 20:19:46,522 [PID 4064] INFO  Postprocessing 333 sources...
+2026-08-04 20:19:46,895 [PID 4064] INFO  Postprocessed 333 of 333 sources
+2026-08-04 20:19:46,896 [PID 4064] PERFORMANCE  Check_Postprocessing: 0.380s
+2026-08-04 20:19:46,896 [PID 4064] PERFORMANCE  Check (request kind: FullCheck): 11.249s
+2026-08-04 20:19:46,995 [PID 4064] ERROR Found 1606 type errors!
+2026-08-04 20:19:53,676 [PID 4084] INFO No binary specified, looking for `pyre.bin` in PATH
+2026-08-04 20:19:53,676 [PID 4084] INFO Pyre binary is located at `/home/z/.venv/bin/pyre.bin`
+2026-08-04 20:19:53,676 [PID 4084] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 1.
+2026-08-04 20:19:53,676 [PID 4084] INFO Consider setting the `--sequential` flag instead when the number of parallel workers is not greater than 1.
+2026-08-04 20:19:53,677 [PID 4084] INFO No typeshed specified, looking for it...
+2026-08-04 20:19:53,677 [PID 4084] INFO Found: `/home/z/.venv/lib/pyre_check/typeshed`
+2026-08-04 20:19:53,678 [PID 4084] INFO Writing arguments into /tmp/pyre_arguments_26kb_931.json...
+2026-08-04 20:19:53,678 [PID 4084] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+    ]
+  },
+  "search_paths": [
+    "/home/z/.venv/lib/pyre_check/typeshed/stdlib",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/z/my-project/audit_workspace/scp-vietnam/.pyre",
+  "global_root": "/home/z/my-project/audit_workspace/scp-vietnam",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 13
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 1,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2026-08-04 20:19:53,709 [PID 4084] PERFORMANCE  Initialized shared memory (heap size: 8589934592, dep table pow: 1, hash table pow: 26): 0.002s
+2026-08-04 20:19:53,709 [PID 4084] PERFORMANCE  Initialized multiprocessing workers (workers: 1): 0.000s
+2026-08-04 20:19:53,709 [PID 4084] INFO  Building module tracker...
+2026-08-04 20:19:53,730 [PID 4084] PERFORMANCE  Module tracker built: 0.028s
+2026-08-04 20:19:53,730 [PID 4084] PERFORMANCE  Full environment built: 0.028s
+2026-08-04 20:19:53,730 [PID 4084] INFO  Collecting all definitions...
+2026-08-04 20:19:55,928 [PID 4084] PERFORMANCE  Collected definitions (defines: 3683): 2.192s
+2026-08-04 20:19:55,928 [PID 4084] INFO  Checking 3683 functions...
+2026-08-04 20:20:01,085 [PID 4084] INFO  Processed 1842 of 3683 functions
+2026-08-04 20:20:04,833 [PID 4084] INFO  Processed 3683 of 3683 functions
+2026-08-04 20:20:04,834 [PID 4084] PERFORMANCE  Check_TypeCheck: 8.902s
+2026-08-04 20:20:04,834 [PID 4084] MEMORY  Shared memory size post-typecheck (size: 17)
+2026-08-04 20:20:04,834 [PID 4084] INFO  Postprocessing 333 sources...
+2026-08-04 20:20:05,216 [PID 4084] INFO  Postprocessed 333 of 333 sources
+2026-08-04 20:20:05,217 [PID 4084] PERFORMANCE  Check_Postprocessing: 0.383s
+2026-08-04 20:20:05,217 [PID 4084] PERFORMANCE  Check (request kind: FullCheck): 11.508s
+2026-08-04 20:20:05,314 [PID 4084] ERROR Found 1606 type errors!
+2026-08-04 20:30:23,796 [PID 4774] INFO No binary specified, looking for `pyre.bin` in PATH
+2026-08-04 20:30:23,797 [PID 4774] INFO Pyre binary is located at `/home/z/.venv/bin/pyre.bin`
+2026-08-04 20:30:23,797 [PID 4774] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 1.
+2026-08-04 20:30:23,797 [PID 4774] INFO Consider setting the `--sequential` flag instead when the number of parallel workers is not greater than 1.
+2026-08-04 20:30:23,797 [PID 4774] INFO No typeshed specified, looking for it...
+2026-08-04 20:30:23,797 [PID 4774] INFO Found: `/home/z/.venv/lib/pyre_check/typeshed`
+2026-08-04 20:30:23,798 [PID 4774] INFO Writing arguments into /tmp/pyre_arguments_cj63qmv1.json...
+2026-08-04 20:30:23,798 [PID 4774] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+    ]
+  },
+  "search_paths": [
+    "/home/z/.venv/lib/pyre_check/typeshed/stdlib",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/z/.venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/z/my-project/audit_workspace/scp-vietnam/scp"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/z/my-project/audit_workspace/scp-vietnam/.pyre",
+  "global_root": "/home/z/my-project/audit_workspace/scp-vietnam",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 13
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 1,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2026-08-04 20:30:23,829 [PID 4774] PERFORMANCE  Initialized shared memory (heap size: 8589934592, dep table pow: 1, hash table pow: 26): 0.002s
+2026-08-04 20:30:23,829 [PID 4774] PERFORMANCE  Initialized multiprocessing workers (workers: 1): 0.000s
+2026-08-04 20:30:23,829 [PID 4774] INFO  Building module tracker...
+2026-08-04 20:30:23,860 [PID 4774] PERFORMANCE  Module tracker built: 0.028s
+2026-08-04 20:30:23,860 [PID 4774] PERFORMANCE  Full environment built: 0.028s
+2026-08-04 20:30:23,860 [PID 4774] INFO  Collecting all definitions...
+2026-08-04 20:30:25,978 [PID 4774] PERFORMANCE  Collected definitions (defines: 3683): 2.126s
+2026-08-04 20:30:25,978 [PID 4774] INFO  Checking 3683 functions...
+2026-08-04 20:30:30,948 [PID 4774] INFO  Processed 1842 of 3683 functions
+2026-08-04 20:30:34,538 [PID 4774] INFO  Processed 3683 of 3683 functions
+2026-08-04 20:30:34,538 [PID 4774] PERFORMANCE  Check_TypeCheck: 8.557s
+2026-08-04 20:30:34,539 [PID 4774] MEMORY  Shared memory size post-typecheck (size: 17)
+2026-08-04 20:30:34,539 [PID 4774] INFO  Postprocessing 333 sources...
+2026-08-04 20:30:34,928 [PID 4774] INFO  Postprocessed 333 of 333 sources
+2026-08-04 20:30:34,928 [PID 4774] PERFORMANCE  Check_Postprocessing: 0.389s
+2026-08-04 20:30:34,928 [PID 4774] PERFORMANCE  Check (request kind: FullCheck): 11.102s
+2026-08-04 20:30:35,016 [PID 4774] ERROR Found 1606 type errors!

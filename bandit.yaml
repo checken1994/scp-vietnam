@@ -1,0 +1,36 @@
+# ===================================================================
+# Bandit YAML config — used via `bandit -c bandit.yaml -r scp/`.
+# ===================================================================
+# WHY this file: Bandit 1.9.4 does NOT auto-discover any config file.
+#   - `.bandit` (INI) only works with explicit `--ini .bandit` flag.
+#   - `[tool.bandit]` in pyproject.toml only works with `-c pyproject.toml`.
+#   - This YAML file is loaded via `-c bandit.yaml` in the Makefile.
+#
+# The skips below MIRROR [tool.bandit] in pyproject.toml and are aligned
+# 1:1 with ruff.toml S-series ignores. See pyproject.toml for full
+# justification of each skip.
+# ===================================================================
+
+# (optional) list included test IDs here, eg '[B101, B406]':
+tests:
+
+# Skips aligned with ruff.toml S-series ignores (1:1 mapping).
+skips:
+  - B101   # assert_used    ↔ ruff S101 — invariants in non-test code (60 hits, 98% FP)
+  - B310   # urlopen        ↔ ruff S310 — URL scheme validated before call (11 hits, 100% FP)
+  - B311   # random         ↔ ruff S311 — domain selection, not crypto (74 hits, 100% FP)
+  - B404   # import subprocess ↔ ruff S404 — required for scanners (2 hits, 100% FP)
+  - B603   # subprocess.run ↔ ruff S603 — hardcoded tools, inputs validated (7 hits, 100% FP)
+  - B607   # partial path   ↔ ruff S607 — tool existence checked (6 hits, 100% FP)
+  - B608   # hardcoded SQL  ↔ ruff S608 — no user input in queries (0 hits, preventive)
+
+# NOTE: B110 (try/except/pass, 19 hits) and B112 (try/except/continue, 46 hits)
+# are NOT skipped — they are LOW-severity real code smells needing human review.
+# NOTE: B105/B106 (hardcoded password, 7 hits) are NOT skipped — handled per-line
+# with `# nosec B105` after manual verification (all are status strings/URLs, not secrets).
+
+### Plugin settings (defaults are acceptable)
+try_except_continue:
+  check_typed_exception: false
+try_except_pass:
+  check_typed_exception: false

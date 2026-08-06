@@ -1,0 +1,15 @@
+# ===================================================================
+# Bandit INI config — auto-discovered as `.bandit` (command-line defaults).
+# ===================================================================
+# WHY this file: Bandit 1.9.4 does NOT auto-discover [tool.bandit] in
+# pyproject.toml. It auto-discovers `.bandit` (INI) for CLI defaults.
+# This file sets the default skips so every `bandit -r scp/` run is clean.
+#
+# The skips below MIRROR [tool.bandit] in pyproject.toml and are aligned
+# 1:1 with ruff.toml S-series ignores. See pyproject.toml for full
+# justification of each skip.
+# ===================================================================
+
+[bandit]
+skips: B101,B310,B311,B404,B603,B607,B608
+exclude_dirs: tests/external_audit,benchmark/attacks

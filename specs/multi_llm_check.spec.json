@@ -1,0 +1,24 @@
+{
+  "name": "multi_llm_check",
+  "path": "scp/meta/multi_llm_check.py",
+  "purpose": "Cross-check LLM answers between 2-3 providers (OpenRouter + Groq) to detect consensus illusion (DNA SCP #20). If providers disagree beyond threshold, flag as speculative. Combats ảo giác đồng thuận.",
+  "interfaces": [
+    "class MultiLLMChecker: __init__(self, providers=['openrouter', 'groq']) -> None",
+    "def check(self, question: str, primary_answer: str) -> dict",
+    "def _call_openrouter(self, question: str) -> Optional[str]",
+    "def _call_groq(self, question: str) -> Optional[str]",
+    "def _compare_answers(self, primary: str, others: list[str]) -> dict"
+  ],
+  "wiring": [
+    "scp/runtime/judge.py:_run_step5_5_adversary_verify"
+  ],
+  "dependencies": [
+    "urllib.request",
+    "json",
+    "os",
+    "logging",
+    "difflib.SequenceMatcher",
+    "threading.Lock"
+  ],
+  "safety_tier": "tier4"
+}

@@ -1,0 +1,26 @@
+{
+  "name": "bypass_encrypt",
+  "path": "scp/security/bypass_encrypt.py",
+  "purpose": "Encrypt data/bypasses/*.jsonl at-rest to prevent exfiltration of attack patterns. Uses Fernet symmetric encryption (cryptography library). Key derived from SCP_ENCRYPTION_KEY env var or generated + persisted to data/.encryption_key.",
+  "interfaces": [
+    "class BypassEncryptor: __init__(self, data_dir='data') -> None",
+    "def encrypt_bypass(self, bypass_dict: dict) -> bytes",
+    "def decrypt_bypass(self, encrypted: bytes) -> dict",
+    "def encrypt_file(self, filepath: Path) -> Path  # returns backup path",
+    "def decrypt_file(self, filepath: Path) -> dict",
+    "def rotate_key(self) -> None  # re-encrypt all bypasses with new key"
+  ],
+  "wiring": [
+    "scp/core/data_partitioner.py:append_bypass"
+  ],
+  "dependencies": [
+    "cryptography.fernet.Fernet",
+    "hashlib",
+    "json",
+    "logging",
+    "os",
+    "pathlib.Path",
+    "threading.Lock"
+  ],
+  "safety_tier": "tier4"
+}

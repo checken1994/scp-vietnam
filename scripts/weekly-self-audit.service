@@ -1,0 +1,10 @@
+[Unit]
+Description=SCP Weekly Self-Audit-Fix Loop
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/z/my-project/download/scp_v97/scripts/weekly_self_audit_runner.sh
+User=root
+StandardOutput=journal
+StandardError=journal

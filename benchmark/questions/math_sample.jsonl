@@ -1,0 +1,5 @@
+{"id":"math_0001","category":"math","question":"2 + 2 = ?","expected_answer":"4","answer_type":"numeric","verification_method":"deterministic","difficulty":"easy"}
+{"id":"math_0002","category":"math","question":"sqrt(144) bằng bao nhiêu?","expected_answer":"12","answer_type":"numeric","verification_method":"deterministic","difficulty":"easy"}
+{"id":"math_0003","category":"math","question":"Tính 15!","expected_answer":"1307674368000","answer_type":"numeric","verification_method":"deterministic","difficulty":"medium"}
+{"id":"math_0004","category":"math","question":"GCD của 48 và 36?","expected_answer":"12","answer_type":"numeric","verification_method":"deterministic","difficulty":"medium"}
+{"id":"math_0005","category":"math","question":"Fibonacci thứ 10?","expected_answer":"55","answer_type":"numeric","verification_method":"deterministic","difficulty":"medium"}

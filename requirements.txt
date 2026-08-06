@@ -1,0 +1,11 @@
+# SCP V104 — Core dependencies (only what's actually imported)
+fastapi>=0.115.0
+uvicorn>=0.30.0
+pydantic>=2.9.0
+pyyaml>=6.0
+requests>=2.31.0
+huggingface_hub>=0.20.0
+
+# Testing tools (optional — install separately)
+# pip install hypothesis icontract mutmut semgrep pytest
+python-dotenv>=1.0.0

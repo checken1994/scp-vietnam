@@ -1,0 +1,164 @@
+"""
+[OPT-17] NOAADataSource — NOAA NCDC Climate Data Online (CDO) API.
+
+DNA SCP: SuperGPQA Earth Science discipline had no primary weather/climate
+DataSource (only generic weather.py). NOAA's CDO API is the authoritative
+source for US weather history, climate normals, and severe weather events.
+Requires NOAA_API_KEY (free token at https://www.ncdc.noaa.gov/cdo-web/token).
+"""
+from __future__ import annotations
+
+import logging
+import os
+
+from scp.interfaces.data_source import IDataSource
+
+logger = logging.getLogger("scp.data_sources.noaa")
+
+
+class NOAADataSource(IDataSource):
+    """NOAA NCDC CDO API — weather & climate data (requires NOAA_API_KEY)."""
+
+    BASE_URL = "https://www.ncdc.noaa.gov/cdo-web/api/v2"
+    TOKEN_URL = "https://www.ncdc.noaa.gov/cdo-web/token"  # noqa: S105,S106  # nosec B105 — URL path contains word "token", not a credential
+
+    # Common dataset IDs
+    DATASET_MAP = {
+        "ghcn": "GHCND",          # Daily summaries (stations worldwide)
+        "daily": "GHCND",
+        "normals": "NORMAL_DLY",  # Climate normals daily
+        "climate normals": "NORMAL_DLY",
+        "precipitation": "GHCND",
+        "temperature": "GHCND",
+    }
+
+    # Location ID prefixes
+    LOCATION_MAP = {
+        "usa": "FIPS:US",
+        "us": "FIPS:US",
+        "new york": "CITY:US360019",
+        "los angeles": "CITY:US060037",
+        "chicago": "CITY:US1714000",
+        "houston": "CITY:US4823000",
+        "phoenix": "CITY:US0450000",
+        "seattle": "CITY:US5300160",
+    }
+
+    def __init__(self):
+        self.api_key = os.environ.get("NOAA_API_KEY", "")
+        self.enabled = bool(self.api_key)
+        if not self.enabled:
+            logger.info("[NOAA] disabled — set NOAA_API_KEY (free token at "
+                        f"{self.TOKEN_URL}) to enable")
+
+    @property
+    def name(self) -> str:
+        return "noaa"
+
+    @property
+    def priority(self) -> int:
+        return 12  # mid — earth_science primary when enabled
+
+    @property
+    def ttl(self) -> int:
+        return 3600  # 1h — weather changes frequently
+
+    def get_supported_intents(self) -> list[str]:
+        return ["weather", "climate", "temperature", "precipitation",
+                "weather_history", "climate_normals", "earth_science"]
+
+    def can_handle(self, intent: str, entity: str = None) -> bool:
+        if not self.enabled:
+            return False
+        if intent in self.get_supported_intents():
+            return True
+        question = intent or ""
+        q = question.lower()
+        keywords = [
+            "weather", "thời tiết",
+            "climate", "khí hậu",
+            "temperature", "nhiệt độ",
+            "precipitation", "lượng mưa",
+            "rainfall", "snowfall",
+            "humidity", "độ ẩm",
+            "wind speed", "tốc độ gió",
+            "noaa", "ncdc",
+            "climate normal", "chuẩn khí hậu",
+            "storm", "bão",
+            "drought", "hạn hán",
+        ]
+        return any(k in q for k in keywords)
+
+    def fetch(self, intent: str, entity: str, **kwargs) -> dict | None:
+        """IDataSource interface — delegate to query()."""
+        return self.query(entity or intent)
+
+    def health_check(self) -> bool:
+        return self.enabled
+
+    def query(self, question: str) -> dict | None:
+        if not self.enabled:
+            return None
+        try:
+            return self._query_data(question)
+        except Exception as e:
+            logger.debug(f"[NOAA] query failed: {e}")
+            return None
+
+    def _query_data(self, question: str) -> dict | None:
+        import httpx
+        try:
+            q = question.lower()
+            # Pick dataset
+            dataset = "GHCND"
+            for keyword, ds in self.DATASET_MAP.items():
+                if keyword in q:
+                    dataset = ds
+                    break
+            # Pick location
+            location_id = None
+            for name, loc_id in self.LOCATION_MAP.items():
+                if name in q:
+                    location_id = loc_id
+                    break
+            params = {
+                "datasetid": dataset,
+                "startdate": "2024-01-01",
+                "enddate": "2024-01-07",
+                "limit": 5,
+                "units": "metric",
+            }
+            if location_id:
+                params["locationid"] = location_id
+            r = httpx.get(f"{self.BASE_URL}/data",
+                          params=params,
+                          headers={"token": self.api_key},
+                          timeout=10)
+            if r.status_code != 200:
+                logger.debug(f"[NOAA] data query returned {r.status_code}")
+                return None
+            data = r.json()
+            results = data.get("results", [])
+            if not results:
+                return None
+            # Summarize top results
+            return {
+                "value": f"{len(results)} observations",
+                "source": "noaa",
+                "metadata": {
+                    "dataset": dataset,
+                    "location": location_id or "global",
+                    "results": [
+                        {
+                            "date": r.get("date", ""),
+                            "datatype": r.get("datatype", ""),
+                            "station": r.get("station", ""),
+                            "value": r.get("value", ""),
+                        } for r in results[:3]
+                    ],
+                    "result_count": data.get("metadata", {}).get("resultset", {}).get("count", 0),
+                },
+            }
+        except Exception as e:
+            logger.debug(f"[NOAA] data query failed: {e}")
+            return None

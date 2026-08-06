@@ -1,0 +1,25 @@
+{
+  "name": "metawhy_monitor",
+  "path": "scp/meta/metawhy_monitor.py",
+  "purpose": "Monitor WHY engine for emergent patterns — detect when SCP keeps asking same type of WHY question repeatedly. If pattern emerges, alert (possible bias or missing piece). Logs to data/metawhy_patterns.jsonl.",
+  "interfaces": [
+    "class MetaWhyMonitor: __init__(self, data_dir='data') -> None",
+    "def record_why(self, question: str, why_plan: dict) -> None",
+    "def detect_patterns(self) -> list[dict]",
+    "def get_emergent_themes(self, window_days: int = 7) -> list[str]",
+    "def alert_if_loop(self) -> Optional[str]"
+  ],
+  "wiring": [
+    "scp/meta/why_engine.py:execute_plan"
+  ],
+  "dependencies": [
+    "json",
+    "logging",
+    "time",
+    "re",
+    "collections.Counter",
+    "pathlib.Path",
+    "threading.Lock"
+  ],
+  "safety_tier": "tier4"
+}

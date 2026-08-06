@@ -1,0 +1,716 @@
+#!/usr/bin/env python3
+"""
+SCP V90 — SMART QUESTION CLASSIFIER
+Thay thế keyword matching bằng embedding-based classification.
+
+Các phương pháp có thể dùng:
+1. TF-IDF + Cosine Similarity (không cần AI, nhanh)
+2. Sentence Embeddings (chính xác hơn)
+3. LLM-based (chính xác nhất nhưng chậm)
+4. Hybrid (kết hợp)
+"""
+
+import hashlib
+import logging
+import math
+import re
+import time
+from collections import Counter
+from dataclasses import dataclass, field
+
+logger = logging.getLogger("scp.smart_classifier")
+
+# ============================================================
+# DOMAIN DEFINITIONS VỚI EXAMPLES
+# ============================================================
+DOMAIN_PROFILES = {
+    "math": {
+        # [V5.9-FIX] TẠI SAO: removed single-char operators "-","*","/","+" from keywords
+        # — they match "CVE-2021-44228" (has "-"), "C++" (has "+"), URLs, dates, etc.
+        # → false positive routing to math. Regex patterns below handle real math expressions.
+        "keywords": ["tính", "calculate", "sqrt", "collatz", "giai thừa", "fibonacci", "gcd", "factorial", "solve equation", "phương trình"],
+        # [V5.9-FIX] Pattern: require spaces around operator OR sqrt/factorial keywords
+        # Old pattern \d+\s*[\+\-\*/\^]\s*\d+ matched "2021-44228" (CVE numbers, dates)
+        # New: require space before AND after operator: \d+\s+[\+\-\*/\^]\s+\d+
+        "patterns": [r'\d+\s+[\+\-\*/\^]\s+\d+', r'sqrt\(', r'\bfactorial\b', r'equation'],
+        "examples": [
+            "2 + 2 = ?",
+            "sqrt(144) bằng bao nhiêu?",
+            "Tính 15!",
+            "Collatz của 27",
+            "GCD của 48 và 18",
+            "Fibonacci thứ 10"
+        ],
+        "weight": 1.0
+    },
+    "statistics": {
+        "keywords": ["trung bình", "trung vị", "phương sai", "mean", "median", "variance", "standard deviation", "average"],
+        "patterns": [r'\bmean of\b', r'\bmedian of\b', r'\bvariance of\b', r'\bmin of\b', r'\bmax of\b'],
+        "examples": [
+            "Trung bình của [1,2,3,4,5]",
+            "Median of [3,1,4,1,5]",
+            "Standard deviation là gì?",
+            "Độ lệch chuẩn của tuổi thọ"
+        ],
+        "weight": 1.5  # Higher priority
+    },
+    "conversion": {
+        "keywords": ["km", "cm", "mile", "inch", "foot", "pound", "kg", "liter", "gallon", "chuyển đổi", "convert", "bằng bao nhiêu"],
+        "patterns": [r'\d+\s*(km|cm|mm|mile|inch|foot|kg|lb|pound)', r'\bconvert\b'],
+        "examples": [
+            "1 mile = ? km",
+            "Chuyển đổi 100 feet sang meters",
+            "5 gallons to liters"
+        ],
+        "weight": 1.3
+    },
+    "finance": {
+        "keywords": ["giá", "price", "bitcoin", "crypto", "ethereum", "exchange", "usd", "eur", "vnd", "tỉ giá", "stock", "market"],
+        "patterns": [r'price of', r'giá .* là', r'\$[\d,]+', r'USD|VND|EUR'],
+        "examples": [
+            "Giá bitcoin hôm nay?",
+            "1 USD bằng bao nhiêu VND?",
+            "Price of Ethereum?",
+            "Tỉ giá USD/VND"
+        ],
+        "weight": 1.2
+    },
+    "chemistry": {
+        "keywords": ["nguyên tử", "phân tử", "electron", "proton", "mol", "Mật độ", "nguyên tố", "hóa trị", "C6H12O6", "atom", "molecule", "periodic table"],
+        "patterns": [r'nguyên tử', r'phân tử', r'electron', r'proton', r'hóa trị'],  # [FIX 2026-07-09] removed r'[A-Z][a-z]?\d*' — matched almost any text once case-folded, causing mass false-routing to chemistry
+        "examples": [
+            "Khối lượng nguyên tử của Oxi?",
+            "Cấu hình electron của Fe",
+            "Phân tử khối của H2SO4"
+        ],
+        "weight": 1.0
+    },
+    "biology": {
+        "keywords": ["dna", "tế bào", "sinh học", "organism", "enzyme", "protein", "mitochondria", "hemoglobin", "quang hợp", "chromosome", "nhiễm sắc thể"],
+        "patterns": [r'\bdna\b', r'\bcell\b', r'\benzyme\b', r'\bchromosome\b'],
+        "examples": [
+            "DNA có bao nhiêu nucleotide?",
+            "Enzyme amylase có chức năng gì?",
+            "Quang hợp xảy ra ở đâu?"
+        ],
+        "weight": 1.0
+    },
+    "medical": {
+        "keywords": ["bệnh", "thuốc", "triệu chứng", "vaccine", "paracetamol", "y tế", "sức khỏe", "bmi", "huyết áp", "covid", "dosage"],
+        "patterns": [r'\bbệnh\b', r'\bthuốc\b', r'\bvaccine\b', r'\bdosage\b'],
+        "examples": [
+            "Triệu chứng của covid?",
+            "Liều paracetamol cho người lớn?",
+            "BMI bình thường là bao nhiêu?"
+        ],
+        "weight": 2.0  # High priority - very specific
+    },
+    "geography": {
+        "keywords": ["thủ đô", "capital", "dân số", "population", "diện tích", "area", "continent", "quốc gia", "country", "thành phố", "city"],
+        "patterns": [r'thủ đô', r'\bcapital\b', r'dân số', r'population', r'diện tích'],
+        "examples": [
+            "Thủ đô của Việt Nam?",
+            "Dân số Tokyo?",
+            "Diện tích nước Pháp?"
+        ],
+        "weight": 1.0
+    },
+    "history": {
+        "keywords": ["năm", "year", "ai", "who", "khi nào", "when", "lịch sử", "history", "chiến tranh", "revolution", "empire", "century"],
+        "patterns": [r'\bnăm\s+\d{4}\b', r'\bcentury\b', r'\bwhen\b', r'ai phát minh'],
+        "examples": [
+            "Ai phát minh ra điện thoại?",
+            "Năm 1945 có sự kiện gì?",
+            "Chiến tranh thế giới thứ 2 năm nào?"
+        ],
+        "weight": 0.8
+    },
+    "astronomy": {
+        "keywords": ["sao", "hành tinh", "planet", "mặt trời", "mặt trăng", "galaxy", "vũ trụ", "universe", "orbit", "telescope", "mercury", "venus", "mars", "jupiter"],
+        "patterns": [r'sao\s+(thủy|kim|hỏa|mộc|thổ|thiên vương|hải vương|diêm vương)', r'\bplanet\b', r'\bgalaxy\b', r'mặt trời', r'mặt trăng'],
+        "examples": [
+            "Sao Mộc có bao nhiêu vệ tinh?",
+            "Khoảng cách từ Trái Đất đến Mặt Trời?",
+            "Sao Hỏa có nước không?"
+        ],
+        "weight": 1.0
+    },
+    "weather": {
+        "keywords": ["thời tiết", "weather", "nhiệt độ", "temperature", "độ ẩm", "humidity", "mưa", "rain", "nắng", "dự báo", "forecast"],
+        "patterns": [r'thời tiết', r'\bweather\b', r'nhiệt độ\s+tại', r'độ ẩm'],
+        "examples": [
+            "Thời tiết Hà Nội hôm nay?",
+            "Nhiệt độ tại Tokyo?",
+            "Độ ẩm ở Sài Gòn?"
+        ],
+        "weight": 1.0
+    },
+    "reality": {
+        "keywords": ["hằng số", "constant", "speed of light", "planck", "avogadro", "gravity", "boltzmann", "stefan", "rydberg", "bohr"],
+        "patterns": [r'hằng số', r'\bconstant\b', r'speed of light', r'planck'],
+        "examples": [
+            "Tốc độ ánh sáng là bao nhiêu?",
+            "Hằng số Planck có giá trị?",
+            "Số Avogadro"
+        ],
+        "weight": 1.5
+    },
+    "sports": {
+        "keywords": ["world cup", "fifa", "olympic", "ronaldo", "messi", "football", "soccer", "tennis", "basketball", "world record"],
+        "patterns": [r'\bworld cup\b', r'\bolympic\b', r'\bRonaldo\b', r'\bMessi\b'],
+        "examples": [
+            "World Cup 2022 winner?",
+            "Ronaldo có bao nhiêu bàn thắng?",
+            "Olympic 2024 ở đâu?"
+        ],
+        "weight": 1.0
+    },
+    "legal": {
+        "keywords": ["luật", "law", "quyền", "right", "điều khoản", "contract", "copyright", "license", "patent", "pháp luật"],
+        "patterns": [r'\bluật\b', r'\blaw\b', r'\bright\b', r'\bcontract\b'],
+        "examples": [
+            "Quyền tác giả là gì?",
+            "Luật sở hữu trí tuệ Việt Nam",
+            "Copyright lasts how long?"
+        ],
+        "weight": 1.0
+    },
+    "technology": {
+        # [V104.36 #70] TẠI SAO: " programming" had leading space (dead keyword),
+        # "ai" substring matches "rain"/"main". Fix: strip space + use patterns for short.
+        "keywords": ["ai", "computer", "internet", "software", "hardware", "programming", "python", "javascript", "algorithm", "machine learning"],
+        "patterns": [r'\bai\b', r'\bcomputer\b', r'\balgorithm\b', r'\bprogramming\b'],
+        "examples": [
+            "AI là gì?",
+            "Machine learning khác gì deep learning?",
+            "Thuật toán sắp xếp nào nhanh nhất?"
+        ],
+        "weight": 0.9
+    },
+    "entertainment": {
+        "keywords": ["movie", "film", "book", "music", "game", "phim", "sách", "nhạc", "trò chơi", "star wars", "netflix", "marvel", "marvel", "disney"],
+        "patterns": [r'\bmovie\b', r'\bfilm\b', r'\bbook\b', r'\bgame\b'],
+        "examples": [
+            "Phim hay nhất 2024?",
+            "Star Wars episode nào hay nhất?",
+            "Marvel Avengers 4 release date?"
+        ],
+        "weight": 0.7
+    },
+    "food": {
+        "keywords": ["món ăn", "công thức", "recipe", "nấu ăn", "cook", "ingredient", "calories", "dinh dưỡng", "vitamin"],
+        "patterns": [r'\bmón ăn\b', r'\bcông thức\b', r'\brecipe\b', r'\bcook\b'],
+        "examples": [
+            "Công thức phở bò?",
+            "1 quả chuối có bao nhiêu calories?",
+            "Cách nấu cơm"
+        ],
+        "weight": 1.0
+    },
+    # [V96] New domains from 45-domain registry
+    "physics": {
+        "keywords": ["vật lý", "physics", "lực", "force", "năng lượng", "energy", "tốc độ", "velocity", "hằng số", "gravity", "khối lượng", "mass", "Planck", "Einstein"],
+        "patterns": [r'\bN/m²\b', r'\bJ/kg\b', r'\bm/s\b', r'\bkg/m³\b'],
+        "examples": ["Tốc độ ánh sáng là bao nhiêu?", "Hằng số Planck", "Lực hấp dẫn"],
+        "weight": 1.0
+    },
+    "logic": {
+        "keywords": ["logic", "modus", "syllogism", "fallacy", "ngụy biện", "đúng", "sai", "boolean", "AND", "OR", "NOT"],
+        "patterns": [r'\bmodus ponens\b', r'\bmodus tollens\b', r'\bif.*then\b'],
+        "examples": ["Modus ponens là gì?", "Logical fallacy examples", "AND OR NOT truth table"],
+        "weight": 1.0
+    },
+    "education": {
+        "keywords": ["học", "giáo dục", "university", "university", "đại học", "college", "degree", "bằng cấp", "SAT", "IELTS", "thi"],
+        "patterns": [r'đại học nào', r'nhập học', r'chương trình học'],
+        "examples": ["Top đại học thế giới?", "Làm sao để vào Harvard?", "IELTS bao nhiêu là đủ?"],
+        "weight": 1.0
+    },
+    "psychology": {
+        "keywords": ["tâm lý", "psychology", "trầm cảm", "depression", "anxiety", "stress", "behavior", "hành vi", "cognitive", "nhận thức"],
+        "patterns": [r'\bPTSD\b', r'\bOCD\b', r'\bBipolar\b'],
+        "examples": ["Triệu chứng trầm cảm?", "Làm sao giảm stress?", "Hiệu ứng placebo là gì?"],
+        "weight": 1.0
+    },
+    "environment": {
+        "keywords": ["môi trường", "environment", "climate", "khí hậu", "pollution", "ô nhiễm", "endangered", "tuyệt chủng", "carbon", "CO2", "climate change"],
+        "patterns": [r'\bAQI\b', r'\bppm\b', r'\btấn CO2\b'],
+        "examples": ["Ô nhiễm không khí ở HN?", "CO2 hiện tại là bao nhiêu?", "Các loài động vật nguy cấp?"],
+        "weight": 1.0
+    },
+    "energy": {
+        "keywords": ["năng lượng", "energy", "solar", "mặt trời", "wind", "gió", "hydro", "điện", "power", "sạch", "renewable"],
+        "patterns": [r'\bkWh\b', r'\bMW\b', r'\bGW\b'],
+        "examples": ["Hiệu suất solar panel?", "Điện gió bao nhiêu 1 kWh?", "Năng lượng tái tạo là gì?"],
+        "weight": 1.0
+    },
+    "transport": {
+        "keywords": ["giao thông", "transport", "xe", "car", "tàu", "train", "máy bay", "plane", "speed", "tốc độ"],
+        "patterns": [r'\bkm/h\b', r'\bmph\b'],
+        "examples": ["Tàu cao tốc đi nhanh bao nhiêu?", "Máy bay Boeing 747 tốc độ?", "Xe điện vs xăng?"],
+        "weight": 1.0
+    },
+    "blockchain": {
+        "keywords": ["blockchain", "crypto", "bitcoin", "ethereum", "wallet", "wallet", "token", "NFT", "DeFi", "smart contract"],
+        "patterns": [r'\b0x[a-fA-F0-9]{40}\b', r'\bmining\b', r'\bhash rate\b'],
+        "examples": ["Blockchain hoạt động thế nào?", "NFT là gì?", "Proof of Work vs PoS?"],
+        "weight": 1.0
+    },
+    "cybersecurity": {
+        # [V5.9-FIX] Added CVE, lỗ hổng, vulnerability, exploit, ransomware keywords
+        "keywords": ["security", "bảo mật", "hack", "password", "mật khẩu", "virus", "malware", "phishing", "encryption", "mã hóa", "cve", "lỗ hổng", "vulnerability", "exploit", "ransomware", "an ninh mạng", "cyber"],
+        "patterns": [r'\bCVE-\d{4}-\d+\b', r'\bDDoS\b', r'\bSQL injection\b', r'\bXSS\b', r'\bzero-day\b'],
+        "examples": ["Làm sao bảo vệ password?", "Phishing là gì?", "AES-256 encryption?"],
+        "weight": 1.0
+    },
+    "genai": {
+        "keywords": ["AI", "machine learning", "deep learning", "neural network", "LLM", "GPT", "ChatGPT", "model", "training", "dataset"],
+        "patterns": [r'\btransformer\b', r'\btraining\b', r'\bfine-tuning\b'],
+        "examples": ["GPT-4 có bao nhiêu params?", "Machine learning khác deep learning gì?", "RAG là gì?"],
+        "weight": 1.0
+    },
+    "social": {
+        "keywords": ["mạng xã hội", "social media", "facebook", "instagram", "tiktok", "twitter", "followers", "người theo dõi"],
+        "examples": ["Facebook có bao nhiêu users?", "Cách tăng followers?", "TikTok algorithm hoạt động thế nào?"],
+        "weight": 1.0
+    },
+    "aerospace": {
+        "keywords": ["space", "vũ trụ", "NASA", "satellite", "vệ tinh", "rocket", "tên lửa", "ISS", "mars"],
+        "patterns": [r'\bkm/s\b', r'\bApollo\b', r'\bVoyager\b'],
+        "examples": ["Apollo 11 đổ bộ năm nào?", "Tốc độ thoát khỏi trái đất?", "ISS bay cao bao nhiêu?"],
+        "weight": 1.0
+    },
+    "tourism": {
+        "keywords": ["du lịch", "tourism", "travel", "visa", "passport", "hotel", "khách sạn", "booking", "destination"],
+        "examples": ["Visa Schengen làm sao?", "Địa điểm du lịch đẹp ở VN?", "Cách book khách sạn giá rẻ?"],
+        "weight": 1.0
+    },
+    "geology": {
+        "keywords": ["địa chất", "geology", "minerals", "khoáng", "rock", "đá", "earthquake", "động đất", "volcano", "núi lửa"],
+        "examples": ["Kim cương cứng bao nhiêu?", "Động đất được đo bằng gì?", "Núi lửa hoạt động thế nào?"],
+        "weight": 1.0
+    },
+    "heritage": {
+        "keywords": ["di sản", "heritage", "UNESCO", "thế giới", "cố đô", "landmark"],
+        "examples": ["Di sản thế giới ở VN?", "Cố đô Huế có gì?", "Lễ hội truyền thống VN?"],
+        "weight": 1.0
+    },
+    "diplomacy": {
+        "keywords": ["ngoại giao", "diplomacy", "UN", "ASEAN", "NATO", "G7", "G20", "treaty", "hiệp ước"],
+        "examples": ["ASEAN có bao nhiêu nước?", "UN hoạt động thế nào?", "G7 gồm những nước nào?"],
+        "weight": 1.0
+    },
+    "military": {
+        "keywords": ["quân sự", "military", "army", "lực lượng", "weapon", "vũ khí", "nuclear", "hạt nhân", "warship", "tàu chiến"],
+        "examples": ["Mỹ có bao nhiêu tàu sân bay?", "Vũ khí hạt nhân ở đâu?", "Tên lửa đạn đạo tầm bao xa?"],
+        "weight": 1.0
+    },
+    "oceanography": {
+        "keywords": ["đại dương", "ocean", "sea", "biển", "marine", "thủy sinh", "coral", "san hô", "trench", "rãnh"],
+        "examples": ["Marianna Trench sâu bao nhiêu?", "Great Barrier Reef ở đâu?", "Độ mặn biển?"],
+        "weight": 1.0
+    },
+    "spacemedicine": {
+        "keywords": ["space medicine", "y học không gian", "astronaut", "cosmonaut", "microgravity", "bone loss"],
+        "examples": ["Astronaut chịu bao nhiêu radiation?", "Bone loss trong không gian?", "Space adaptation syndrome?"],
+        "weight": 1.0
+    },
+    "crafts": {
+        "keywords": ["thủ công", "crafts", "gốm", "ceramics", "nón", "lụa", "silk", "tranh", "painting"],
+        "examples": ["Gốm Bát Tràng nổi tiếng gì?", "Nón lá Huế?", "Lụa Vạn Phúc?"],
+        "weight": 1.0
+    },
+    "architecture": {
+        "keywords": ["architecture", "kiến trúc", "building", "nhà", "design", "thiết kế", "structural", "kết cấu"],
+        "examples": ["Kiến trúc Gothic là gì?", "Kết cấu nhà cao tầng?", "豆腐 architecture?"],
+        "weight": 1.0
+    },
+    "uxui": {
+        "keywords": ["UX", "UI", "design", "interface", "wireframe", "prototype", "usability", "user experience"],
+        "examples": ["UX design process?", "Figma là gì?", "A/B testing trong design?"],
+        "weight": 1.0
+    },
+    "digitalmarketing": {
+        "keywords": ["marketing", "quảng cáo", "SEO", "Google Ads", "Facebook Ads", "conversion", "CTR", "ROI", "CPA"],
+        "examples": ["CTR tốt là bao nhiêu?", "Làm sao SEO top Google?", "Facebook Ads hoạt động thế nào?"],
+        "weight": 1.0
+    },
+    "ecommerce": {
+        "keywords": ["ecommerce", "shopee", "lazada", "amazon", "shop", "mua", "bán", "shipping", "vận chuyển"],
+        "examples": ["Shopee có bao nhiêu users?", "Làm sao bán hàng online?", "Shipping fee tính thế nào?"],
+        "weight": 1.0
+    },
+    "audiovideo": {
+        "keywords": ["audio", "video", "mp3", "mp4", "codec", "compression", "bitrate", "streaming", "youtube"],
+        "examples": ["MP3 vs FLAC khác gì?", "H264 vs H265?", "Bitrate tốt cho video là bao nhiêu?"],
+        "weight": 1.0
+    },
+    "foodtech": {
+        "keywords": ["food tech", "lab-grown meat", "plant-based", "vertical farming", "3D food printing", "alternative protein"],
+        "examples": ["Lab-grown meat là gì?", "Vertical farming hoạt động thế nào?", "Plant-based meat?"],
+        "weight": 1.0
+    },
+    "general": {
+        "keywords": ["what is", "là gì", "who is", "là ai", "tell me", "giới thiệu", "explain"],
+        "patterns": [r'\blà gì\b', r'\bwhat is\b', r'\bwho is\b', r'\btell me\b'],
+        "examples": [
+            "Bitcoin là gì?",
+            "What is AI?",
+            "Giới thiệu về Việt Nam"
+        ],
+        "weight": 0.5
+    }
+}
+
+
+@dataclass
+class ClassificationResult:
+    """Kết quả phân loại."""
+    domain: str
+    confidence: float
+    alternatives: list[tuple[str, float]] = field(default_factory=list)
+    method: str = "hybrid"
+
+
+class SmartClassifier:
+    """SMART QUESTION CLASSIFIER
+
+    Kết hợp nhiều phương pháp để phân loại chính xác:
+    1. Keyword matching (nhanh, cho keywords rõ ràng)
+    2. Pattern matching (cho cấu trúc đặc biệt)
+    3. Semantic similarity (cho câu hỏi phức tạp)
+
+    Usage:
+        classifier = SmartClassifier()
+        result = classifier.classify("Giá bitcoin hôm nay?")
+        print(result.domain, result.confidence)
+    """
+
+    def __init__(self, use_embeddings: bool = False):
+        self._cache: dict[str, tuple[float, ClassificationResult]] = {}
+        self._CACHE_TTL = 3600  # 1 hour
+        self._CACHE_MAX = 2000
+        self._use_embeddings = use_embeddings
+
+        # Precompute domain signatures
+        self._domain_signatures = self._build_signatures()
+
+        logger.info(f"SmartClassifier initialized (embeddings={use_embeddings})")
+
+    def _build_signatures(self) -> dict:
+        """Build TF-IDF-like signatures for each domain."""
+        signatures = {}
+        for domain, profile in DOMAIN_PROFILES.items():
+            # Combine keywords and examples
+            words = []
+            for kw in profile["keywords"]:
+                words.extend(kw.lower().split())
+            for ex in profile["examples"]:
+                words.extend(ex.lower().split())
+
+            # Count word frequencies
+            word_freq = Counter(words)
+
+            # TF-IDF-like scoring
+            total = sum(word_freq.values()) or 1
+            signatures[domain] = {
+                word: freq / total
+                for word, freq in word_freq.items()
+            }
+
+        return signatures
+
+    def _cosine_similarity(self, vec1: dict[str, float], vec2: dict[str, float]) -> float:
+        """Tính cosine similarity giữa 2 vectors."""
+        common = set(vec1.keys()) & set(vec2.keys())
+        if not common:
+            return 0.0
+
+        dot_product = sum(vec1[w] * vec2[w] for w in common)
+        norm1 = math.sqrt(sum(v**2 for v in vec1.values()))
+        norm2 = math.sqrt(sum(v**2 for v in vec2.values()))
+
+        if norm1 == 0 or norm2 == 0:
+            return 0.0
+
+        return dot_product / (norm1 * norm2)
+
+    def _tokenize(self, text: str) -> list[str]:
+        """Tokenize text thành words."""
+        # Remove punctuation and lowercase
+        text = re.sub(r'[^\w\s]', ' ', text.lower())
+        # Split by whitespace
+        words = text.split()
+        # Remove very short words
+        words = [w for w in words if len(w) >= 2]
+        return words
+
+    def _build_query_vector(self, question: str) -> dict[str, float]:
+        """Build TF-IDF vector cho question."""
+        words = self._tokenize(question)
+        word_freq = Counter(words)
+        total = len(words) or 1
+
+        return {word: freq / total for word, freq in word_freq.items()}
+
+    def _keyword_score(self, question: str, domain: str) -> float:
+        """Tính keyword matching score.
+
+        [V104.36 #70] TẠI SAO: kw.lower() in q_lower is substring — "ai" matches
+        "rain", "or" matches "for", "and" matches "hand". Fix: for short keywords
+        (<=3 chars), use word-boundary regex; for longer, substring is acceptable.
+        """
+        profile = DOMAIN_PROFILES.get(domain, {})
+        q_lower = question.lower()
+
+        score = 0.0
+        matched = 0
+
+        # Keywords — short keywords need word boundary, long can use substring
+        for kw in profile.get("keywords", []):
+            kw_lower = kw.lower().strip()  # [V104.36 #70] strip leading/trailing space
+            if not kw_lower:
+                continue
+            # [V104.37 #80] TẠI SAO: V104.36 #70 only fixed ≤3 char keywords;
+            # 4+ char keywords ("mean" matches "meaning", "force" matches "enforce")
+            # had same substring bug. Fix: word-boundary for ALL keywords.
+            if re.search(r'\b' + re.escape(kw_lower) + r'\b', q_lower):
+                score += 1.0
+                matched += 1
+
+        # Patterns
+        for pattern in profile.get("patterns", []):
+            if re.search(pattern, q_lower, re.IGNORECASE):
+                score += 1.5  # Patterns are more specific
+                matched += 1
+
+        # Normalize by number of terms
+        total_terms = len(profile.get("keywords", [])) + len(profile.get("patterns", []))
+        if total_terms > 0:
+            return (score / total_terms) * profile.get("weight", 1.0)
+
+        return 0.0
+
+    def _semantic_score(self, question: str, domain: str) -> float:
+        """Tính semantic similarity score."""
+        query_vec = self._build_query_vector(question)
+        domain_sig = self._domain_signatures.get(domain, {})
+
+        return self._cosine_similarity(query_vec, domain_sig)
+
+    def classify(self, question: str) -> ClassificationResult:
+        """
+        Classify question vào domain phù hợp.
+
+        Returns:
+            ClassificationResult với domain, confidence, và alternatives
+        """
+        if not question:
+            return ClassificationResult(domain="math", confidence=0.5, method="fallback")
+
+        # Check cache first
+        cache_key = hashlib.md5(question.encode()).hexdigest()
+        cached = self._cache.get(cache_key)
+        if cached:
+            ts, result = cached
+            if time.time() - ts < self._CACHE_TTL:
+                return result
+
+        # [FIX #6] TẠI SAO: SmartClassifier fail route "2+2=?" → math because the
+        # question has no math keywords (just digits + operators). The keyword/
+        # semantic scoring gives 0.097 → fallback to "general" → MathSLM never
+        # gets called → FAIL with empty answer + Constitution KILL.
+        # Reality > Model: tested `2+2=?` → was "general" 0.097, after this rule
+        # → "math" 0.99. MathSLM then returns "2+2 = 4" with confidence 0.99.
+        # Pattern: digit(s) + operator + digit(s) → math.
+        import re as _re_classify
+
+        # [V5.9-FIX] CVE pattern check BEFORE math — TẠI SAO: math pattern
+        # \d+\s*[+\-*/%^]\s*\d+ matches "2021-44228" in CVE IDs → routes CVE
+        # questions to math instead of cybersecurity. Fix: check CVE first.
+        _CVE_PATTERN = _re_classify.compile(r'\bCVE-\d{4}-\d+\b', _re_classify.IGNORECASE)
+        if _CVE_PATTERN.search(question):
+            result = ClassificationResult(
+                domain="cybersecurity",
+                confidence=0.99,
+                alternatives=[("general", 0.1)],
+                method="deterministic_cve_pattern",
+            )
+            if len(self._cache) >= self._CACHE_MAX:
+                oldest_keys = sorted(self._cache.keys(), key=lambda k: self._cache[k][0])[:500]
+                for k in oldest_keys:
+                    del self._cache[k]
+            self._cache[cache_key] = (time.time(), result)
+            return result
+
+        _MATH_PATTERN = _re_classify.compile(r'\d+(?:\.\d+)?\s*[+\-*/%^]\s*\d+(?:\.\d+)?')
+        if _MATH_PATTERN.search(question):
+            result = ClassificationResult(
+                domain="math",
+                confidence=0.99,
+                alternatives=[("general", 0.1)],
+                method="deterministic_math_pattern",
+            )
+            if len(self._cache) >= self._CACHE_MAX:
+                oldest_keys = sorted(self._cache.keys(), key=lambda k: self._cache[k][0])[:500]
+                for k in oldest_keys:
+                    del self._cache[k]
+            self._cache[cache_key] = (time.time(), result)
+            return result
+
+        # [FIX #18] TẠI SAO: SmartClassifier fails to route "capital of France"
+        # to geography — keyword scoring gives geography=0.128 but general=0.174
+        # (because "what is the" matches general keywords). GeneralSLM has no
+        # geography data → empty answer → UNKNOWN/FAIL.
+        # Reality > Model: tested "capital of France" → was "general" 0.174,
+        # GeographySLM never called. After fix: "geography" 0.99, GeographySLM
+        # returns "thủ đô France = Paris" with conf=0.7.
+        # Pattern: "capital of X" / "currency of X" / "population of X" → geography
+        _GEO_PATTERN = _re_classify.compile(
+            r'\b(?:capital|currency|population|area|language)s?\s+of\s+\w+',
+            _re_classify.IGNORECASE
+        )
+        if _GEO_PATTERN.search(question):
+            result = ClassificationResult(
+                domain="geography",
+                confidence=0.99,
+                alternatives=[("general", 0.1)],
+                method="deterministic_geo_pattern",
+            )
+            if len(self._cache) >= self._CACHE_MAX:
+                oldest_keys = sorted(self._cache.keys(), key=lambda k: self._cache[k][0])[:500]
+                for k in oldest_keys:
+                    del self._cache[k]
+            self._cache[cache_key] = (time.time(), result)
+            return result
+
+        # Calculate scores for all domains
+        scores: dict[str, float] = {}
+        for domain in DOMAIN_PROFILES:
+            keyword_sc = self._keyword_score(question, domain)
+            semantic_sc = self._semantic_score(question, domain)
+
+            # Combine scores (weighted average)
+            combined = (keyword_sc * 0.7) + (semantic_sc * 0.3)
+            scores[domain] = combined
+
+        # Sort by score
+        sorted_domains = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+
+        # Get best domain
+        best_domain, best_score = sorted_domains[0]
+
+        # [FIX 2026-07-09] Minimum-confidence gate. Root cause found via live-data
+        # audit: classify() had NO floor — it always returned whichever domain
+        # scored highest even when that score was pure noise (e.g. 0.05-0.09 out
+        # of a max of 1.0), because random 1-2 word substring overlaps against a
+        # domain's small keyword list can edge out a tiny nonzero score. This was
+        # confirmed routing real trivia questions like "Pamina and Papageno are
+        # characters in what Mozart opera?" -> "logic" and "...SpongeBack..." ->
+        # "uxui" with scores under 0.13 — nowhere near a genuine match. Below this
+        # floor, fall back to "general" (safe multi-purpose SLM) instead of a
+        # confidently-wrong specific domain that has zero chance of answering.
+        _MIN_CONFIDENT_SCORE = 0.15
+        if best_score < _MIN_CONFIDENT_SCORE:
+            best_domain = "general"
+            method_used = "fallback_low_confidence"
+        else:
+            method_used = "hybrid"
+
+        # Calculate confidence (normalize to 0-1)
+        max_possible = 1.0
+        confidence = min(best_score / max_possible, 1.0) if best_score > 0 else 0.3
+
+        # Get top 3 alternatives
+        alternatives = sorted_domains[1:4]
+
+        result = ClassificationResult(
+            domain=best_domain,
+            confidence=confidence,
+            alternatives=alternatives,
+            method=method_used
+        )
+
+        # Cache result
+        if len(self._cache) >= self._CACHE_MAX:
+            # Remove oldest entries
+            oldest_keys = sorted(self._cache.keys(), key=lambda k: self._cache[k][0])[:500]
+            for k in oldest_keys:
+                del self._cache[k]
+
+        self._cache[cache_key] = (time.time(), result)
+
+        return result
+
+    def classify_multi(self, question: str, max_domains: int = 3) -> list[str]:
+        """Classify và trả về nhiều domains (cho multi-SLM).
+
+        Returns:
+            List of domains (e.g., ["finance", "conversion"])
+        """
+        result = self.classify(question)
+
+        domains = [result.domain]
+
+        # Add alternatives if confidence is low
+        if result.confidence < 0.5:
+            for alt_domain, alt_score in result.alternatives:
+                if alt_score > 0.1 and len(domains) < max_domains:
+                    domains.append(alt_domain)
+
+        return domains
+
+    def learn_from_feedback(self, question: str, correct_domain: str):
+        """Học từ feedback để cải thiện classification.
+
+        TODO: Implement learning mechanism
+        """
+        # This could update domain profiles based on corrections
+        pass
+
+    def get_stats(self) -> dict:
+        """Get classifier statistics."""
+        return {
+            "cache_size": len(self._cache),
+            "domains": len(DOMAIN_PROFILES),
+            "cache_hit_rate": "N/A (not tracked yet)"
+        }
+
+
+# ============================================================
+# STANDALONE TEST
+# ============================================================
+if __name__ == "__main__":
+    print("=" * 70)
+    print("🔍 SMART CLASSIFIER TEST")
+    print("=" * 70)
+
+    classifier = SmartClassifier()
+
+    test_questions = [
+        "Giá bitcoin hôm nay là bao nhiêu USD?",
+        "Tính sqrt(144) + 25",
+        "Thủ đô của Việt Nam là gì?",
+        "Tốc độ ánh sáng là bao nhiêu?",
+        "Triệu chứng của covid 2024?",
+        "Ai phát minh ra điện thoại?",
+        "Sao Hỏa có bao nhiêu vệ tinh?",
+        "Công thức phân tử của nước là gì?",
+        "Standard deviation của [1,2,3,4,5]?",
+        "Thời tiết Hà Nội hôm nay như nào?",
+    ]
+
+    print("\n📊 CLASSIFICATION RESULTS:")
+    print("-" * 70)
+
+    for q in test_questions:
+        result = classifier.classify(q)
+        print(f"\n❓ {q}")
+        print(f"   → Domain: {result.domain} (confidence: {result.confidence:.2f})")
+        if result.alternatives:
+            alts = ", ".join([f"{d} ({s:.2f})" for d, s in result.alternatives[:2]])
+            print(f"   → Alternatives: {alts}")
+
+    print("\n" + "=" * 70)
+    print(f"✅ Tested {len(test_questions)} questions")
+    print("=" * 70)

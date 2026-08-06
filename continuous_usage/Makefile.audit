@@ -1,0 +1,31 @@
+# [G5-FIX] Makefile.audit — 8 targets for manual audit
+# Usage: make -f continuous_usage/Makefile.audit <target>
+
+.PHONY: ruff bandit vulture flake8 secrets pip-audit pyright all clean
+
+ruff:
+	ruff check scp/ --statistics
+
+bandit:
+	bandit -r scp/ -ll -q
+
+vulture:
+	vulture scp/ --min-confidence 60
+
+flake8:
+	flake8 scp/ --select B,Bugbear,DUO --max-line-length 120
+
+secrets:
+	detect-secrets scan --all-files --force-use-all-plugins scp/
+
+pip-audit:
+	pip-audit -r requirements.txt
+
+pyright:
+	pyright scp/ --warnings
+
+all: ruff bandit vulture flake8 secrets pip-audit pyright
+	@echo "=== All audit tools complete ==="
+
+clean:
+	rm -rf .ruff_cache .mypy_cache .pyre .pytest_cache

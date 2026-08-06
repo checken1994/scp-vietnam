@@ -1,0 +1,17 @@
+# PyRIT configuration for SCP V105
+target:
+  type: openai
+  endpoint: http://127.0.0.1:8000/v1/chat/completions
+  model: scp-v99
+  api_key: dummy
+
+attack_strategies:
+  - prompt_injection
+  - jailbreak
+  - data_exfiltration
+  - role_override
+  - multilingual
+
+prompts_per_strategy: 30
+concurrency: 5
+timeout: 30

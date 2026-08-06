@@ -1,0 +1,1 @@
+# Attack scripts moved to /attack_payloads/
