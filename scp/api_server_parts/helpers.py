@@ -255,11 +255,9 @@ def _safe_fetch_url(
         _SafeRedirectHandler,
         urllib.request.ProxyHandler({}),
     )
-<<<<<<< HEAD
+
     req = urllib.request.Request(url, headers={"User-Agent": _SCP_SAFE_FETCH_UA})  # noqa: S310 — scheme validated above
-=======
-    req = urllib.request.Request(url, headers={"User-Agent": _SCP_SAFE_FETCH_UA})
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
+
     try:
         with opener.open(req, timeout=timeout) as resp:
             chunks: list[bytes] = []
@@ -277,11 +275,9 @@ def _safe_fetch_url(
         raise
     except urllib.error.HTTPError as exc:
         raise ValueError(f"HTTP error: {exc.code}") from exc
-<<<<<<< HEAD
+
     except (urllib.error.URLError, OSError) as exc:  # [FALSE-POS-FIX] B014: TimeoutError IS OSError in Python 3 — redundant
-=======
-    except (urllib.error.URLError, TimeoutError, OSError) as exc:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
+
         raise ValueError(f"fetch error: {exc}") from exc
 
 
@@ -488,11 +484,9 @@ def get_judge() -> RealityJudge:
                 _partitioner = DataPartitioner("data")
                 # ThreeTierCache nhận db_path (Path), KHÔNG nhận partitioner.
                 from scp.core.partition.shard import DATA_DIR as _V1044_DATA_DIR
-<<<<<<< HEAD
+
                 _cache = ThreeTierCache(db_path=str(_V1044_DATA_DIR / "v13.db"))  # noqa: F841 — side-effect: keep cache object alive (ThreeTierCache registers internally)
-=======
-                _cache = ThreeTierCache(db_path=str(_V1044_DATA_DIR / "v13.db"))
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
+
                 # [ROOT-FIX-A] ThreeTierCache (scp/core/partition/rotate.py) has NO
                 # `attach_partitioner()` method — the previous `if hasattr(...)` block
                 # was dead code that silently no-op'd. Removed to keep the init path

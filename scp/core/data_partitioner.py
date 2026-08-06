@@ -120,21 +120,21 @@ if __name__ == "__main__":
         partitioner.write_knowledge("geography", {"entity": "thủ đô VN",
                                                     "value": "Hà Nội"})
         records = partitioner.read_knowledge("geography")
-<<<<<<< HEAD
+
         assert len(records) == 1  # noqa: S101
-=======
+
         assert len(records) == 1
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
+
         print(f"  ✓ knowledge written + read: {records[0]['value']}")
 
         partitioner.write_error({"q": "test", "type": "low_confidence"})
         errors = partitioner.read_errors_today()
-<<<<<<< HEAD
+
         assert len(errors) == 1  # noqa: S101
-=======
+
         if not (len(errors) == 1):
             raise AssertionError(f'Assertion failed: len(errors) == 1')
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
+
         print("  ✓ errors written + read")
 
         partitioner.write_bypass({"type": "BYPASS", "attack": "jailbreak"})
@@ -146,12 +146,11 @@ if __name__ == "__main__":
 
         # Miss first
         r = cache.get("thủ đô VN là gì?")
-<<<<<<< HEAD
+
         assert r is None, f"Should be None on first call, got {r}"  # noqa: S101
-=======
+
         if not (r is None, f"Should be None on first call, got {r}"):
             raise AssertionError(f'Assertion failed: r is None, f"Should be None on first call, got {r}"')
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         print("  ✓ cold miss: None")
 
         # Put
@@ -164,34 +163,23 @@ if __name__ == "__main__":
 
         # Hit HOT
         r = cache.get("thủ đô VN là gì?")
-<<<<<<< HEAD
+
         assert r is not None and r["verdict"] == "PASS"  # noqa: S101
         assert r["source"] == "fresh"  # noqa: S101
         stats = cache.stats()
         assert stats["hot_hits"] == 1  # noqa: S101
-=======
-        assert r is not None and r["verdict"] == "PASS"
-        assert r["source"] == "fresh"
-        stats = cache.stats()
-        assert stats["hot_hits"] == 1
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
+
         print(f"  ✓ HOT hit: {r['verdict']} (source={r['source']})")
 
         # Clear HOT, hit WARM
         cleared = cache.clear_hot()
-<<<<<<< HEAD
+
         assert cleared == 1  # noqa: S101
         r = cache.get("thủ đô VN là gì?")
         assert r is not None and r["source"] == "warm"  # noqa: S101
         stats = cache.stats()
         assert stats["warm_hits"] == 1  # noqa: S101
-=======
-        assert cleared == 1
-        r = cache.get("thủ đô VN là gì?")
-        assert r is not None and r["source"] == "warm"
-        stats = cache.stats()
-        assert stats["warm_hits"] == 1
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
+
         print("  ✓ WARM hit after clear_hot")
 
         # Test 3: Bypass Lessons
@@ -206,47 +194,36 @@ if __name__ == "__main__":
             "suggested_rule_type": "pattern",
         }
         r = lessons_store.record_lesson(bypass)
-<<<<<<< HEAD
+
         assert r["new"] is True  # noqa: S101
-=======
-        assert r["new"] is True
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
+
         print(f"  ✓ recorded new lesson: {r['bypass_id']}")
 
         # Update (same bypass)
         r = lessons_store.record_lesson(bypass)
-<<<<<<< HEAD
+
         assert r["updated"] is True  # noqa: S101
-=======
-        assert r["updated"] is True
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
+
+
         print("  ✓ updated existing lesson")
 
         # Get pending
         pending = lessons_store.get_pending_rules()
-<<<<<<< HEAD
+
         assert len(pending) == 1  # noqa: S101
         assert pending[0]["suggested_pattern"] == bypass["suggested_rule_pattern"]  # noqa: S101
-=======
-        assert len(pending) == 1
-        assert pending[0]["suggested_pattern"] == bypass["suggested_rule_pattern"]
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
+
         print(f"  ✓ pending rules: {len(pending)}")
 
         # Activate
         ok = lessons_store.activate_rule("test123", "rule-1",
                                           tested_against=47, fp_rate=0.0)
-<<<<<<< HEAD
+
         assert ok  # noqa: S101
         stats = lessons_store.get_stats()
         assert stats["rules_activated"] == 1  # noqa: S101
         assert stats["total_lessons"] == 1  # noqa: S101
-=======
-        assert ok
-        stats = lessons_store.get_stats()
-        assert stats["rules_activated"] == 1
-        assert stats["total_lessons"] == 1
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
+
         print(f"  ✓ activated: {stats}")
 
         # Test 4: TTL Expirer
@@ -265,7 +242,7 @@ if __name__ == "__main__":
                                   "type": "BYPASS"}) + "\n")
         migration = migrate_old_to_new(data_dir, db_path, dry_run=True)
         print(f"  ✓ migration dry_run: {migration['migrated']}")
-<<<<<<< HEAD
+
         assert len(migration["migrated"]) >= 1  # noqa: S101
 
         # Test 6: detect_domain
@@ -274,22 +251,14 @@ if __name__ == "__main__":
         assert detect_domain("Tính 2+3?") == "math"  # noqa: S101
         assert detect_domain("Công thức phân tử của nước?") == "chemistry"  # noqa: S101
         assert detect_domain("Hello world") == "general"  # noqa: S101
-=======
-        assert len(migration["migrated"]) >= 1
 
-        # Test 6: detect_domain
-        print("\nTest 6: detect_domain")
-        assert detect_domain("Thủ đô VN là gì?") == "geography"
-        assert detect_domain("Tính 2+3?") == "math"
-        assert detect_domain("Công thức phân tử của nước?") == "chemistry"
-        assert detect_domain("Hello world") == "general"
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         print("  ✓ domain detection works")
 
         shutil.rmtree(tmpdir, ignore_errors=True)
 
         print("\n✓ V104.4 all tests complete.")
     except Exception:
+
         import traceback
         traceback.print_exc()
         import shutil
