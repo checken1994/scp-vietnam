@@ -1,0 +1,32 @@
+# SCP systemd service — chạy 24/7 trên Linux VPS
+# Install: cp scp.service /etc/systemd/system/
+# Enable:  systemctl daemon-reload && systemctl enable scp && systemctl start scp
+
+[Unit]
+Description=SCP Self-Correcting Pipeline (24/7)
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/scp
+ExecStart=/usr/bin/python3 /opt/scp/run_247.py foreground --interval 200
+Restart=always
+RestartSec=10
+StandardOutput=append:/opt/scp/logs/scp_v14.log
+StandardError=append:/opt/scp/logs/scp_v14_error.log
+
+# Environment
+Environment=PYTHONUNBUFFERED=1
+Environment=SCP_COGNITIVE_LAYERS=all
+
+# Resource limits
+MemoryMax=512M
+CPUQuota=80%
+
+# Logging
+SyslogIdentifier=scp
+
+[Install]
+WantedBy=multi-user.target

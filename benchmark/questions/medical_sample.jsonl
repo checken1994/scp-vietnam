@@ -1,0 +1,2 @@
+{"id":"med_0001","category":"medical","question":"thuốc aspirin tác dụng gì","expected_answer":"Giảm đau, chống viêm, chống huyết khối","answer_type":"string","verification_method":"pubmed","difficulty":"medium"}
+{"id":"med_0002","category":"medical","question":"thuốc paracetamol dùng để gì","expected_answer":"Giảm đau, hạ sốt","answer_type":"string","verification_method":"localdb","difficulty":"easy"}

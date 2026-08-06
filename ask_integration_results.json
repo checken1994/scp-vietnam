@@ -1,0 +1,32 @@
+[
+  {
+    "test": "Health check",
+    "status": "PASS",
+    "data": "{'status': 'ok', 'version': '14.0.0', 'slms': 53, 'v98_modules': 10, 'routes': 66, 'modules': '136+ Python files', 'data_size_mb': 6.2, 'multi_turn_tracker': {'total_tracked': 0, 'suspicious_detected': 0, 'by_pattern': {}, 'active_sessions': 0}, 'cross_language': {'patterns_transferred': 0, 'languages': ['en', 'zh', 'ja', 'ko', 'fr', 'de', 'es', 'ar'], 'by_language': {}}, 'fact_checker': {'claims_checked': 0, 'claims_verified': 0, 'claims_false': 0, 'by_source': {}}}"
+  },
+  {
+    "test": "Basic /ask (2+2)",
+    "status": "PASS",
+    "data": "{'verdict': 'UNKNOWN', 'final_answer': '2+2 = 4\\n\\n\ud83d\udca1 SCP \u0111\u00e3 ki\u1ec3m tra:\\n  \u2022 MathSLM: 2+2 = 4\\n  \u2022 UniversalSLM: 2+2 (car body style) A car-body style that has a seat each f\\n\ud83d\udcca Confidence: 99% \u2014 ch\u01b0a \u0111\u1ee7 ng\u01b0\u1ee1ng (c\u1ea7n \u226570%)', 'confidence': 0.99, 'domain': 'math', 'falsification_status': 'OUT_OF_SCOPE', 'governance_decision': 'ESCALATE', 'v98_guard': {'is_poisoned': False, 'risk_score': 0.0, 'detected_patterns': [], 'recommendation': 'continue'}, 'v98_classification': {'actor': 'bot_legacy', 'attack_t"
+  },
+  {
+    "test": "Geography (France)",
+    "status": "PASS",
+    "data": "{'verdict': 'PARTIAL', 'final_answer': 'th\u1ee7 \u0111\u00f4 France = Paris', 'confidence': 0.49999999999999994, 'domain': 'geography', 'falsification_status': 'OUT_OF_SCOPE', 'governance_decision': 'UPHOLD', 'v98_guard': {'is_poisoned': False, 'risk_score': 0.0, 'detected_patterns': [], 'recommendation': 'continue'}, 'v98_classification': {'actor': 'bot_legacy', 'attack_type': 'none', 'severity': 'medium', 'confidence': 0.7, 'strong_signals': ['ua:python-requests'], 'weak_signals': []}, 'v98_attack_policy': "
+  },
+  {
+    "test": "Fact-check (Earth flat)",
+    "status": "PASS",
+    "data": "{'verdict': 'UNKNOWN', 'final_answer': '[SCP] T\u00f4i kh\u00f4ng c\u00f3 \u0111\u1ee7 d\u1eef li\u1ec7u \u0111\u1ec3 tr\u1ea3 l\u1eddi c\u00e2u h\u1ecfi n\u00e0y. \u0110\u00e2y l\u00e0 ngo\u00e0i ph\u1ea1m vi ki\u1ebfn th\u1ee9c hi\u1ec7n t\u1ea1i c\u1ee7a t\u00f4i.\\n\\n\ud83d\udca1 SCP \u0111\u00e3 ki\u1ec3m tra:\\n  (kh\u00f4ng c\u00f3 SLM n\u00e0o tr\u1ea3 l\u1eddi)\\n\ud83d\udcca Confidence: 0% \u2014 ch\u01b0a \u0111\u1ee7 ng\u01b0\u1ee1ng (c\u1ea7n \u226570%)', 'confidence': 0.0, 'domain': 'reality', 'falsification_status': 'OUT_OF_SCOPE', 'governance_decision': 'ESCALATE', 'v98_guard': {'is_poisoned': False, 'risk_score': 0.0, 'detected_patterns': [], 'recommendation': 'continue'}, 'v98_classification': {'actor':"
+  },
+  {
+    "test": "Attack detection",
+    "status": "PASS",
+    "data": "{'verdict': 'FAIL', 'final_answer': '[SCP: Answer withheld \u2014 verdict: FAIL]', 'confidence': 0.0, 'domain': 'security', 'falsification_status': None, 'governance_decision': None, 'v98_guard': None, 'v98_classification': None, 'v98_attack_policy': None, 'v98_counter_executed': None, 'v98_canary_token': None, 'v98_bypass_recorded': None, 'elapsed_ms': 29.2, 'session_id': 'e912272f-bef8-47df-9ee2-966ad7758af3', 'slm_trace': [], 'phase_timings': {}, 'reasoning': '[SCP: Answer withheld]', 'slm_respons"
+  },
+  {
+    "test": "Encoded attack",
+    "status": "PASS",
+    "data": "{'verdict': 'FAIL', 'final_answer': '[SCP: Answer withheld \u2014 verdict: FAIL]', 'confidence': 0.0, 'domain': 'security', 'falsification_status': None, 'governance_decision': None, 'v98_guard': None, 'v98_classification': None, 'v98_attack_policy': None, 'v98_counter_executed': None, 'v98_canary_token': None, 'v98_bypass_recorded': None, 'elapsed_ms': 29.9, 'session_id': '5788fba6-6e6d-492d-9e44-4c47bb8e3c85', 'slm_trace': [], 'phase_timings': {}, 'reasoning': '[SCP: Answer withheld]', 'slm_respons"
+  }
+]

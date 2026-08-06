@@ -1,0 +1,24 @@
+# Ruff configuration for SCP Viet Nam
+
+line-length = 120
+target-version = "py39"
+
+[lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear (includes B006: mutable default args, B902: blind except)
+]
+ignore = [
+    "E402",   # Module level import not at top of file (needed for sys.path manipulation)
+    "E501",   # Line too long (handled by line-length setting)
+    "E701",   # Multiple statements on one line (legacy code style)
+]
+
+[lint.per-file-ignores]
+"__init__.py" = ["F401", "F811"]  # Allow unused imports in __init__.py
+"scripts/*" = ["E402", "F401", "E701"]  # Allow in scripts (RC-1 FIX: removed E722)
+"tests/*" = ["E402", "F401"]

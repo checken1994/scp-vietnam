@@ -1,0 +1,138 @@
+"""
+[OPT-11] GutenbergDataSource — Project Gutenberg books API (Gutendex).
+
+DNA SCP: literature / book data needs verifiable source.
+Gutendex is a free, no-key API that mirrors Project Gutenberg's 70k+ books.
+Supports: book titles, authors, literary works, download counts.
+"""
+from __future__ import annotations
+
+import logging
+
+from scp.interfaces.data_source import IDataSource
+
+logger = logging.getLogger("scp.data_sources.gutenberg")
+
+
+class GutenbergDataSource(IDataSource):
+    """Gutendex API — Project Gutenberg books (no key required)."""
+
+    BASE_URL = "https://gutendex.com"
+
+    def __init__(self):
+        self.enabled = True
+        logger.info("[Gutenberg] enabled (no API key required)")
+
+    @property
+    def name(self) -> str:
+        return "gutenberg"
+
+    @property
+    def priority(self) -> int:
+        return 15  # lower priority — literature niche
+
+    @property
+    def ttl(self) -> int:
+        return 86400  # 24h cache — book catalog doesn't change fast
+
+    def get_supported_intents(self) -> list[str]:
+        return ["book", "author", "literature", "novel", "literary_work"]
+
+    def can_handle(self, intent: str, entity: str = None) -> bool:
+        if not self.enabled:
+            return False
+        if intent in self.get_supported_intents():
+            return True
+        # Question-based (legacy compat)
+        question = intent or ""
+        q = question.lower()
+        keywords = ["book", "sách", "novel", "tiểu thuyết", "author", "tác giả",
+                    "literature", "văn học", "gutenberg", "shakespeare", "dickens",
+                    "tolstoy", "austen"]
+        return any(k in q for k in keywords)
+
+    def fetch(self, intent: str, entity: str, **kwargs) -> dict | None:
+        """IDataSource interface — delegate to query()."""
+        return self.query(entity or intent)
+
+    def health_check(self) -> bool:
+        return self.enabled
+
+    def query(self, question: str) -> dict | None:
+        if not self.enabled:
+            return None
+        try:
+            import re
+            # Try to extract author or title from question
+            # "Who wrote X?" → X
+            m = re.match(r'who\s+wrote\s+(.+?)\?*$', question, re.IGNORECASE)
+            if m:
+                return self._query_book(m.group(1).strip())
+            # "Sách của X" / "books by X"
+            m = re.match(r'(?:sách|books?)\s+(?:của|by)\s+(.+?)\?*$', question, re.IGNORECASE)
+            if m:
+                return self._query_author(m.group(1).strip())
+            # "Author of X" → X
+            m = re.match(r'author\s+of\s+(.+?)\?*$', question, re.IGNORECASE)
+            if m:
+                return self._query_book(m.group(1).strip())
+            # Generic — try searching the whole question
+            return self._query_book(question.strip())
+        except Exception as e:
+            logger.debug(f"[Gutenberg] query failed: {e}")
+            return None
+
+    def _query_book(self, title: str) -> dict | None:
+        import httpx
+        try:
+            r = httpx.get(f"{self.BASE_URL}/books",
+                          params={"search": title}, timeout=10)
+            r.raise_for_status()
+            data = r.json()
+            results = data.get("results", [])
+            if results:
+                book = results[0]
+                return {
+                    "value": book.get("title", ""),
+                    "source": "gutenberg",
+                    "metadata": {
+                        "authors": [a.get("name", "") for a in book.get("authors", [])],
+                        "download_count": book.get("download_count", 0),
+                        "languages": book.get("languages", []),
+                        "gutenberg_id": book.get("id", 0),
+                        "formats": list(book.get("formats", {}).keys())[:3],
+                    },
+                }
+        except Exception as e:
+            logger.debug(f"[Gutenberg] book '{title}' query failed: {e}")
+        return None
+
+    def _query_author(self, author: str) -> dict | None:
+        import httpx
+        try:
+            r = httpx.get(f"{self.BASE_URL}/books",
+                          params={"search": author}, timeout=10)
+            r.raise_for_status()
+            data = r.json()
+            results = data.get("results", [])
+            if results:
+                # Return top 3 books by this author
+                top_books = results[:3]
+                return {
+                    "value": f"{len(results)} books found, top: {top_books[0].get('title', '')}",
+                    "source": "gutenberg",
+                    "metadata": {
+                        "author_searched": author,
+                        "book_count": data.get("count", 0),
+                        "top_books": [
+                            {
+                                "title": b.get("title", ""),
+                                "download_count": b.get("download_count", 0),
+                                "gutenberg_id": b.get("id", 0),
+                            } for b in top_books
+                        ],
+                    },
+                }
+        except Exception as e:
+            logger.debug(f"[Gutenberg] author '{author}' query failed: {e}")
+        return None

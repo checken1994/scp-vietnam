@@ -1,0 +1,2 @@
+{"id":"cyber_0001","category":"cybersecurity","question":"CVE-2021-44228 lỗ hổng gì","expected_answer":"Log4Shell","answer_type":"string","verification_method":"cve_api","difficulty":"hard"}
+{"id":"cyber_0002","category":"cybersecurity","question":"lỗ hổng XSS là gì","expected_answer":"Cross-Site Scripting","answer_type":"string","verification_method":"localdb","difficulty":"medium"}

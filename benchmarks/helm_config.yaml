@@ -1,0 +1,4 @@
+# HELM — Holistic Evaluation of Language Models (Stanford CRFM)
+# Run: helm-run --conf-path benchmarks/helm_config.yaml --suite v1
+model: "openai/scp-v99"
+endpoint: "http://127.0.0.1:8000/v1/chat/completions"

@@ -1,0 +1,134 @@
+"""
+[OPT-12] ERICDataSource — Education Resources Information Center API.
+
+DNA SCP: education research / pedagogy claims need verifiable source.
+ERIC is the world's largest education database, hosted by US Dept of Education.
+API key optional — without it, rate limit is 50 req/day (vs 5000 with key).
+Free key: https://eric.ed.gov/?api
+"""
+from __future__ import annotations
+
+import logging
+import os
+
+from scp.interfaces.data_source import IDataSource
+
+logger = logging.getLogger("scp.data_sources.eric")
+
+
+class ERICDataSource(IDataSource):
+    """ERIC API — education research, pedagogy papers."""
+
+    BASE_URL = "https://api.eric.ed.gov/v1rest"
+
+    def __init__(self):
+        self.api_key = os.environ.get("ERIC_API_KEY", "")
+        # ERIC works without key (rate-limited) — so enabled even without key
+        self.enabled = True
+        if not self.api_key:
+            logger.info("[ERIC] enabled without key — rate-limited to 50 req/day. "
+                        "Set ERIC_API_KEY for 5000 req/day.")
+        else:
+            logger.info("[ERIC] enabled with API key (5000 req/day)")
+
+    @property
+    def name(self) -> str:
+        return "eric"
+
+    @property
+    def priority(self) -> int:
+        return 15  # lower priority — education niche
+
+    @property
+    def ttl(self) -> int:
+        return 3600  # 1h cache
+
+    def get_supported_intents(self) -> list[str]:
+        return ["education", "pedagogy", "research_paper", "curriculum",
+                "teaching_method", "academic"]
+
+    def can_handle(self, intent: str, entity: str = None) -> bool:
+        if not self.enabled:
+            return False
+        if intent in self.get_supported_intents():
+            return True
+        # Question-based (legacy compat)
+        question = intent or ""
+        q = question.lower()
+        keywords = ["education", "giáo dục", "pedagogy", "sư phạm",
+                    "curriculum", "giáo trình", "teaching method", "phương pháp giảng dạy",
+                    "school", "trường học", "student", "sinh viên", "học sinh",
+                    "eric", "research paper", "luận văn"]
+        return any(k in q for k in keywords)
+
+    def fetch(self, intent: str, entity: str, **kwargs) -> dict | None:
+        """IDataSource interface — delegate to query()."""
+        return self.query(entity or intent)
+
+    def health_check(self) -> bool:
+        return self.enabled
+
+    def query(self, question: str) -> dict | None:
+        if not self.enabled:
+            return None
+        try:
+            # ERIC query syntax: search field using `query` parameter
+            # Examples: "title:reading", "author:smith", or full text search
+            # For simplicity, do a full-text search on the question
+            search_term = self._extract_search_term(question)
+            if not search_term:
+                return None
+            return self._search(search_term)
+        except Exception as e:
+            logger.debug(f"[ERIC] query failed: {e}")
+            return None
+
+    def _extract_search_term(self, question: str) -> str:
+        """Extract meaningful search term from question."""
+        import re
+        # Strip common question words
+        cleaned = re.sub(r'(?i)\b(what|who|when|where|how|why|is|are|the|a|an)\b', '', question)
+        cleaned = re.sub(r'[?.,!;:\'"]', '', cleaned).strip()
+        # Take up to 5 words
+        words = cleaned.split()[:5]
+        return ' '.join(words) if words else ""
+
+    def _search(self, search_term: str) -> dict | None:
+        import httpx
+        try:
+            params = {
+                "search": search_term,
+                "format": "json",
+                "rows": 5,  # top 5 results
+            }
+            if self.api_key:
+                params["api_key"] = self.api_key
+            r = httpx.get(f"{self.BASE_URL}/search", params=params, timeout=10)
+            r.raise_for_status()
+            data = r.json()
+            results = data.get("response", {}).get("docs", [])
+            if results:
+                top = results[0]
+                return {
+                    "value": top.get("title_t", [""])[0] if isinstance(top.get("title_t"), list) else top.get("title_t", ""),
+                    "source": "eric",
+                    "metadata": {
+                        "search_term": search_term,
+                        "total_results": data.get("response", {}).get("numFound", 0),
+                        "top_results": [
+                            {
+                                "title": (r.get("title_t", [""])[0]
+                                          if isinstance(r.get("title_t"), list)
+                                          else r.get("title_t", "")),
+                                "author": (r.get("author_t", [""])[0]
+                                           if isinstance(r.get("author_t"), list)
+                                           else r.get("author_t", "")),
+                                "publication_year": r.get("publicationdateyear_t", ""),
+                                "eric_id": r.get("id", ""),
+                            } for r in results[:3]
+                        ],
+                    },
+                }
+        except Exception as e:
+            logger.debug(f"[ERIC] search '{search_term}' failed: {e}")
+        return None

@@ -1,0 +1,6 @@
+{
+  "name": "SCP-GLUE",
+  "description": "GLUE/SuperGLUE adapted for SCP verification tasks",
+  "endpoint": "http://127.0.0.1:8000/ask",
+  "metrics": ["accuracy", "latency", "verdict_distribution"]
+}

@@ -1,0 +1,3 @@
+{"id":"geo_0001","category":"geography","question":"thủ đô Việt Nam","expected_answer":"Hà Nội","answer_type":"string","verification_method":"localdb+wikipedia","difficulty":"easy"}
+{"id":"geo_0002","category":"geography","question":"thủ đô Pháp","expected_answer":"Paris","answer_type":"string","verification_method":"localdb+wikipedia","difficulty":"easy"}
+{"id":"geo_0003","category":"geography","question":"thủ đô Nhật Bản","expected_answer":"Tokyo","answer_type":"string","verification_method":"localdb+wikipedia","difficulty":"easy"}

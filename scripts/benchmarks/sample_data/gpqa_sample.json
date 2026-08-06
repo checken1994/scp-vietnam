@@ -1,0 +1,62 @@
+[
+  {
+    "id": "gpqa_1",
+    "domain": "physics",
+    "question": "A quantum harmonic oscillator has a ground state energy of 0.5 ℏω. What is the energy of the first excited state?",
+    "answer": "1.5 ℏω"
+  },
+  {
+    "id": "gpqa_2",
+    "domain": "chemistry",
+    "question": "In organic chemistry, what is the hybridization of the carbon atom in methane (CH4)?",
+    "answer": "sp3"
+  },
+  {
+    "id": "gpqa_3",
+    "domain": "biology",
+    "question": "What is the name of the enzyme that unwinds the DNA double helix during replication?",
+    "answer": "helicase"
+  },
+  {
+    "id": "gpqa_4",
+    "domain": "mathematics",
+    "question": "What is the cardinality of the set of all real numbers between 0 and 1?",
+    "answer": "uncountable"
+  },
+  {
+    "id": "gpqa_5",
+    "domain": "physics",
+    "question": "What is the name of the paradox that arises when considering the entanglement of particles that are space-like separated?",
+    "answer": "EPR paradox"
+  },
+  {
+    "id": "gpqa_6",
+    "domain": "chemistry",
+    "question": "What is the IUPAC name for the compound commonly known as 'aspirin'?",
+    "answer": "acetylsalicylic acid"
+  },
+  {
+    "id": "gpqa_7",
+    "domain": "biology",
+    "question": "What is the name of the process by which a cell engulfs large particles or whole cells?",
+    "answer": "phagocytosis"
+  },
+  {
+    "id": "gpqa_8",
+    "domain": "mathematics",
+    "question": "What is the value of the Euler-Mascheroni constant (γ) approximately?",
+    "answer": "0.5772"
+  },
+  {
+    "id": "gpqa_9",
+    "domain": "physics",
+    "question": "What is the name of the phenomenon where light is scattered by particles much smaller than its wavelength?",
+    "answer": "Rayleigh scattering"
+  },
+  {
+    "id": "gpqa_10",
+    "domain": "chemistry",
+    "question": "What is the bond angle in a perfect tetrahedral molecule like methane (CH4)?",
+    "answer": "109.5"
+  }
+]

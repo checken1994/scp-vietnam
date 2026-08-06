@@ -1,0 +1,74 @@
+# [G5-FIX P0-10] GitHub Actions — Layer 2 (mỗi PR, ~5 min)
+# Previously FABRICATED (doc claimed .github/workflows/why-audit-ci.yml existed, file did not). Now real.
+name: SCP Audit (PR)
+
+on:
+  pull_request:
+    branches: [main, master, develop]
+  push:
+    branches: [main]
+
+jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install ruff bandit vulture flake8 flake8-bugbear dlint detect-secrets pip-audit pyright
+
+      - name: Ruff check
+        run: ruff check scp/ --output-format=github
+
+      - name: Bandit (HIGH+ severity)
+        run: bandit -r scp/ -ll || true  # warn-only first, enforce later
+
+      - name: Vulture (dead code)
+        run: vulture scp/ --min-confidence 100
+
+      - name: flake8 (bugbear + dlint)
+        run: flake8 scp/ --select B,Bugbear,DUO --max-line-length 120
+
+      - name: detect-secrets
+        run: detect-secrets scan --all-files --force-use-all-plugins scp/ | python3 -c "import json,sys; d=json.load(sys.stdin); r=d.get('results',{}); exit(1 if r else 0)"
+
+      - name: pip-audit (CVE check)
+        run: pip-audit -r requirements.txt
+
+      - name: Pyright (type check)
+        run: pyright scp/ --warnings || true  # warn-only (745 errors to fix gradually)
+
+  security-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pytest pytest-asyncio httpx
+
+      - name: Run external audit tests
+        run: pytest scp/tests/external_audit/ -v --tb=short
+
+      - name: Run DNA golden tests (no silent skip)
+        run: pytest tests/test_golden_23.py -v --tb=short
+        # [G4-FIX P2-16] removed Makefile "-prefix + || true" pattern
+
+  protected-paths-verification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify protected paths not modified in PR
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          for file in $(git diff --name-only origin/${{ github.base_ref }} HEAD); do
+            case "$file" in
+              scp/autofix/permission.py|scp/autofix/engine.py|scp/meta/capability_levels.py|scp/meta/constitution.py|scp/api/_shared.py|scp/api/_lifespan.py)
+                echo "BLOCKED: $file is protected (G2-FIX PERM-03)"
+                exit 1
+                ;;
+            esac
+          done

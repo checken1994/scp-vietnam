@@ -1,0 +1,185 @@
+"""
+[OPT-20] GlottologDataSource — Glottolog API (languages & dialects).
+
+DNA SCP: SuperGPQA Linguistics discipline had NO dedicated DataSource — only
+the generic social.py covered languages loosely. Glottolog (Max Planck
+Institute) is the authoritative reference for the world's languages: 7k+
+languages, dialects, language families, endangerment status. Free, no key —
+fills the linguistics gap entirely.
+"""
+from __future__ import annotations
+
+import logging
+
+from scp.interfaces.data_source import IDataSource
+
+logger = logging.getLogger("scp.data_sources.glottolog")
+
+
+class GlottologDataSource(IDataSource):
+    """Glottolog API v1 — languages, dialects, language families (no key)."""
+
+    BASE_URL = "https://glottolog.org/api/v1"
+
+    def __init__(self):
+        # Glottolog API is free, no key needed
+        self.enabled = True
+        logger.info("[Glottolog] enabled (no API key required)")
+
+    @property
+    def name(self) -> str:
+        return "glottolog"
+
+    @property
+    def priority(self) -> int:
+        return 18  # mid-low — linguistics niche; primary source for language data
+
+    @property
+    def ttl(self) -> int:
+        return 86400  # 24h — Glottolog publishes yearly editions; weekly acceptable
+
+    def get_supported_intents(self) -> list[str]:
+        return ["language", "dialect", "language_family", "linguistics",
+                "endangered_language", "glottocode", "iso639"]
+
+    def can_handle(self, intent: str, entity: str = None) -> bool:
+        if not self.enabled:
+            return False
+        if intent in self.get_supported_intents():
+            return True
+        question = intent or ""
+        q = question.lower()
+        keywords = [
+            "language", "ngôn ngữ",
+            "dialect", "phương ngữ",
+            "language family", "hệ ngôn ngữ",
+            "linguistics", "ngôn ngữ học",
+            "endangered", "nguy cấp",
+            "glottolog", "glottocode",
+            "iso639", "iso 639",
+            "indoeuropean", "indo-european",
+            "sino-tibetan", "hán tạng",
+            "afroasiatic", "nam á",
+            "niger-congo", "phi",
+            "austronesian", "nam đảo",
+            "vietnamese", "tiếng việt",
+            "english", "mandarin", "spanish",
+            "arabic", "hindi", "bengali",
+        ]
+        return any(k in q for k in keywords)
+
+    def fetch(self, intent: str, entity: str, **kwargs) -> dict | None:
+        """IDataSource interface — delegate to query()."""
+        return self.query(entity or intent)
+
+    def health_check(self) -> bool:
+        return self.enabled
+
+    def query(self, question: str) -> dict | None:
+        if not self.enabled:
+            return None
+        try:
+            import re
+            # Glottocode pattern (4 lowercase letters + 4 digits)
+            m = re.search(r'\b([a-z]{4}\d{4})\b', question.lower())
+            if m:
+                return self._fetch_glottocode(m.group(1))
+            # ISO 639-3 pattern (3 lowercase letters)
+            m = re.search(r'\biso[:\s-]*639[:\s-]*(\w{3})\b', question, re.IGNORECASE)
+            if m:
+                return self._fetch_iso639(m.group(1).lower())
+            # Default — language name search
+            return self._search_language(question)
+        except Exception as e:
+            logger.debug(f"[Glottolog] query failed: {e}")
+            return None
+
+    def _fetch_glottocode(self, glottocode: str) -> dict | None:
+        import httpx
+        try:
+            r = httpx.get(f"{self.BASE_URL}/languoid/{glottocode}",
+                          timeout=10,
+                          headers={"User-Agent": "SCP-Verifier/1.0"})
+            if r.status_code != 200:
+                logger.debug(f"[Glottolog] glottocode {glottocode} returned {r.status_code}")
+                return None
+            data = r.json()
+            return {
+                "value": data.get("name", glottocode),
+                "source": "glottolog",
+                "metadata": {
+                    "name": data.get("name", ""),
+                    "glottocode": glottocode,
+                    "iso639_3": data.get("iso639-3", ""),
+                    "level": data.get("level", ""),
+                    "family": data.get("family", ""),
+                    "classification": data.get("classification", {}),
+                    "latitude": data.get("latitude"),
+                    "longitude": data.get("longitude"),
+                    "countries": data.get("countries", []),
+                    "endangerment": data.get("endangerment", {}),
+                    "urls": data.get("urls", {}),
+                },
+            }
+        except Exception as e:
+            logger.debug(f"[Glottolog] glottocode {glottocode} fetch failed: {e}")
+            return None
+
+    def _fetch_iso639(self, iso: str) -> dict | None:
+        import httpx
+        try:
+            r = httpx.get(f"{self.BASE_URL}/language",
+                          params={"iso639_3": iso},
+                          timeout=10,
+                          headers={"User-Agent": "SCP-Verifier/1.0"})
+            if r.status_code != 200:
+                return None
+            data = r.json()
+            results = data.get("results") or data if isinstance(data, list) else []
+            if isinstance(results, list) and results:
+                top = results[0]
+                return {
+                    "value": top.get("name", iso),
+                    "source": "glottolog",
+                    "metadata": {
+                        "name": top.get("name", ""),
+                        "iso639_3": iso,
+                        "glottocode": top.get("id") or top.get("glottocode", ""),
+                        "level": top.get("level", ""),
+                    },
+                }
+            return None
+        except Exception as e:
+            logger.debug(f"[Glottolog] iso639 {iso} fetch failed: {e}")
+            return None
+
+    def _search_language(self, query: str) -> dict | None:
+        import httpx
+        try:
+            r = httpx.get(f"{self.BASE_URL}/language",
+                          params={"q": query},
+                          timeout=10,
+                          headers={"User-Agent": "SCP-Verifier/1.0"})
+            if r.status_code != 200:
+                logger.debug(f"[Glottolog] search returned {r.status_code}")
+                return None
+            data = r.json()
+            results = data.get("results") if isinstance(data, dict) else data
+            if not results or (isinstance(results, list) and not results):
+                return None
+            top = results[0] if isinstance(results, list) else results
+            return {
+                "value": top.get("name", query),
+                "source": "glottolog",
+                "metadata": {
+                    "name": top.get("name", ""),
+                    "glottocode": top.get("id") or top.get("glottocode", ""),
+                    "iso639_3": top.get("iso639-3", ""),
+                    "level": top.get("level", ""),
+                    "family": top.get("family", ""),
+                    "result_count": len(results) if isinstance(results, list) else 1,
+                },
+            }
+        except Exception as e:
+            logger.debug(f"[Glottolog] language search failed: {e}")
+            return None

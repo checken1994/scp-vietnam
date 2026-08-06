@@ -1,0 +1,1 @@
+{"id":"geo_0001","category":"geology","question":"động đất gần đây","expected_answer":"USGS","answer_type":"realtime","verification_method":"usgs_api","difficulty":"hard"}

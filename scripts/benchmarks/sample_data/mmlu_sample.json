@@ -1,0 +1,107 @@
+[
+  {
+    "id": "mmlu_1",
+    "subject": "anatomy",
+    "question": "Which of the following is the most common site for the formation of a thrombus in the deep veins of the lower extremity?",
+    "choices": ["A. Popliteal vein", "B. Femoral vein", "C. Iliac vein", "D. Posterior tibial vein"],
+    "answer": "A"
+  },
+  {
+    "id": "mmlu_2",
+    "subject": "astronomy",
+    "question": "What is the approximate distance from the Earth to the Moon?",
+    "choices": ["A. 384,400 km", "B. 1,496,000 km", "C. 149,600,000 km", "D. 9.46 trillion km"],
+    "answer": "A"
+  },
+  {
+    "id": "mmlu_3",
+    "subject": "history",
+    "question": "In what year did the Berlin Wall fall, marking a significant moment in the end of the Cold War?",
+    "choices": ["A. 1987", "B. 1989", "C. 1991", "D. 1993"],
+    "answer": "B"
+  },
+  {
+    "id": "mmlu_4",
+    "subject": "mathematics",
+    "question": "What is the derivative of f(x) = 3x^3 + 2x^2 - 5x + 7?",
+    "choices": ["A. 9x^2 + 4x - 5", "B. 3x^2 + 2x - 5", "C. 9x^2 + 4x + 7", "D. 9x^2 - 5"],
+    "answer": "A"
+  },
+  {
+    "id": "mmlu_5",
+    "subject": "chemistry",
+    "question": "What is the molecular formula of glucose?",
+    "choices": ["A. C6H12O6", "B. C6H6O6", "C. C12H22O11", "D. C2H6O"],
+    "answer": "A"
+  },
+  {
+    "id": "mmlu_6",
+    "subject": "computer_science",
+    "question": "What is the time complexity of binary search on a sorted array of n elements?",
+    "choices": ["A. O(n)", "B. O(n log n)", "C. O(log n)", "D. O(1)"],
+    "answer": "C"
+  },
+  {
+    "id": "mmlu_7",
+    "subject": "geography",
+    "question": "Which is the longest river in the world?",
+    "choices": ["A. Amazon", "B. Mississippi", "C. Nile", "D. Yangtze"],
+    "answer": "C"
+  },
+  {
+    "id": "mmlu_8",
+    "subject": "physics",
+    "question": "What is the SI unit of electric current?",
+    "choices": ["A. Volt", "B. Watt", "C. Ampere", "D. Ohm"],
+    "answer": "C"
+  },
+  {
+    "id": "mmlu_9",
+    "subject": "biology",
+    "question": "Which organelle is responsible for photosynthesis in plant cells?",
+    "choices": ["A. Mitochondria", "B. Chloroplast", "C. Nucleus", "D. Ribosome"],
+    "answer": "B"
+  },
+  {
+    "id": "mmlu_10",
+    "subject": "economics",
+    "question": "What does GDP stand for?",
+    "choices": ["A. General Domestic Product", "B. Gross Domestic Product", "C. Global Domestic Product", "D. Gross Development Product"],
+    "answer": "B"
+  },
+  {
+    "id": "mmlu_11",
+    "subject": "philosophy",
+    "question": "Who wrote 'The Republic'?",
+    "choices": ["A. Aristotle", "B. Socrates", "C. Plato", "D. Epicurus"],
+    "answer": "C"
+  },
+  {
+    "id": "mmlu_12",
+    "subject": "law",
+    "question": "What does 'habeas corpus' literally mean in Latin?",
+    "choices": ["A. You have the body", "B. Let the buyer beware", "C. By the court", "D. In good faith"],
+    "answer": "A"
+  },
+  {
+    "id": "mmlu_13",
+    "subject": "medicine",
+    "question": "What is the normal resting heart rate for an adult human?",
+    "choices": ["A. 40-60 bpm", "B. 60-100 bpm", "C. 100-140 bpm", "D. 140-180 bpm"],
+    "answer": "B"
+  },
+  {
+    "id": "mmlu_14",
+    "subject": "psychology",
+    "question": "Who is considered the founder of psychoanalysis?",
+    "choices": ["A. Carl Jung", "B. Sigmund Freud", "C. B.F. Skinner", "D. Ivan Pavlov"],
+    "answer": "B"
+  },
+  {
+    "id": "mmlu_15",
+    "subject": "art",
+    "question": "Who painted the Mona Lisa?",
+    "choices": ["A. Michelangelo", "B. Raphael", "C. Leonardo da Vinci", "D. Donatello"],
+    "answer": "C"
+  }
+]
