@@ -38,11 +38,7 @@ def fetch_opentdb(n: int = 5) -> list[dict]:
                 "domain": _map_opentdb_category(category),
                 "category": category,
             })
-<<<<<<< HEAD
         except Exception:  # noqa: S112
-=======
-        except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 
@@ -72,11 +68,7 @@ def fetch_trivia_api(n: int = 5) -> list[dict]:
                 "domain": _map_opentdb_category(category),
                 "category": category,
             })
-<<<<<<< HEAD
         except Exception:  # noqa: S112
-=======
-        except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 
@@ -219,11 +211,7 @@ def fetch_pokemon(n: int = 5) -> list[dict]:
         return results
     for _ in range(n):
         try:
-<<<<<<< HEAD
             p = random.choice(_POKEMON_CACHE)  # noqa: S311
-=======
-            p = random.choice(_POKEMON_CACHE)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             name = p.get("name", "")
             if not name:
                 continue
@@ -243,11 +231,7 @@ def fetch_pokemon(n: int = 5) -> list[dict]:
                 "domain": "biology",
                 "category": "pokemon",
             })
-<<<<<<< HEAD
         except Exception:  # noqa: S112
-=======
-        except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 
@@ -261,15 +245,9 @@ def fetch_swapi(n: int = 3) -> list[dict]:
     endpoints = ["people", "planets", "starships", "vehicles", "species"]
     for _ in range(n):
         try:
-<<<<<<< HEAD
             ep = random.choice(endpoints)  # noqa: S311
             # Random ID 1-30 (some return 404, that's OK)
             rid = random.randint(1, 30)  # noqa: S311
-=======
-            ep = random.choice(endpoints)
-            # Random ID 1-30 (some return 404, that's OK)
-            rid = random.randint(1, 30)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             data = _http_get_json(f"https://swapi.dev/api/{ep}/{rid}/")
             if not data:
                 continue
@@ -293,11 +271,7 @@ def fetch_swapi(n: int = 3) -> list[dict]:
                 "domain": "entertainment",
                 "category": ep,
             })
-<<<<<<< HEAD
         except Exception:  # noqa: S112
-=======
-        except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 

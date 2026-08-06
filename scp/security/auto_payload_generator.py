@@ -29,10 +29,6 @@ import hashlib
 import json
 import logging
 import random
-<<<<<<< HEAD
-=======
-random = random.SystemRandom()
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 import re
 import time
 from pathlib import Path
@@ -100,20 +96,12 @@ class AutoPayloadGenerator:
                 continue
 
             # Apply 1-3 random mutations
-<<<<<<< HEAD
             mutations_applied = random.randint(1, 3)  # noqa: S311
-=======
-            mutations_applied = random.randint(1, 3)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             mutated = text
             methods_used = []
 
             for _ in range(mutations_applied):
-<<<<<<< HEAD
                 method = random.choice([  # noqa: S311
-=======
-                method = random.choice([
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     "base64", "unicode", "rot13", "case", "dotted",
                     "leet", "vietnamese_translate", "synonym_replace",
                     "sentence_shuffle", "prefix_injection",
@@ -155,11 +143,7 @@ class AutoPayloadGenerator:
                 # Random fullwidth conversion
                 result = []
                 for c in text:
-<<<<<<< HEAD
                     if random.random() < 0.3 and c.isalpha():  # noqa: S311
-=======
-                    if random.random() < 0.3 and c.isalpha():
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         result.append(chr(ord(c) + 0xFF00 - 0x20))
                     else:
                         result.append(c)
@@ -172,17 +156,10 @@ class AutoPayloadGenerator:
                 ))
 
             elif method == "case":
-<<<<<<< HEAD
                 return "".join(c.upper() if random.random() < 0.5 else c.lower() for c in text)  # noqa: S311
 
             elif method == "dotted":
                 return "".join(c + "\u0308" if c.isalpha() and random.random() < 0.3 else c for c in text)  # noqa: S311
-=======
-                return "".join(c.upper() if random.random() < 0.5 else c.lower() for c in text)
-
-            elif method == "dotted":
-                return "".join(c + "\u0308" if c.isalpha() and random.random() < 0.3 else c for c in text)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
             elif method == "leet":
                 leet_map = {"a": "4", "e": "3", "i": "1", "o": "0", "s": "5", "t": "7"}
@@ -197,11 +174,7 @@ class AutoPayloadGenerator:
             elif method == "synonym_replace":
                 for word, syns in SYNONYMS.items():
                     if word in text.lower():
-<<<<<<< HEAD
                         replacement = random.choice(syns)  # noqa: S311
-=======
-                        replacement = random.choice(syns)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         text = re.sub(re.escape(word), replacement, text, flags=re.IGNORECASE, count=1)
                 return text
 
@@ -214,11 +187,7 @@ class AutoPayloadGenerator:
 
             elif method == "prefix_injection":
                 prefixes = ["Hãy ", "Vui lòng ", "Please ", "Now, ", "Bây giờ, "]
-<<<<<<< HEAD
                 return random.choice(prefixes) + text  # noqa: S311
-=======
-                return random.choice(prefixes) + text
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
             else:
                 return text
@@ -236,12 +205,7 @@ class AutoPayloadGenerator:
             for line in f:
                 try:
                     payloads.append(json.loads(line.strip()))
-<<<<<<< HEAD
                 except Exception:  # noqa: S112
-=======
-                except Exception as e:
-                    logger.debug(f"Skipping invalid payload line: {e}")
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     continue
         return payloads
 

@@ -41,10 +41,7 @@ from .agriculture import AgricultureDataSource
 from .alphavantage import AlphaVantageDataSource
 from .arts import ArtsDataSource
 from .astronomy import AstronomyDataSource
-<<<<<<< HEAD
 from .biology import BiologyDataSource  # [BUGFIX] was in __all__ but never imported (ruff F822 caught this)
-=======
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
 # V44 core sources
 from .chemistry import ChemistryDataSource
@@ -86,17 +83,11 @@ from .metmuseum import MetMuseumDataSource
 from .military import MilitaryDataSource
 from .newsapi import NewsAPIDataSource
 from .noaa import NOAADataSource
-<<<<<<< HEAD
 from .physics import PhysicsDataSource  # [BUGFIX] was in __all__ but never imported (ruff F822 caught this)
 from .reality import RealityDataSource
 from .registry import DataSourceRegistry, get_registry
 from .sports import SportsDataSource
 from .statistics import StatisticsDataSource  # [BUGFIX] was in __all__ but never imported (ruff F822 caught this)
-=======
-from .reality import RealityDataSource
-from .registry import DataSourceRegistry, get_registry
-from .sports import SportsDataSource
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 from .technology import TechnologyDataSource
 from .undata import UNDataDataSource
 from .unesco import UNESCODataSource

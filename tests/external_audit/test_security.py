@@ -185,13 +185,8 @@ def test_bandit_no_new_high_severity_via_bandit():
     NOTE: this test does NOT fail on the 15 pre-existing B324 issues. It
     fails only if NEW HIGH-severity issues appear beyond the known baseline.
     """
-<<<<<<< HEAD
     result = subprocess.run(  # noqa: S603
         ["bandit", "-r", str(SCP_ROOT), "-f", "json", "-q"],  # noqa: S607
-=======
-    result = subprocess.run(
-        ["bandit", "-r", str(SCP_ROOT), "-f", "json", "-q"],
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         capture_output=True, text=True,
     )
     if result.returncode not in (0, 1):

@@ -302,11 +302,7 @@ class ThreatSimulatorEngine:
     def mutate(self, text: str, method: str = "") -> str:
         """Apply 1 mutation method to text."""
         if not method:
-<<<<<<< HEAD
             method = random.choice(MUTATION_METHODS)  # noqa: S311
-=======
-            method = random.SystemRandom().choice(MUTATION_METHODS)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
         if method == "base64":
             return base64.b64encode(text.encode()).decode()
@@ -345,11 +341,7 @@ class ThreatSimulatorEngine:
                             text = entry.get("attack_text", "")
                             if text and text not in base:
                                 base.append(text)
-<<<<<<< HEAD
                         except Exception:  # noqa: S112
-=======
-                        except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                             continue
                 logger.info(f"ThreatSimulator: loaded {len(base) - len(BASE_ATTACKS)} crawled attacks")
         except Exception as e:
@@ -360,13 +352,8 @@ class ThreatSimulatorEngine:
 
         # Generate mutations
         for _ in range(count):
-<<<<<<< HEAD
             base_text = random.choice(base)  # noqa: S311
             method = random.choice(MUTATION_METHODS)  # noqa: S311
-=======
-            base_text = random.choice(base)
-            method = random.choice(MUTATION_METHODS)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             mutated = self.mutate(base_text, method)
             # [FIX #7] MD5 → SHA256 (CWE-327). See attack_memory.py:214.
             h = hashlib.sha256(mutated.encode()).hexdigest()[:8]

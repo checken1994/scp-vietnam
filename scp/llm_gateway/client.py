@@ -41,10 +41,7 @@ Design:
 from __future__ import annotations
 
 import asyncio
-<<<<<<< HEAD
 import itertools
-=======
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 import logging
 import os
 import threading
@@ -55,7 +52,6 @@ logger = logging.getLogger("scp.llm_gateway")
 
 
 # ============================================================
-<<<<<<< HEAD
 # [OPENROUTER-FREE-FIX] REGISTRY OF ALL 17 FREE MODELS ON OPENROUTER
 # ============================================================
 # Verified via https://openrouter.ai/api/v1/models on 2026-08-06.
@@ -85,8 +81,6 @@ OPENROUTER_FREE_MODELS: list[str] = [
 
 
 # ============================================================
-=======
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 # [ROOT-FIX 44-A] MULTI-MODEL TASK → MODEL MAPPING
 # ============================================================
 # Each SCP task type is routed to the Ollama model best suited for it.
@@ -200,7 +194,6 @@ class OllamaProvider:
 
 
 class OpenRouterProvider:
-<<<<<<< HEAD
     """OpenRouter cloud LLM provider — 3 keys + PAID primary + FREE fallback.
 
     [ROOT-FIX 44-A] OpenRouter is the ONLY cloud provider now — user has keys.
@@ -282,22 +275,10 @@ class OpenRouterProvider:
             f"OPENROUTER_MODEL_{task.upper()}",
             self.TASK_FREE_FALLBACK_MAP.get(task, self.TASK_FREE_FALLBACK_MAP["default"]),
         )
-=======
-    """OpenRouter cloud LLM provider (paid, high quality).
-
-    [ROOT-FIX 44-A] OpenRouter is the ONLY cloud provider now — user has a key.
-    DeepSeek/Anthropic/OpenAI direct providers removed (user has no keys → dead code).
-    """
-
-    def __init__(self):
-        self.api_key = os.environ.get("OPENROUTER_API_KEY", "")
-        self.model = os.environ.get("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct")
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         self.base_url = os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
         self._client: httpx.AsyncClient | None = None
 
     @property
-<<<<<<< HEAD
     def api_key(self) -> str:
         """Current API key (round-robin across 3 keys)."""
         return self._next_key()
@@ -318,38 +299,10 @@ class OpenRouterProvider:
                 json={"model": model, "messages": messages, "stream": False},
                 headers={
                     "Authorization": f"Bearer {api_key}",
-=======
-    def enabled(self) -> bool:
-        """True if a non-placeholder API key is configured."""
-        return bool(
-            self.api_key
-            and self.api_key != "your-key-here"
-            and self.api_key != "sk-or-v1-REPLACE-WITH-YOUR-NEW-KEY"
-        )
-
-    async def chat(self, question: str, context: str = "", system_prompt: str = "") -> tuple[str | None, str]:
-        if not self.enabled:
-            return None, "openrouter"
-        try:
-            if self._client is None:
-                self._client = httpx.AsyncClient(timeout=60.0)
-            messages = []
-            if system_prompt:
-                messages.append({"role": "system", "content": system_prompt})
-            if context:
-                messages.append({"role": "user", "content": context})
-            messages.append({"role": "user", "content": question})
-            resp = await self._client.post(
-                f"{self.base_url}/chat/completions",
-                json={"model": self.model, "messages": messages, "stream": False},
-                headers={
-                    "Authorization": f"Bearer {self.api_key}",
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     "HTTP-Referer": "https://scp-vietnam.local",
                     "X-Title": "SCP Gateway",
                 },
             )
-<<<<<<< HEAD
             # 429 = rate limit, 402 = payment required (quota exhausted)
             if resp.status_code in (429, 402):
                 return None, f"HTTP {resp.status_code} (quota/rate-limit)"
@@ -420,18 +373,6 @@ class OpenRouterProvider:
             "task": self.task,
             "total_free_models_available": len(OPENROUTER_FREE_MODELS),
         }
-=======
-            resp.raise_for_status()
-            data = resp.json()
-            answer = data.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
-            return (answer or None, "openrouter")
-        except Exception as e:
-            logger.debug(f"OpenRouter failed: {e}")
-            return None, "openrouter"
-
-    def stats(self) -> dict:
-        return {"configured": self.enabled, "model": self.model}
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
 
 # ============================================================
@@ -472,7 +413,6 @@ class LLMGateway:
         self.ollama_learning = OllamaProvider(task="learning")       # qwen2.5:7b
         self.ollama_fast     = OllamaProvider(task="fast_learning")  # llama3.2
         self.ollama_judge    = OllamaProvider(task="judge")          # qwen2.5:7b
-<<<<<<< HEAD
         # [OPENROUTER-FREE-FIX] Multi-model OpenRouter — one provider per task.
         # Each task gets its own FREE model (nemotron-ultra for autofix, gemma-31b
         # for why/learning, gpt-oss-20b for chat, etc.). All cost $0.
@@ -486,10 +426,6 @@ class LLMGateway:
         self.openrouter = self.openrouter_default
         # Alias: openrouter_fast_learning (matching ollama_fast naming pattern)
         self.openrouter_fast_learning = self.openrouter_fast
-=======
-        # Cloud fallback (only OpenRouter — user's only cloud key).
-        self.openrouter = OpenRouterProvider()
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         self._stats = {
             "total_calls": 0,
             "ollama_calls": 0,
@@ -568,7 +504,6 @@ class LLMGateway:
             "chat":          self.ollama_default,
         }.get(task, self.ollama_default)
 
-<<<<<<< HEAD
         # [OPENROUTER-FREE-FIX] Select OpenRouter provider based on task.
         # Each task gets its own FREE model (nemotron-ultra for autofix, etc.)
         openrouter_provider = {
@@ -586,14 +521,6 @@ class LLMGateway:
             answer, _ = await openrouter_provider.chat(question, context, system_prompt)
             if answer:
                 return answer, f"openrouter:{openrouter_provider.model}"
-=======
-        # [ROOT-FIX 46] AutoFix: OpenRouter FIRST (V4 flash > R1:8b for code reasoning)
-        if task == "autofix" and self.openrouter.enabled:
-            self._stats["openrouter_calls"] += 1
-            answer, _ = await self.openrouter.chat(question, context, system_prompt)
-            if answer:
-                return answer, f"openrouter:{self.openrouter.model}"
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
         # Layer 1: Ollama (local, free, task-specific model)
         if ollama_provider.enabled:
@@ -603,20 +530,12 @@ class LLMGateway:
                 return answer, f"ollama:{ollama_provider.model}"
 
         # Layer 2: OpenRouter (cloud fallback — for non-autofix tasks)
-<<<<<<< HEAD
         # [OPENROUTER-FREE-FIX] Use task-specific OpenRouter provider (FREE model)
         if task != "autofix" and openrouter_provider.enabled:
             self._stats["openrouter_calls"] += 1
             answer, _ = await openrouter_provider.chat(question, context, system_prompt)
             if answer:
                 return answer, f"openrouter:{openrouter_provider.model}"
-=======
-        if task != "autofix" and self.openrouter.enabled:
-            self._stats["openrouter_calls"] += 1
-            answer, _ = await self.openrouter.chat(question, context, system_prompt)
-            if answer:
-                return answer, "openrouter"
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
         self._stats["failures"] += 1
         return None, "none"
@@ -690,7 +609,6 @@ class LLMGateway:
             "ollama_learning": self.ollama_learning.stats(),
             "ollama_fast":     self.ollama_fast.stats(),
             "ollama_judge":    self.ollama_judge.stats(),
-<<<<<<< HEAD
             # [OPENROUTER-FREE-FIX] Show all task-specific OpenRouter providers
             "openrouter_default":  self.openrouter_default.stats(),
             "openrouter_autofix":  self.openrouter_autofix.stats(),
@@ -724,19 +642,6 @@ class LLMGateway:
             ]:
                 logger.info(f"    {task_name:15s} → {prov.free_fallback}")
             logger.info(f"  Total FREE models available: {len(OPENROUTER_FREE_MODELS)} (see OPENROUTER_FREE_MODELS in client.py)")
-=======
-            "openrouter":      self.openrouter.stats(),
-        }
-
-    def check_startup(self) -> None:
-        """[ROOT-FIX 45-A] Check Ollama models + OpenRouter key at startup."""
-        # Check OpenRouter key
-        or_key = self.openrouter.api_key
-        if not or_key or "REPLACE" in or_key or or_key == "your-key-here":
-            logger.warning("[Startup] OpenRouter API key NOT set — cloud fallback DISABLED. Set OPENROUTER_API_KEY in .env.")
-        else:
-            logger.info("[Startup] OpenRouter configured — cloud fallback enabled")
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         # Check Ollama models
         try:
             import httpx as _httpx

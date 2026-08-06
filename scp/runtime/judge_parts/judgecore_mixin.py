@@ -591,11 +591,7 @@ class JudgeCoreMixin:
                             # Clear any stale hint from previous call (defensive)
                             if hasattr(slm, "why_sources_hint"):
                                 try:
-<<<<<<< HEAD
                                     del slm.why_sources_hint  # [FALSE-POS-FIX] B043: delattr with constant string == del attr
-=======
-                                    delattr(slm, "why_sources_hint")
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                                 except Exception as e:
                                     logger.warning(f"Silent except: {e}")
                     except Exception as _hint_err:
@@ -1864,7 +1860,6 @@ class JudgeCoreMixin:
                 # [FIX #10] Empty SLM answer is NOT antibody failure
                 ab_results = []
                 # [FIX #4] Use REAL antibody results, not hardcoded passed=True
-<<<<<<< HEAD
                 # [BUGFIX-FALSE-POS-FIX-3] fallback_risk: r.get("passed", True) was ALWAYS
                 # returning True because SLM response dicts (lines 601-615) never include
                 # "passed" or "severity" keys. This meant governance ALWAYS saw passed=True
@@ -1877,14 +1872,6 @@ class JudgeCoreMixin:
                         "severity": "error" if _has_error else ("warning" if _conf < 0.5 else "info"),
                         "antibody": r.get("antibody_name", r.get("slm_name", "unknown")),
                         "details": r.get("details", r.get("error", r.get("reasoning", ""))),
-=======
-                for r in verdict.slm_responses:
-                    ab_results.append({
-                        "passed": r.get("passed", True),
-                        "severity": r.get("severity", "info"),
-                        "antibody": r.get("antibody_name", "unknown"),
-                        "details": r.get("details", ""),
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     })
                 gov_decision = self.governance.decide(
                     ctx={"domain": verdict.domain, "session_id": ""},
@@ -2347,11 +2334,7 @@ class JudgeCoreMixin:
                             _rep_store.record_outcome(_src, _v58_domain, _v58_was_correct)
                         except Exception as _re:
                             logger.debug(f"[V5.8-OPT] record_outcome failed for SLM source={_src!r}: {_re}")
-<<<<<<< HEAD
                 except Exception:  # noqa: S112
-=======
-                except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     continue  # defensive — bad SLM response shouldn't break reputation
 
             # Also record reality_check source if present (v13.db, REST Countries, etc.)

@@ -214,11 +214,7 @@ def test_integration_engine_process():
     try:
         import os as _os
         import shutil
-<<<<<<< HEAD
         _os.environ["SCP_DB_PATH"] = _os.path.join(_os.environ.get("TMPDIR", "/tmp"), "scp_dna_test.db")  # nosec B108 — test fixture, uses TMPDIR env var (not hardcoded)
-=======
-        _os.environ["SCP_DB_PATH"] = "/tmp/scp_dna_test.db"
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         from scp.runtime.engine import SCPV14 as SCPV13
         engine = SCPV13()
 

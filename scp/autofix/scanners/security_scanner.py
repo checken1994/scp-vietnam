@@ -6,11 +6,7 @@
 #     - CWE-79: XSS — render(user_input) không escape
 #     - CWE-89: SQL injection (delegate to SQLInjectionScanner — không duplicate)
 #     - CWE-22: Path traversal — open(user_path) không sanitize
-<<<<<<< HEAD
 #     - CWE-78: OS command injection — os.system(user_input), shell=True calls
-=======
-#     - CWE-78: OS command injection — os.system(user_input), subprocess.run(shell=True)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 #     - CWE-502: Deserialization — pickle.loads(user_data), yaml.load(data)
 #     - CWE-798: Hardcoded credentials — password = "xxx" trong source
 #     - CWE-312: Plaintext storage of sensitive info (closely related)
@@ -268,11 +264,7 @@ class SecurityScanner:
                 tree = ast.parse(source, filename=str(path))
             except SyntaxError:
                 continue
-<<<<<<< HEAD
             except Exception:  # noqa: S112
-=======
-            except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 continue
 
             finder = _SecurityFinder(str(path))
@@ -288,13 +280,8 @@ class SecurityScanner:
                         f"`|`) to execute arbitrary commands on the host."
                     )
                     fix = (
-<<<<<<< HEAD
                         "Use safe_run(['cmd', 'arg1', 'arg2']) from scp.core.safe_process "
                         "with argument list (no shell interpretation). Or use shlex.quote() "
-=======
-                        "Use subprocess.run(['cmd', 'arg1', 'arg2'], shell=False) with "
-                        "argument list (no shell interpretation). Or use shlex.quote() "
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         "to escape user input if shell=True is unavoidable."
                     )
                 elif kind == "cwe78_subprocess_shell":

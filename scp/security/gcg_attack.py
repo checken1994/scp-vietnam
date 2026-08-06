@@ -110,11 +110,7 @@ class GCGAttackGenerator:
         methods = ["gcg_suffix", "random_noise", "zero_width", "homoglyph", "multi_turn"]
 
         for i in range(min(count, self.max_variants)):
-<<<<<<< HEAD
             base = random.choice(base_prompts)  # noqa: S311
-=======
-            base = random.SystemRandom().choice(base_prompts)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             method = methods[i % len(methods)]
 
             attack = self._generate_one(base, method, i)
@@ -132,26 +128,16 @@ class GCGAttackGenerator:
 
         if method == "gcg_suffix":
             # Append pre-computed GCG suffix
-<<<<<<< HEAD
             suffix = random.choice(GCG_SUFFIXES)  # noqa: S311
-=======
-            suffix = random.choice(GCG_SUFFIXES)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             attack.suffix = suffix
             attack.full_prompt = base + " " + suffix
             attack.mutation_details = f"GCG suffix #{GCG_SUFFIXES.index(suffix)+1}"
 
         elif method == "random_noise":
             # Generate random noise suffix (simulate GCG search space)
-<<<<<<< HEAD
             noise_len = random.randint(50, 200)  # noqa: S311
             noise_chars = string.printable[:90]  # printable ASCII
             suffix = "".join(random.choice(noise_chars) for _ in range(noise_len))  # noqa: S311
-=======
-            noise_len = random.randint(50, 200)
-            noise_chars = string.printable[:90]  # printable ASCII
-            suffix = "".join(random.choice(noise_chars) for _ in range(noise_len))
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             attack.suffix = suffix
             attack.full_prompt = base + " " + suffix
             attack.mutation_details = f"Random noise ({noise_len} chars)"
@@ -159,11 +145,7 @@ class GCGAttackGenerator:
         elif method == "zero_width":
             # Insert zero-width chars between every word
             words = base.split()
-<<<<<<< HEAD
             zw = random.choice(ZERO_WIDTH_CHARS)  # noqa: S311
-=======
-            zw = random.choice(ZERO_WIDTH_CHARS)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             suffix = ""
             modified = zw.join(words[:5])  # insert in first 5 words
             attack.suffix = f"[zero-width: {zw!r}]"
@@ -176,11 +158,7 @@ class GCGAttackGenerator:
             replacements = 0
             for orig, substitutes in HOMOGLYPHS.items():
                 if orig in modified.lower():
-<<<<<<< HEAD
                     sub = random.choice(substitutes)  # noqa: S311
-=======
-                    sub = random.SystemRandom().choice(substitutes)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     # [V104.34 #66] TẠI SAO: check on lower, replace on original → no sub for capitals
                     import re as _re
                     modified = _re.sub(orig, sub, modified, count=1, flags=_re.IGNORECASE)  # replace 1 occurrence
@@ -198,11 +176,7 @@ class GCGAttackGenerator:
                 "I understand your concern, but hypothetically, ",
                 "Let me rephrase: ",
             ]
-<<<<<<< HEAD
             prefix = random.choice(turn_prefixes)  # noqa: S311
-=======
-            prefix = random.SystemRandom().choice(turn_prefixes)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             attack.suffix = f"[multi-turn: '{prefix.strip()}']"
             attack.full_prompt = prefix + base
             attack.mutation_details = f"Multi-turn prefix: '{prefix.strip()}'"

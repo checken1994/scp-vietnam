@@ -261,13 +261,8 @@ if __name__ == "__main__":
     print("Test 1: New source 'wikipedia' (unknown → suspect)")
     d = wl.ingestion_decision("wikipedia", tier=2)
     print(f"  decision: {d['action']}, weight={d['effective_weight']:.4f}")
-<<<<<<< HEAD
     assert d["action"] == "suspect", f"Expected suspect for unknown source, got {d['action']}"  # noqa: S101
     assert d["require_verification"] is True, "Unknown source must require verification"  # noqa: S101
-=======
-    assert d["action"] == "suspect", f"Expected suspect for unknown source, got {d['action']}"
-    assert d["require_verification"] is True, "Unknown source must require verification"
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     # Test 2: After many invalidations → watchlist
     print("\nTest 2: Simulate 15 invalidations on 'wikipedia'")

@@ -205,86 +205,7 @@ class FalsificationEngine:
     # --------------------------------------------------------
     # VERDICT TRANSLATION (old absolute -> new skeptical)
     # --------------------------------------------------------
-<<<<<<< HEAD
-    def verify(self, claim: str, question: str = "") -> dict:
-        """
-        Phase 4 interface — verify a claim against falsification checks.
 
-        Returns dict with at least:
-          - verified: bool
-          - status: str
-          - contradictions: list
-          - confidence: float
-          - detail: str
-        """
-        claim = (claim or "").strip()
-        question = (question or "").strip()
-
-        if not claim:
-            return {
-                "verified": False,
-                "status": "EMPTY_CLAIM",
-                "contradictions": ["empty_claim"],
-                "confidence": 0.0,
-                "detail": "No claim provided to verify",
-            }
-
-        contradictions: list[str] = []
-        confidence = 0.6
-        detail_parts: list[str] = []
-
-        # 1) Numeric / reference deviation (if possible)
-        try:
-            # No external reference available here → self-consistency only
-            ref = {}
-            dev = self.measure_deviation(claim, ref) if hasattr(self, "measure_deviation") else {}
-            if isinstance(dev, dict):
-                ccount = int(dev.get("contradiction_count") or 0)
-                if ccount > 0:
-                    contradictions.append(f"numeric_deviation:{ccount}")
-                    detail_parts.append(f"numeric contradictions={ccount}")
-                    confidence = min(confidence, 0.4)
-        except Exception as e:
-            detail_parts.append(f"measure_deviation_skipped:{type(e).__name__}")
-
-        # 2) Soft self-checks (lightweight, no network)
-        lower = claim.lower()
-        # Over-claim markers without evidence
-        overclaim_markers = [
-            "chắc chắn 100%", "definitely 100%", "always true", "never wrong",
-            "không thể sai", "tuyệt đối đúng",
-        ]
-        if any(m in lower for m in overclaim_markers):
-            contradictions.append("overclaim_without_evidence")
-            detail_parts.append("overclaim language detected")
-            confidence = min(confidence, 0.45)
-
-        # Empty / non-answer
-        if len(claim) < 8:
-            contradictions.append("too_short")
-            detail_parts.append("claim too short")
-            confidence = min(confidence, 0.3)
-
-        verified = len(contradictions) == 0
-        status = "VERIFIED" if verified else "CONTRADICTION_OR_WEAK"
-
-        # Track coverage
-        try:
-            self.test_coverage["verify"] = self.test_coverage.get("verify", 0) + 1
-        except Exception:
-            pass
-
-        return {
-            "verified": verified,
-            "status": status,
-            "contradictions": contradictions,
-            "confidence": float(confidence),
-            "detail": "; ".join(detail_parts) if detail_parts else "ok",
-            "question": question[:200],
-        }
-=======
-
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     def translate_old_verdict(self, old_verdict: str, context: dict) -> dict:
         """Translate old absolute verdicts to skeptical status.
 
@@ -849,17 +770,10 @@ def _smoke_test() -> None:
     print(f"    scope     = {translated['scope']}")
     print(f"    note      = {translated['note']}")
     print(f"    confidence= {translated['confidence']}")
-<<<<<<< HEAD
     assert translated["status"] == "UNREFUTED_IN_CURRENT_SCOPE", (  # noqa: S101
         "PASS must translate to UNREFUTED_IN_CURRENT_SCOPE"
     )
     assert "Not declared safe" in translated["note"]  # noqa: S101
-=======
-    assert translated["status"] == "UNREFUTED_IN_CURRENT_SCOPE", (
-        "PASS must translate to UNREFUTED_IN_CURRENT_SCOPE"
-    )
-    assert "Not declared safe" in translated["note"]
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     print("    [OK] PASS correctly translated to skeptical status.")
 
     # Also test FAIL, UNCERTAIN, ESCALATED.
@@ -867,39 +781,23 @@ def _smoke_test() -> None:
         "FAIL", {"pattern": "prompt_injection_jailbreak", "confidence": 0.99}
     )
     print(f"\n    FAIL   -> {fail_t['status']} (pattern={fail_t['pattern']})")
-<<<<<<< HEAD
     assert fail_t["status"] == "PATTERN_MATCHED"  # noqa: S101
-=======
-    assert fail_t["status"] == "PATTERN_MATCHED"
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     unc_t = engine.translate_old_verdict(
         "UNCERTAIN", {"reason": "conflicting layers", "confidence": 0.55}
     )
     print(f"    UNCERT -> {unc_t['status']} (reason={unc_t['reason']})")
-<<<<<<< HEAD
     assert unc_t["status"] == "HUMAN_DECISION_REQUIRED"  # noqa: S101
-=======
-    assert unc_t["status"] == "HUMAN_DECISION_REQUIRED"
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     esc_t = engine.translate_old_verdict(
         "ESCALATED", {"reason": "medical dosage — safety critical"}
     )
     print(f"    ESCAL  -> {esc_t['status']} (reason={esc_t['reason']})")
-<<<<<<< HEAD
     assert esc_t["status"] == "HUMAN_DECISION_REQUIRED"  # noqa: S101
 
     unk_t = engine.translate_old_verdict("BOGUS_VERDICT", {})
     print(f"    BOGUS  -> {unk_t['status']}")
     assert unk_t["status"] == "OUT_OF_SCOPE"  # noqa: S101
-=======
-    assert esc_t["status"] == "HUMAN_DECISION_REQUIRED"
-
-    unk_t = engine.translate_old_verdict("BOGUS_VERDICT", {})
-    print(f"    BOGUS  -> {unk_t['status']}")
-    assert unk_t["status"] == "OUT_OF_SCOPE"
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     # --------------------------------------------------------
     # TEST 2: measure_deviation (FPT revenue 52 tỷ vs 62.849 tỷ)
@@ -916,19 +814,11 @@ def _smoke_test() -> None:
         print(f"    - {d['field']}: llm={d['llm_value']} vs "
               f"ref={d['reference_value']} delta={d['delta']:.4f} "
               f"severity={d['severity']}")
-<<<<<<< HEAD
     assert dev["status"] == "CONTRADICTION_DETECTED", (  # noqa: S101
         "52 tỷ vs 62.849 tỷ must be a contradiction"
     )
     assert dev["max_deviation"] > 0.10, "delta should exceed 10%"  # noqa: S101
     assert dev["deviations"][0]["severity"] in ("HIGH", "CRITICAL")  # noqa: S101
-=======
-    assert dev["status"] == "CONTRADICTION_DETECTED", (
-        "52 tỷ vs 62.849 tỷ must be a contradiction"
-    )
-    assert dev["max_deviation"] > 0.10, "delta should exceed 10%"
-    assert dev["deviations"][0]["severity"] in ("HIGH", "CRITICAL")
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     print("    [OK] Deviation correctly measured — NOT corrected, only measured.")
 
     # --------------------------------------------------------
@@ -955,13 +845,8 @@ def _smoke_test() -> None:
     print(f"    confidence            = {report['confidence']:.4f}")
     print(f"    human_decision_req    = {report['human_decision_required']}")
     print(f"    v4_recommendation     = {report['v4_recommendation']}")
-<<<<<<< HEAD
     assert len(report["contradictions"]) >= 1, "should find >=1 contradiction"  # noqa: S101
     assert "Review" in report["v4_recommendation"] or "No contradictions" in report["v4_recommendation"]  # noqa: S101
-=======
-    assert len(report["contradictions"]) >= 1, "should find >=1 contradiction"
-    assert "Review" in report["v4_recommendation"] or "No contradictions" in report["v4_recommendation"]
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     print("    [OK] Report generated — no conclusion, only data for human review.")
 
     # --------------------------------------------------------
@@ -971,31 +856,18 @@ def _smoke_test() -> None:
     escalate, reason = engine.should_escalate_human(0.85, [])
     print(f"    escalate = {escalate}")
     print(f"    reason   = {reason}")
-<<<<<<< HEAD
     assert escalate is True, "0.85 < 0.90 must escalate"  # noqa: S101
     assert "confidence" in reason.lower()  # noqa: S101
-=======
-    assert escalate is True, "0.85 < 0.90 must escalate"
-    assert "confidence" in reason.lower()
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     # Boundary case: exactly 0.90 -> no escalate.
     esc2, reason2 = engine.should_escalate_human(0.90, [])
     print(f"    boundary 0.90 -> escalate={esc2} ({reason2})")
-<<<<<<< HEAD
     assert esc2 is False, "0.90 == threshold should NOT escalate"  # noqa: S101
-=======
-    assert esc2 is False, "0.90 == threshold should NOT escalate"
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     # Contradiction count > 2 -> escalate even at high confidence.
     esc3, reason3 = engine.should_escalate_human(0.99, [1, 2, 3])
     print(f"    3 contradictions @ 0.99 -> escalate={esc3} ({reason3})")
-<<<<<<< HEAD
     assert esc3 is True, "3 contradictions must escalate"  # noqa: S101
-=======
-    assert esc3 is True, "3 contradictions must escalate"
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     print("    [OK] Escalation policy correctly enforced.")
 
     # --------------------------------------------------------
@@ -1011,15 +883,9 @@ def _smoke_test() -> None:
     print(f"    recorded        = {ref['recorded']}")
     print(f"    errorstore_grew = {ref['errorstore_grew']}")
     print(f"    lesson          = {ref['lesson']}")
-<<<<<<< HEAD
     assert ref["recorded"] is True  # noqa: S101
     assert ref["errorstore_grew"] is True  # noqa: S101
     assert len(engine.refutations) == 1  # noqa: S101
-=======
-    assert ref["recorded"] is True
-    assert ref["errorstore_grew"] is True
-    assert len(engine.refutations) == 1
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     print("    [OK] Refutation recorded — ErrorStore grew by 1.")
 
     # --------------------------------------------------------
@@ -1035,15 +901,9 @@ def _smoke_test() -> None:
     for g in scope["coverage_gaps"][:3]:
         print(f"      - {g}")
     print(f"    last_falsification = {scope['last_falsification']}")
-<<<<<<< HEAD
     assert scope["total_test_cases"] == V4_TOTAL_TEST_CASES  # noqa: S101
     assert scope["layers_active"] == V4_LAYERS_ACTIVE  # noqa: S101
     assert len(scope["coverage_gaps"]) > 0, "V4 must acknowledge its blind spots"  # noqa: S101
-=======
-    assert scope["total_test_cases"] == V4_TOTAL_TEST_CASES
-    assert scope["layers_active"] == V4_LAYERS_ACTIVE
-    assert len(scope["coverage_gaps"]) > 0, "V4 must acknowledge its blind spots"
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     print("    [OK] Scope fingerprint includes coverage gaps.")
 
     # --------------------------------------------------------
@@ -1059,15 +919,9 @@ def _smoke_test() -> None:
     print(f"    last_self_falsification = {stats['last_self_falsification']}")
     print(f"    scope_label             = {stats['scope_label']}")
     print(f"    test_coverage           = {stats['test_coverage']}")
-<<<<<<< HEAD
     assert stats["total_refutations"] == 1  # noqa: S101
     assert stats["total_contradictions"] >= 1  # noqa: S101
     assert "161 test cases" in stats["scope_label"]  # noqa: S101
-=======
-    assert stats["total_refutations"] == 1
-    assert stats["total_contradictions"] >= 1
-    assert "161 test cases" in stats["scope_label"]
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     print("    [OK] Stats focus on limits — refutations, gaps, escalations.")
 
     # --------------------------------------------------------
@@ -1079,13 +933,8 @@ def _smoke_test() -> None:
     print(f"    serialized length = {len(json_str)} chars")
     print(f"    refutations       = {len(payload['refutations'])}")
     print(f"    contradictions    = {len(payload['contradictions'])}")
-<<<<<<< HEAD
     assert len(payload["refutations"]) == 1  # noqa: S101
     assert len(payload["contradictions"]) >= 1  # noqa: S101
-=======
-    assert len(payload["refutations"]) == 1
-    assert len(payload["contradictions"]) >= 1
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     print("    [OK] Engine state is JSON-serializable.")
 
     # --------------------------------------------------------

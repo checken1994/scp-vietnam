@@ -416,11 +416,7 @@ class AttackPatternMemory:
             # Check keyword rules
             for keyword, rule_id in list(self._keyword_index.items()):
                 # [V104.18 #7 FIX] Word boundary match (was: substring → "dan" in "danger")
-<<<<<<< HEAD
                 # [FALSE-POS-FIX] F402: use module-level _re (imported at L15), not loop-local import
-=======
-                import re as _re
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 if _re.search(r'\b' + _re.escape(keyword) + r'\b', q_lower):
                     rule = self.dynamic_rules.get(rule_id)
                     if rule and rule.promoted and not rule.disabled:

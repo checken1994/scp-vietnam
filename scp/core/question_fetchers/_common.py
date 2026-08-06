@@ -11,10 +11,6 @@ import json
 import logging
 import re
 import threading
-<<<<<<< HEAD
-=======
-import urllib.parse
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 import urllib.request
 from typing import Optional
 
@@ -111,11 +107,7 @@ def _http_get_json(url: str, timeout: int = _DEFAULT_TIMEOUT, headers: Optional[
             }
             if headers:
                 hdrs.update(headers)
-<<<<<<< HEAD
             req = urllib.request.Request(url, headers=hdrs)  # noqa: S310
-=======
-            req = urllib.request.Request(url, headers=hdrs)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             with safe_urlopen(req, timeout=timeout) as resp:
                 return json.loads(resp.read().decode('utf-8'))
     except Exception as e:

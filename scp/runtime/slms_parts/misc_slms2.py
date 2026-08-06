@@ -524,19 +524,11 @@ class HolidaySLM(BaseSLM):
                     req = urllib.request.Request(url, headers={
                         'User-Agent': 'SCP-V78-Bot/1.0 (educational research)'
                     })
-<<<<<<< HEAD
                     with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
                         data = _json.loads(resp.read().decode('utf-8'))
                     if isinstance(data, list) and data:
                         import random as _rand
                         holiday = _rand.choice(data)  # noqa: S311
-=======
-                    with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP
-                        data = _json.loads(resp.read().decode('utf-8'))
-                    if isinstance(data, list) and data:
-                        import random as _rand
-                        holiday = _rand.choice(data)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         name = holiday.get("name", "")
                         date = holiday.get("date", "")
                         local_name = holiday.get("localName", "")
@@ -599,11 +591,7 @@ class AnimalFactsSLM(BaseSLM):
                     "https://catfact.ninja/fact",
                     headers={'User-Agent': 'SCP-V78-Bot/1.0'}
                 )
-<<<<<<< HEAD
                 with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
-=======
-                with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     data = _json.loads(resp.read().decode('utf-8'))
                 fact = data.get("fact", "")
                 if fact:
@@ -621,11 +609,7 @@ class AnimalFactsSLM(BaseSLM):
                     "https://some-random-api.com/animal/dog",
                     headers={'User-Agent': 'SCP-V79-Bot/1.0'}
                 )
-<<<<<<< HEAD
                 with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
-=======
-                with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     data = _json.loads(resp.read().decode('utf-8'))
                 fact = data.get("fact", "")
                 if fact:
@@ -754,11 +738,7 @@ class ReligionSLM(BaseSLM):
             try:
                 url = f"https://bible-api.com/{urllib.parse.quote(ref)}?translation=kjv"
                 req = urllib.request.Request(url, headers={'User-Agent': 'SCP-V73/1.0'})
-<<<<<<< HEAD
                 with urllib.request.urlopen(req, timeout=10) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
-=======
-                with urllib.request.urlopen(req, timeout=10) as resp:  # nosec B310 — URL validated by SCP
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     data = _json.loads(resp.read().decode('utf-8'))
                 text = (data.get("text") or "").strip()
                 if text:
@@ -814,11 +794,7 @@ class AdviceSLM(BaseSLM):
                     "https://api.adviceslip.com/advice",
                     headers={'User-Agent': 'SCP-V78-Bot/1.0'}
                 )
-<<<<<<< HEAD
                 with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
-=======
-                with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     data = _json.loads(resp.read().decode('utf-8'))
                 advice = data.get("slip", {}).get("advice", "")
                 if advice:
@@ -877,11 +853,7 @@ class ChuckNorrisSLM(BaseSLM):
                     "https://api.chucknorris.io/jokes/random",
                     headers={'User-Agent': 'SCP-V78-Bot/1.0'}
                 )
-<<<<<<< HEAD
                 with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
-=======
-                with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     data = _json.loads(resp.read().decode('utf-8'))
                 joke = data.get("value", "")
                 if joke:

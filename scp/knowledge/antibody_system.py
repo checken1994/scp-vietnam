@@ -519,50 +519,7 @@ class DomainAntibodySystem:
                 relevant.append(ab_name)
 
         return relevant
-<<<<<<< HEAD
-    def check_all(self, question: str, answer: str, domain: str = "general") -> list[dict]:
-        """
-        Phase 5 interface — run all relevant antibodies.
 
-        Phase code expects list[dict] with key 'passed'.
-        This wraps self.check() and normalizes AntibodyResult -> dict.
-        """
-        try:
-            results = self.check(
-                question=question or "",
-                answer=answer or "",
-                domain=domain or "general",
-                ground_truth=None,
-            )
-        except TypeError:
-            # Backward-compatible if older check() signature differs
-            results = self.check(question or "", answer or "", domain or "general")
-
-        normalized: list[dict] = []
-        for r in results or []:
-            if isinstance(r, dict):
-                normalized.append(r)
-                continue
-            # AntibodyResult object
-            if hasattr(r, "to_dict"):
-                d = r.to_dict()
-            else:
-                d = {
-                    "antibody_name": getattr(r, "antibody_name", "unknown"),
-                    "passed": bool(getattr(r, "passed", True)),
-                    "severity": str(getattr(r, "severity", "info")),
-                    "confidence": float(getattr(r, "confidence", 0.5) or 0.5),
-                    "details": str(getattr(r, "details", "") or ""),
-                    "domain": str(getattr(r, "domain", domain) or domain),
-                }
-            # Ensure required key for phase5
-            if "passed" not in d:
-                d["passed"] = True
-            normalized.append(d)
-        return normalized
-=======
-
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     def check(
         self,
         question: str,

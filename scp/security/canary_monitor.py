@@ -166,10 +166,6 @@ class CanaryTokenMonitor:
         # [EXEC-3] Snapshot tokens under lock (iterating a dict while another
         # thread mutates raises RuntimeError). Mutations (set triggered + _stats)
         # also under lock to keep audit consistent.
-<<<<<<< HEAD
-=======
-        triggered_token: CanaryToken | None = None
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         with self._lock:
             for token_str, token in list(self.tokens.items()):
                 if token_str in text:
@@ -186,13 +182,8 @@ class CanaryTokenMonitor:
                         break
                     else:
                         return token
-<<<<<<< HEAD
             else:
                 return None
-=======
-        if triggered_token is None:
-            return None
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         # File I/O outside the lock (slow, audit-only).
         self._persist_trigger(triggered_token)
         return triggered_token

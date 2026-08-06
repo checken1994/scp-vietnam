@@ -36,15 +36,6 @@ try:
 except ImportError:
     start_harm_detector = None
     stop_harm_detector = None
-<<<<<<< HEAD
-=======
-
-try:
-    from scp.core.audit_fetcher import start_audit_fetcher as _af_start
-except ImportError:
-    start_audit_fetcher = None
-    stop_audit_fetcher = None
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 import os
 import threading
 import time as _time

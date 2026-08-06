@@ -25,12 +25,9 @@ import pytest
 # Resolve SCP source root: tests/external_audit/../../ = scp-v105-fixed/
 SCP_ROOT = Path(__file__).resolve().parent.parent.parent
 
-<<<<<<< HEAD
 # [FALSE-POS-FIX] B105: extract test token to module-level constant
 _TEST_TOKEN = "test-token-for-import-only"  # nosec B105 - test fixture token, not a real credential
 
-=======
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
 # ---------------------------------------------------------------------------
 # RC-1: lint invariants (F821 + E722 must stay clean)
@@ -44,13 +41,8 @@ def test_no_undefined_names_via_ruff():
     ignore exposed 32 real bugs (logger/Optional/threading/sys/_tracker_log_deferred
     /PredictiveEngine undefined). This test guards against recurrence.
     """
-<<<<<<< HEAD
     result = subprocess.run(  # noqa: S603
         ["ruff", "check", "--select=F821", "--no-cache", str(SCP_ROOT)],  # noqa: S607
-=======
-    result = subprocess.run(
-        ["ruff", "check", "--select=F821", "--no-cache", str(SCP_ROOT)],
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         capture_output=True, text=True,
     )
     assert result.returncode == 0, (
@@ -65,13 +57,8 @@ def test_no_bare_except_via_ruff():
     SystemExit — and silently hides bugs. V105 had 1 in judge.py:1689
     (tracker.log failure path). Fixed to `except Exception as e: logger.warning(...)`.
     """
-<<<<<<< HEAD
     result = subprocess.run(  # noqa: S603
         ["ruff", "check", "--select=E722", "--no-cache", str(SCP_ROOT)],  # noqa: S607
-=======
-    result = subprocess.run(
-        ["ruff", "check", "--select=E722", "--no-cache", str(SCP_ROOT)],
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         capture_output=True, text=True,
     )
     assert result.returncode == 0, (
@@ -96,13 +83,8 @@ def test_no_hardcoded_token_via_grep():
     token = os.environ.get("SCP_AUTH_TOKEN_SECRET", "")
     if not token:
         pytest.skip("SCP_AUTH_TOKEN_SECRET not set — cannot verify hardcoded token absence")
-<<<<<<< HEAD
     result = subprocess.run(  # noqa: S603
         ["grep", "-rn", "--include=*.py", "--include=*.md", "--include=*.js",  # noqa: S607
-=======
-    result = subprocess.run(
-        ["grep", "-rn", "--include=*.py", "--include=*.md", "--include=*.js",
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
          "--include=*.ts", "--include=*.tsx",
          token, str(SCP_ROOT)],
         capture_output=True, text=True,
@@ -162,13 +144,8 @@ def test_evolution_enabled_default_via_grep():
     RC-2 flipped all 4 defaults to "1".
     """
     # Find any os.environ.get("SCP_EVOLUTION_ENABLED", "0") still present
-<<<<<<< HEAD
     result = subprocess.run(  # noqa: S603
         ["grep", "-rn", "--include=*.py",  # noqa: S607
-=======
-    result = subprocess.run(
-        ["grep", "-rn", "--include=*.py",
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
          'SCP_EVOLUTION_ENABLED", "0"', str(SCP_ROOT)],
         capture_output=True, text=True,
     )
@@ -226,21 +203,12 @@ def test_api_server_imports():
     )
     env = {
         "PATH": "/usr/bin:/bin:/usr/local/bin",
-<<<<<<< HEAD
         "HOME": __import__("tempfile").gettempdir(),  # nosec B108 - test fixture, uses tempfile.gettempdir() (not hardcoded)
         # Skip heavy startup gates that might fail in CI without Ollama.
         "SCP_SKIP_STARTUP_GATE": "1",
         "SCP_AUTH_TOKEN_SECRET": _TEST_TOKEN,  # nosec B105 - test fixture token (constant defined at module level)
     }
     result = subprocess.run(  # noqa: S603
-=======
-        "HOME": "/tmp",
-        # Skip heavy startup gates that might fail in CI without Ollama.
-        "SCP_SKIP_STARTUP_GATE": "1",
-        "SCP_AUTH_TOKEN_SECRET": "test-token-for-import-only",
-    }
-    result = subprocess.run(
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         [sys.executable, "-c", code],
         capture_output=True, text=True, env=env, timeout=60,
     )

@@ -98,11 +98,7 @@ _PRINCIPLES: list[Principle] = [
     Principle(
         PrincipleId.NO_HALLUCINATION, "No Hallucination",
         "The system must abstain rather than fabricate sources, citations or facts.",
-<<<<<<< HEAD
-        weight=1.4, default_action="ESCALATE",
-=======
         weight=1.4, default_action="KILL",
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     ),
     Principle(
         PrincipleId.EVIDENCE_FIRST, "Evidence First",

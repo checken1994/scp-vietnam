@@ -71,14 +71,10 @@ def _wiki_cache_key(target: str) -> str:
 
 def _wiki_circuit_check() -> bool:
     """Return True if request may proceed (breaker closed or reset time elapsed)."""
-<<<<<<< HEAD
     # [FALSE-POS-FIX] F824: removed `_wiki_circuit_reset_time` — read-only here
     # (only compared at L76). Assigned in _wiki_register_failure() which has its own global.
     # Kept _wiki_circuit_open (L78=) and _wiki_fail_count (L79=) — both assigned below.
     global _wiki_circuit_open, _wiki_fail_count
-=======
-    global _wiki_circuit_open, _wiki_circuit_reset_time, _wiki_fail_count
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     if _wiki_circuit_open:
         if time.time() >= _wiki_circuit_reset_time:
             logger.info("[wikipedia] Circuit breaker RESET — retrying after cooldown")
@@ -150,11 +146,7 @@ def _fetch_wikipedia_pages(target: str) -> dict | None:
                 "exchars": "500",
             })
             url = f"https://en.wikipedia.org/w/api.php?{params}"
-<<<<<<< HEAD
             req = urllib.request.Request(url, headers={  # noqa: S310
-=======
-            req = urllib.request.Request(url, headers={
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 "User-Agent": _os.environ.get(
                     "WIKIPEDIA_USER_AGENT",
                     "SCP-V3/1.0 (scp-research@example.com)",
@@ -215,11 +207,7 @@ def _fetch_wikipedia_pages(target: str) -> dict | None:
                 continue
             return None
 
-<<<<<<< HEAD
         except (urllib.error.URLError, OSError) as ue:  # [FALSE-POS-FIX] B014: TimeoutError IS OSError in Python 3 — redundant
-=======
-        except (urllib.error.URLError, TimeoutError, OSError) as ue:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             # Transient network/timeout — retry with backoff.
             wait = 2 ** attempt
             logger.warning(

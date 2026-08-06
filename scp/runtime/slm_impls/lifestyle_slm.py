@@ -429,11 +429,7 @@ class HolidaySLM(BaseSLM):
                         data = _json.loads(resp.read().decode('utf-8'))
                     if isinstance(data, list) and data:
                         import random as _rand
-<<<<<<< HEAD
                         holiday = _rand.choice(data)  # noqa: S311
-=======
-                        holiday = _rand.choice(data)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         name = holiday.get("name", "")
                         date = holiday.get("date", "")
                         local_name = holiday.get("localName", "")

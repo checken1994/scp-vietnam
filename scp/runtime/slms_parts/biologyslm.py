@@ -306,11 +306,7 @@ class BiologySLM(BaseSLM):
                     req = urllib.request.Request(url, headers={
                         'User-Agent': 'SCP-V75-Bot/1.0 (educational research)'
                     })
-<<<<<<< HEAD
                     with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
-=======
-                    with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         data = _json.loads(resp.read().decode('utf-8'))
                     types = [t["type"]["name"] for t in data.get("types", [])]
                     if types:
@@ -332,17 +328,10 @@ class BiologySLM(BaseSLM):
                     import json as _json
                     import urllib.request
                     url = f"https://www.fruityvice.com/api/fruit/{fruit}"
-<<<<<<< HEAD
                     req = urllib.request.Request(url, headers={  # noqa: S310
                         'User-Agent': 'SCP-V75-Bot/1.0 (educational research)'
                     })
                     with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
-=======
-                    req = urllib.request.Request(url, headers={
-                        'User-Agent': 'SCP-V75-Bot/1.0 (educational research)'
-                    })
-                    with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         data = _json.loads(resp.read().decode('utf-8'))
                     nutr = data.get("nutritions", {})
                     answer = (f"{data.get('name', fruit)} (family: {data.get('family', '')}). "

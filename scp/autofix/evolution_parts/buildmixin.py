@@ -205,21 +205,13 @@ class EvolutionEngineBuildMixin:
             # circular imports, or runtime errors at module level. Test bằng cách
             # import thật (fail-open if import machinery unavailable).
             try:
-<<<<<<< HEAD
-=======
-                import importlib
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 import importlib.util
                 # Use spec_from_file_location to avoid polluting sys.modules
                 _module_name = f"_v91_validate_{spec.name.replace('.', '_').replace('-', '_')}"
                 _spec_obj = importlib.util.spec_from_file_location(_module_name, str(filepath))
                 if _spec_obj is None or _spec_obj.loader is None:
                     return False, "importlib could not create spec from file"
-<<<<<<< HEAD
                 _module = importlib.util.module_from_spec(_spec_obj)  # noqa: F841 — intentionally not exec'd (see comment below: too risky for new code)
-=======
-                _module = importlib.util.module_from_spec(_spec_obj)
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 # Don't exec the module — just check it's loadable structure-wise.
                 # Exec could have side effects (network calls, file writes, etc.).
                 # If we want deeper check, we'd exec, but that's risky for new code.
@@ -263,11 +255,7 @@ class EvolutionEngineBuildMixin:
             # dict comprehension). Quick test: try to exec module in isolated
             # namespace — if it raises, validation fails. Fail-open on error.
             try:
-<<<<<<< HEAD
                 _namespace = {"__name__": _module_name, "__file__": str(filepath)}  # noqa: F841 — prepared for exec but intentionally not used (see comment below)
-=======
-                _namespace = {"__name__": _module_name, "__file__": str(filepath)}
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 # Don't actually exec — too risky for new code. Just verify the
                 # module has a docstring (basic quality signal) and at least 1 def.
                 _has_docstring = bool(_tree.body and isinstance(_tree.body[0], _ast.Expr)

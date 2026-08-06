@@ -284,11 +284,8 @@ class AutoFixEngine:
           1. ast.parse() — patched file still parses (syntax OK)
           2. Re-scan same file — original bug still there? (NEW)
           3. Check no NEW bugs introduced (compare against original_bugs signatures)
-<<<<<<< HEAD
           4. [WORLD-CLASS-GATE] self_scan_patch_diff — patch không được thêm pattern nguy hiểm
           5. [WORLD-CLASS-GATE] pytest — suite không được vỡ sau patch
-=======
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         """
         try:
             # [V9.1-UPGRADE] Check 1: ast.parse — file must still be valid Python
@@ -341,13 +338,9 @@ class AutoFixEngine:
                 _all_bugs_post = ast_scan_scp()
                 _new_bugs = []
                 _orig_lines = {getattr(b, "line", None) for b in original_bugs}
-<<<<<<< HEAD
                 # [FALSE-POS-FIX] F841: removed `_orig_types` — dead code.
                 # Was meant for dedup but line 346 uses a different set comprehension
                 # (line, type) tuples directly. _orig_types was never referenced.
-=======
-                _orig_types = {getattr(b, "bug_type", "") for b in original_bugs}
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 for b in _all_bugs_post:
                     if str(getattr(b, "file", "")) != str(filepath):
                         continue
@@ -370,7 +363,6 @@ class AutoFixEngine:
             except Exception as _new_bug_err:
                 logger.debug(f"[V9.1-UPGRADE] new-bug check failed (fail-open): {_new_bug_err}")
 
-<<<<<<< HEAD
             # [WORLD-CLASS-GATE] Check 4: self_scan_patch_diff
             # TẠI SAO: Runtime log cho thấy "fix subprocess nhưng patch thêm subprocess mới"
             # (audit_and_fix.py có gate này, SCP thiếu). Soi patch tìm pattern nguy hiểm
@@ -411,7 +403,7 @@ class AutoFixEngine:
             # Gate: chỉ chạy nếu tests/ tồn tại + SCP_AUTOFIX_RUN_PYTEST=1 (opt-in).
             try:
                 if os.environ.get("SCP_AUTOFIX_RUN_PYTEST", "0") == "1":
-                    import subprocess as _sp  # noqa: S404
+                    import subprocess as _sp
                     import sys as _sys
                     _tests_dir = filepath.parent
                     while _tests_dir.parent != _tests_dir:
@@ -431,61 +423,6 @@ class AutoFixEngine:
                 logger.debug(f"[WORLD-CLASS-GATE] pytest verify fail-open: {_pytest_err}")
 
             return True, "fix verified OK (syntax + re-scan + no new bugs + self-scan + pytest)"
-=======
-            # [DNA2-FIX] Check 4: RUN TESTS — "code sau fix còn hoạt động ĐÚNG không?"
-            # DNA #2: PASS ≠ ĐÚNG — syntax OK + ruff OK ≠ logic OK
-            # Phải chạy pytest để verify behavior thật
-            try:
-                import subprocess as _sp  # noqa: S404
-
-                # Tìm test file cho file vừa fix
-                # Ví dụ: scp/api_server.py → tests/test_api_server.py hoặc scp/tests/test_api_server.py
-                _file_name = filepath.stem  # "api_server"
-                _test_candidates = [
-                    f"tests/test_{_file_name}.py",
-                    f"scp/tests/test_{_file_name}.py",
-                    "tests/test_judge_characterization.py",  # fallback: judge tests
-                ]
-
-                _test_file = None
-                for _tc in _test_candidates:
-                    _tc_path = filepath.parent.parent / _tc if not filepath.is_absolute() else filepath.parent / _tc
-                    # Try relative to project root
-                    _root = filepath.parent
-                    while _root.name != "scp-vietnam" and _root.parent != _root:
-                        _root = _root.parent
-                    _tc_full = _root / _tc
-                    if _tc_full.exists():
-                        _test_file = str(_tc_full)
-                        break
-
-                if _test_file:
-                    # Run pytest on the test file — timeout 60s
-                    _result = _sp.run(
-                        [sys.executable, "-m", "pytest", _test_file, "-x", "--tb=short", "-q"],
-                        capture_output=True, text=True, timeout=60,
-                        cwd=str(_root) if _root.exists() else None,
-                    )
-
-                    if _result.returncode != 0:
-                        # Tests FAILED → fix broke behavior → ROLLBACK
-                        _fail_summary = _result.stdout[-500:] if _result.stdout else _result.stderr[-500:]
-                        return False, (
-                            f"TESTS FAILED after fix — code KHÔNG HOẠT ĐỘNG ĐÚNG: "
-                            f"pytest returncode={_result.returncode}\n"
-                            f"Output: {_fail_summary}"
-                        )
-                    else:
-                        logger.info(f"[DNA2-FIX] Tests PASSED: {_test_file}")
-                else:
-                    # No test file found — fail-open (can't verify behavior)
-                    logger.debug(f"[DNA2-FIX] No test file found for {filepath.name} — behavior check skipped")
-            except Exception as _test_err:
-                # fail-open: test runner error → don't block fix
-                logger.debug(f"[DNA2-FIX] Test check error (fail-open): {_test_err}")
-
-            return True, "fix verified OK (syntax + re-scan + no new bugs + tests pass)"
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
         except Exception as _verify_err:
             logger.debug(f"[V9.1-UPGRADE] _verify_fix error (fail-open): {_verify_err}")
@@ -738,11 +675,7 @@ class AutoFixEngine:
             except Exception as e:
                 logger.warning(f"Silent except: {e}")
 
-<<<<<<< HEAD
             _autofix_validation_skipped = False  # noqa: F841 — sentinel for future wiring (tracks validation skip status)
-=======
-            _autofix_validation_skipped = False
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             try:
                 import re as _autofix_re
                 # Try SEARCH/REPLACE first, then legacy OLD/NEW
@@ -806,19 +739,11 @@ class AutoFixEngine:
                 else:
                     # No search-replace markers → _apply_fix will try fenced-code
                     # or queue for review. Skip validation (not applicable).
-<<<<<<< HEAD
                     _autofix_validation_skipped = True  # noqa: F841 — sentinel
             except Exception as _val_err:
                 # Fail-open: validation infrastructure crashed → don't block fix.
                 logger.debug(f"[AutoFix] [OPT-26] validation harness error (non-blocking): {_val_err}")
                 _autofix_validation_skipped = True  # noqa: F841 — sentinel
-=======
-                    _autofix_validation_skipped = True
-            except Exception as _val_err:
-                # Fail-open: validation infrastructure crashed → don't block fix.
-                logger.debug(f"[AutoFix] [OPT-26] validation harness error (non-blocking): {_val_err}")
-                _autofix_validation_skipped = True
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
             patched = agent._apply_fix(filepath, bug.suggested_fix)
             if patched:

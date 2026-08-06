@@ -166,12 +166,8 @@ def _alert_incidents(incidents: list[dict]) -> None:
 
 
 def _harm_loop() -> None:
-<<<<<<< HEAD
     # [FALSE-POS-FIX] F824: `global _running` removed — read-only access (while loop).
     # Assignment happens in start_detector()/stop_detector() which have their own global.
-=======
-    global _running
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     logger.info("[HarmDetector] Background thread started")
     while _running:
         try:
@@ -235,15 +231,8 @@ def get_harm_stats() -> dict[str, Any]:
                     ht = inc.get("harm_type", "unknown")
                     counts[ht] = counts.get(ht, 0) + 1
                     total += 1
-<<<<<<< HEAD
                 except Exception:  # noqa: S112
                     continue
     except Exception as _e:  # noqa: S110
         logger.debug(f"[silent-except] {_e}")
-=======
-                except Exception:
-                    continue
-    except Exception:
-        pass
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     return {"total_incidents": total, "by_type": counts, "running": _running}

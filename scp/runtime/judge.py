@@ -72,7 +72,6 @@ from scp.runtime.slms import (
 
 logger = logging.getLogger("scp.judge")
 
-<<<<<<< HEAD
 # [FALSE-POS-FIX-4] Severity constants — mirrors LLM JSON contract from
 # logical_auditor.py:49 (severity: "critical|major|minor"). Defined as
 # module-level constants so static dataflow scanners can see "major" IS
@@ -82,8 +81,6 @@ SEVERITY_MAJOR = "major"
 SEVERITY_MINOR = "minor"
 VALID_SEVERITIES = frozenset({SEVERITY_CRITICAL, SEVERITY_MAJOR, SEVERITY_MINOR})
 
-=======
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
 # [V5.3-WIRE] multi_llm_check integration — opt-in via SCP_MULTI_LLM_CHECK=1 env var.
 # TẠI SAO: DNA SCP #20 "ảo giác đồng thuận" — 100 AI cùng kết luận chưa chắc 100
@@ -166,26 +163,14 @@ class RealityJudge(JudgeBgMixin, JudgeCoreMixin, JudgeRouteMixin, JudgeUtilMixin
         self.verdict_history: list[JudgeVerdict] = []
         self.registry = None  # [v27] Deprecated checker_factory
 
-<<<<<<< HEAD
-                # [V95] SmartClassifier — hybrid keyword + semantic classification
-        try:
-            from scp.core.smart_classifier import SmartClassifier
-            self.classifier = SmartClassifier()
-            self.smart_classifier = self.classifier  # alias cho phase2
-=======
         # [V95] SmartClassifier — hybrid keyword + semantic classification
         try:
             from scp.core.smart_classifier import SmartClassifier
             self.classifier = SmartClassifier()
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             logger.info("[V95] SmartClassifier initialized")
         except Exception as e:
             logger.warning(f"[V95] SmartClassifier init failed: {e}")
             self.classifier = None
-<<<<<<< HEAD
-            self.smart_classifier = None
-=======
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
         # [V65] Wire ExperienceEngine directly into RealityJudge
         # Trước V65: ExperienceEngine chỉ có trong SCPV14 (không dùng trong run_247)
@@ -812,7 +797,6 @@ class RealityJudge(JudgeBgMixin, JudgeCoreMixin, JudgeRouteMixin, JudgeUtilMixin
     def _apply_logical_audit(self, verdict, audit_result):
         """Apply LogicalAuditor result to verdict."""
         verdict.evidence["v107_logical_audit"] = audit_result.to_dict()
-<<<<<<< HEAD
         # Severity values come from LLM JSON (see SEVERITY_* constants above +
         # logical_auditor.py:49 contract). Using named constants instead of
         # string literals so dataflow scanners can trace the assignment.
@@ -822,15 +806,6 @@ class RealityJudge(JudgeBgMixin, JudgeCoreMixin, JudgeRouteMixin, JudgeUtilMixin
             verdict.confidence *= 0.3
             verdict.reasoning += f" | [V107 LogicalAuditor] {critical} critical logic issues found"
             logger.warning(f"[V107] {critical} critical logic issues: {[i.description[:60] for i in audit_result.issues if i.severity == SEVERITY_CRITICAL]}")
-=======
-        # Critical issues → downgrade confidence
-        critical = sum(1 for i in audit_result.issues if i.severity == "critical")
-        major = sum(1 for i in audit_result.issues if i.severity == "major")
-        if critical > 0:
-            verdict.confidence *= 0.3
-            verdict.reasoning += f" | [V107 LogicalAuditor] {critical} critical logic issues found"
-            logger.warning(f"[V107] {critical} critical logic issues: {[i.description[:60] for i in audit_result.issues if i.severity == 'critical']}")
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         elif major > 0:
             verdict.confidence *= 0.7
             verdict.reasoning += f" | [V107 LogicalAuditor] {major} major logic issues found"
@@ -1129,11 +1104,7 @@ class RealityJudge(JudgeBgMixin, JudgeCoreMixin, JudgeRouteMixin, JudgeUtilMixin
 
     def get_stats(self) -> dict:
         """Thống kê Reality Judge."""
-<<<<<<< HEAD
         verdicts = {"PASS": 0, "FAIL": 0, "PARTIAL": 0, "CONFLICT": 0, "UNKNOWN": 0}  # nosec B105 — verdict counters, not passwords
-=======
-        verdicts = {"PASS": 0, "FAIL": 0, "PARTIAL": 0, "CONFLICT": 0, "UNKNOWN": 0}
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         for v in self.verdict_history:
             verdicts[v.verdict] = verdicts.get(v.verdict, 0) + 1
         return {
@@ -1197,15 +1168,9 @@ class RealityJudge(JudgeBgMixin, JudgeCoreMixin, JudgeRouteMixin, JudgeUtilMixin
         verdict = None  # noqa: F841 — sentinel init, used later in Step 9
         verdict_type = None  # noqa: F841 — sentinel init
         reasoning = ""  # noqa: F841 — sentinel init
-<<<<<<< HEAD
         _pre_verdict_evidence: dict[str, Any] = {}  # noqa: F841 — sentinel init (populated by judge pipeline below)
         _adversary_conflict = False  # noqa: F841 — sentinel init
         _es_index_threshold_boost = 0.0  # noqa: F841 — sentinel init
-=======
-        _pre_verdict_evidence: dict[str, Any] = {}
-        _adversary_conflict = False
-        _es_index_threshold_boost = 0.0
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
         # Delegate to the extracted judge pipeline (JudgeCoreMixin.judge)
         return super().judge(

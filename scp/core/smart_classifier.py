@@ -286,12 +286,6 @@ class SmartClassifier:
             r'|\bflat\s+(?:earth|trái\s+đất)\b'
             r'|\btrái\s+đất\s+phẳng\b'
             r'|\b(?:is|có)\s+(?:earth|trái\s+đất)\s+(?:flat|phẳng)\b'
-<<<<<<< HEAD
-            # NEW: shape questions (round / sphere / circle)
-            r'|\b(?:earth|trái\s+đất).{0,30}(?:hình\s*tròn|tròn|cầu|round|sphere|oblate|elip|elliptical)\b'
-            r'|\b(?:hình\s*tròn|round|sphere).{0,20}(?:earth|trái\s+đất)\b'
-=======
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             r'|\bfact[\s-]?check\b'
             r'|\btrue\s+or\s+false\b'
             r'|\bđúng\s+hay\s+sa?i\b'

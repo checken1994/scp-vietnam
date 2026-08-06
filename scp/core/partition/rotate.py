@@ -89,11 +89,7 @@ class ThreeTierCache:
                         safe_cols = [c for c in sorted(common) if c.replace("_", "").replace("cache", "").isalnum()]
                         if safe_cols:
                             col_list = ", ".join(safe_cols)
-<<<<<<< HEAD
                             conn.execute(f"INSERT INTO verdict_cache ({col_list}) SELECT {col_list} FROM verdict_cache_old")  # col_list built from validated safe_cols (schema introspection)  # nosec B608  # noqa: S608
-=======
-                            conn.execute(f"INSERT INTO verdict_cache ({col_list}) SELECT {col_list} FROM verdict_cache_old")  # col_list built from validated safe_cols (schema introspection)  # nosec B608
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     conn.execute("DROP TABLE verdict_cache_old")
             except Exception as mig_e:
                 logger.debug(f"[AUDIT-1] verdict_cache migration check: {mig_e}")

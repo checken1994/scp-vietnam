@@ -76,11 +76,7 @@ def fetch_wikipedia_random(lang: str = "vi", n: int = 5) -> list[dict]:
                 r = future.result(timeout=20)
                 if r:
                     results.append(r)
-<<<<<<< HEAD
             except Exception:  # noqa: S112
-=======
-            except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 continue
 
     return results
@@ -117,11 +113,7 @@ def fetch_open_library(n: int = 3) -> list[dict]:
                 "domain": "arts",
                 "category": "book",
             })
-<<<<<<< HEAD
         except Exception:  # noqa: S112
-=======
-        except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 
@@ -186,11 +178,7 @@ def fetch_open5e_spells(n: int = 3) -> list[dict]:
                 "domain": "arts",
                 "category": "spell",
             })
-<<<<<<< HEAD
         except Exception:  # noqa: S112
-=======
-        except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 
@@ -221,11 +209,7 @@ def fetch_bible_api(n: int = 2) -> list[dict]:
                 "domain": "history",
                 "category": "religion",
             })
-<<<<<<< HEAD
         except Exception:  # noqa: S112
-=======
-        except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 

@@ -663,6 +663,11 @@ async def ask(req: AskRequest, request: Request):
             from scp.core.multi_source_verifier import AsyncMultiSourceVerifier
             from scp.data_sources import get_registry
 
+            # Pull sources that self-report fact-check capability. Each source's
+            # `can_handle(intent="fact_check")` decides — disabled sources
+            # (e.g. GoogleFactCheck without API key) return False and are skipped.
+            # Use the registry's public API (`get_sources_for_intent`) plus a
+            # final can_handle() guard so disabled sources don't waste a slot.
             _fc_sources = []
             try:
                 _registry = get_registry()
@@ -670,12 +675,15 @@ async def ask(req: AskRequest, request: Request):
                 try:
                     _candidates = _registry.get_sources_for_intent("fact_check") or []
                 except Exception:
+                    # Older registries without get_sources_for_intent — fall back
+                    # to iterating the internal dict (mirrors SourceWatchlist
+                    # pattern in judge.py:345).
                     _candidates = list(getattr(_registry, "_sources", {}).values())
                 for _src in _candidates:
                     try:
                         if _src.can_handle("fact_check"):
                             _fc_sources.append(_src)
-                    except Exception:
+                    except Exception:  # noqa: S112
                         continue
             except Exception as _reg_err:
                 logger.debug(f"[OPT-22] registry lookup failed: {_reg_err}")
@@ -685,19 +693,24 @@ async def ask(req: AskRequest, request: Request):
                 req.question, sources=_fc_sources or None
             )
 
+            # [OPT-22b] Translate per-source verdicts (GoogleFactCheck returns
+            # metadata.consensus="FALSE"/"TRUE"/"MIXED" — the aggregator only
+            # counts `verified`/`contradicted` keys, so consensus is "unclear"
+            # unless we synthesize these keys). Map FALSE → contradicted,
+            # TRUE → verified, then recompute consensus.
             _extra_verified = 0
             _extra_contradicted = 0
             for _raw in fact_result.get("results", []) or []:
                 try:
                     _meta = _raw.get("metadata", {}) if isinstance(_raw, dict) else {}
-                    _verdict = (str(_meta.get("consensus", "")).upper() if _meta else "")
+                    _verdict = (str(_meta.get("consensus", "")).upper()
+                                if _meta else "")
                     if _verdict == "FALSE":
                         _extra_contradicted += 1
                     elif _verdict == "TRUE":
                         _extra_verified += 1
-                except Exception:
+                except Exception:  # noqa: S112
                     continue
-
             if _extra_verified or _extra_contradicted:
                 fact_result["verified"] = fact_result.get("verified", 0) + _extra_verified
                 fact_result["contradicted"] = fact_result.get("contradicted", 0) + _extra_contradicted
@@ -705,6 +718,7 @@ async def ask(req: AskRequest, request: Request):
                     fact_result["consensus"] = "contradicted"
                 elif fact_result["verified"] > fact_result["contradicted"]:
                     fact_result["consensus"] = "verified"
+                # else: keep "unclear" (tie)
 
             if fact_result.get("consensus") == "contradicted":
                 logger.info(
@@ -933,7 +947,7 @@ async def ask(req: AskRequest, request: Request):
 # [V104.45 #Z] TẠI SAO: fact-check was post-hoc only — FALSE claims logged but
 # answer already sent to client. Fix: retract queue — if FALSE claims found,
 # mark the answer as retracted in a queue that clients can poll.
-fact_check_retract_queue: list[dict] = []  # in-memory retract queue (cap 1000)
+_fact_check_retract_queue: list[dict] = []  # in-memory retract queue (cap 1000)
 
 
 async def _async_fact_check(answer: str, question: str, session_id: str = ""):
@@ -983,11 +997,9 @@ async def _async_fact_check(answer: str, question: str, session_id: str = ""):
 
 
 
-
 # ============================================================
 # IMPORT — Excel/JSONL file upload
 # ============================================================
-
 
 
 
@@ -1007,6 +1019,7 @@ async def dashboard():
 # ============================================================
 # V103 NEW: Attack Crawler endpoints
 # ============================================================
+
 
 
 
@@ -1065,9 +1078,14 @@ async def health():
 
 
 
+
+
+
+
 # ============================================================
 # V104.2 NEW: Fast Learning (Parallel + Skip-Known + Compounding)
 # ============================================================
+
 
 
 
@@ -1106,3 +1124,13 @@ async def root():
 # ============================================================
 # [ARCH-2] AutoFix Permission Management — human reviews logic bug fixes
 # ============================================================
+
+
+
+
+
+
+
+
+
+

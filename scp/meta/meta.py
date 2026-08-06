@@ -519,11 +519,7 @@ class WorldModel:
             params.append(obj.lower())
 
         where = " AND ".join(conditions) if conditions else "1=1"
-<<<<<<< HEAD
         return db_query_all(f"SELECT * FROM meta_world_model WHERE {where} ORDER BY confidence DESC", tuple(params))  # nosec B608 — input validated by SCP whitelist  # noqa: S608
-=======
-        return db_query_all(f"SELECT * FROM meta_world_model WHERE {where} ORDER BY confidence DESC", tuple(params))  # nosec B608 — input validated by SCP whitelist
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     def get_neighbors(self, entity: str) -> dict[str, list[str]]:
         """Lấy hàng xóm của 1 entity (graph traversal)."""

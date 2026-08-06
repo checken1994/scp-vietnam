@@ -45,7 +45,6 @@ import re
 import sqlite3
 import threading
 import time
-
 import urllib.parse
 import urllib.request
 from datetime import datetime
@@ -557,13 +556,11 @@ class FastLearningEngine:
                 "srsearch": search_term, "format": "json", "srlimit": 1,
             })
             url = f"https://vi.wikipedia.org/w/api.php?{params}"
-
             parsed_url = urllib.parse.urlparse(url)
             if parsed_url.scheme not in ("http", "https"):
                 raise ValueError(f"Unsupported URL scheme: {parsed_url.scheme!r}")
             req = urllib.request.Request(url, headers={"User-Agent": "SCP-V104.2/1.0"})
             with urllib.request.urlopen(req, timeout=10) as resp:  # noqa: S310 — scheme validated above
-
                 data = json.loads(resp.read())
                 search_results = data.get("query", {}).get("search", [])
                 if not search_results:
@@ -824,15 +821,12 @@ class FastLearningEngine:
         # Sinh danh sách câu hỏi
         question_batch = []
         for _ in range(count):
-
             domain = random.choice(DOMAINS)  # noqa: S311
-
             templates = SEED_QUESTIONS[domain]
             country_templates = [t for t in templates if "{country}" in t]
             compound_templates = [t for t in templates if "{compound}" in t]
             generic_templates = [t for t in templates
                                  if "{country}" not in t and "{compound}" not in t]
-
             roll = random.random()  # noqa: S311
             country_used = None
             if country_templates and roll < 0.7:
@@ -1025,9 +1019,7 @@ class FastLearningEngine:
 
         for _ in range(count):
             # 1. Sinh câu hỏi theo ma trận 14 × 5
-
             domain = random.choice(DOMAINS)  # noqa: S311
-
             templates = SEED_QUESTIONS[domain]
 
             # Ưu tiên template có {country} để đảm bảo coverage đa quốc gia
@@ -1037,13 +1029,11 @@ class FastLearningEngine:
                                  if "{country}" not in t and "{compound}" not in t]
 
             # 70% country-specific, 20% compound, 10% generic (nếu có)
-
             roll = random.random()  # noqa: S311
             country_used = None
             if country_templates and roll < 0.7:
                 template = random.choice(country_templates)  # noqa: S311
                 country = random.choice(COUNTRIES)  # noqa: S311
-
                 question = template.format(country=country)
                 country_used = country
                 # Track coverage
@@ -1051,7 +1041,6 @@ class FastLearningEngine:
                     results["matrix_coverage"]["by_country"].get(country, 0) + 1
                 )
             elif compound_templates and roll < 0.9:
-
                 template = random.choice(compound_templates)  # noqa: S311
                 question = template.format(compound=random.choice(COMPOUNDS))  # noqa: S311
             elif generic_templates:
@@ -1061,17 +1050,14 @@ class FastLearningEngine:
                 # Fallback nếu không có compound/generic
                 template = random.choice(country_templates)  # noqa: S311
                 country = random.choice(COUNTRIES)  # noqa: S311
-
                 question = template.format(country=country)
                 country_used = country
                 results["matrix_coverage"]["by_country"][country] = (
                     results["matrix_coverage"]["by_country"].get(country, 0) + 1
                 )
             else:
-
                 template = random.choice(compound_templates)  # noqa: S311
                 question = template.format(compound=random.choice(COMPOUNDS))  # noqa: S311
-
 
             results["matrix_coverage"]["by_domain"][domain] = (
                 results["matrix_coverage"]["by_domain"].get(domain, 0) + 1
@@ -1255,14 +1241,12 @@ class FastLearningEngine:
         from defusedxml import ElementTree as DET  # nosec B314 — defusedxml hardens XXE
         headlines = []
         try:
-
             parsed = urllib.parse.urlparse(rss_url)
             if parsed.scheme not in ("http", "https"):
                 logger.debug(f"RSS URL scheme not allowed: {rss_url}")
                 return []
             req = urllib.request.Request(rss_url, headers={"User-Agent": "SCP-V104/1.0"})  # noqa: S310 — scheme validated above
             with urllib.request.urlopen(req, timeout=15) as resp:  # noqa: S310 — scheme validated above
-
                 content = resp.read().decode("utf-8", errors="replace")
             root = DET.fromstring(content)
             items = root.findall(".//item") or root.findall(".//{http://www.w3.org/2005/Atom}entry")

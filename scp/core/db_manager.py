@@ -176,13 +176,9 @@ _last_batch_flush = time.time()
 
 def db_batch_exec(sql: str, params: tuple) -> None:
     """Buffer writes → flush in batch (100x faster than 1-by-1)."""
-<<<<<<< HEAD
     # [FALSE-POS-FIX] F824: `global _last_batch_flush` removed — read-only access
     # (only `time.time() - _last_batch_flush` comparison, no assignment here).
     # Assignment happens in db_batch_flush() below, which has its own global decl.
-=======
-    global _last_batch_flush
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     with _batch_lock:
         _batch_buffer.append((sql, params))
         should_flush = (
@@ -195,16 +191,12 @@ def db_batch_exec(sql: str, params: tuple) -> None:
 
 def db_batch_flush() -> int:
     """Flush buffered writes to DB in 1 transaction."""
-<<<<<<< HEAD
     # [FALSE-POS-FIX] F824: removed `_batch_buffer` from global — only .clear()/.append()
     # method calls (no reassignment). Kept `_last_batch_flush` — assigned at line 198.
     # NOTE: pyflakes F824 may still flag `_last_batch_flush` as unused due to a known
     # pyflakes limitation (assignment inside `with` block). If so, that is a FALSE
     # POSITIVE — the assignment IS in function scope. Suppress with noqa if needed.
     global _last_batch_flush
-=======
-    global _last_batch_flush, _batch_buffer
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     with _batch_lock:
         if not _batch_buffer:
             return 0
@@ -273,21 +265,12 @@ def db_query_one(sql: str, params=(), db_path: str = None) -> Optional[dict]:
 def _cap_table(table_name: str, max_rows: int, evict_count: int):
     """Archive + delete old rows."""
     try:
-<<<<<<< HEAD
         count_row = db_query_one(f'SELECT COUNT(*) as cnt FROM "{table_name}"')  # nosec B608 — input validated by SCP whitelist  # noqa: S608
         if count_row and count_row['cnt'] > max_rows:
             try:
                 old_rows = db_query_all(f'SELECT * FROM "{table_name}" ORDER BY timestamp ASC LIMIT {evict_count}')  # nosec B608 — input validated by SCP whitelist  # noqa: S608
             except Exception:
                 old_rows = db_query_all(f'SELECT * FROM "{table_name}" ORDER BY rowid ASC LIMIT {evict_count}')  # nosec B608 — input validated by SCP whitelist  # noqa: S608
-=======
-        count_row = db_query_one(f'SELECT COUNT(*) as cnt FROM "{table_name}"')  # nosec B608 — input validated by SCP whitelist
-        if count_row and count_row['cnt'] > max_rows:
-            try:
-                old_rows = db_query_all(f'SELECT * FROM "{table_name}" ORDER BY timestamp ASC LIMIT {evict_count}')  # nosec B608 — input validated by SCP whitelist
-            except Exception:
-                old_rows = db_query_all(f'SELECT * FROM "{table_name}" ORDER BY rowid ASC LIMIT {evict_count}')  # nosec B608 — input validated by SCP whitelist
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             if not old_rows: return
 
             archive_dir = os.path.join(DATA_DIR, "archive")
@@ -298,15 +281,9 @@ def _cap_table(table_name: str, max_rows: int, evict_count: int):
                     f.write(json.dumps(row, ensure_ascii=False, default=str) + "\n")
 
             try:
-<<<<<<< HEAD
                 db_exec(f'DELETE FROM "{table_name}" WHERE rowid IN (SELECT rowid FROM "{table_name}" ORDER BY timestamp ASC LIMIT {evict_count})')  # nosec B608 — input validated by SCP whitelist  # noqa: S608
             except Exception:
                 db_exec(f'DELETE FROM "{table_name}" WHERE rowid IN (SELECT rowid FROM "{table_name}" ORDER BY rowid ASC LIMIT {evict_count})')  # nosec B608 — input validated by SCP whitelist  # noqa: S608
-=======
-                db_exec(f'DELETE FROM "{table_name}" WHERE rowid IN (SELECT rowid FROM "{table_name}" ORDER BY timestamp ASC LIMIT {evict_count})')  # nosec B608 — input validated by SCP whitelist
-            except Exception:
-                db_exec(f'DELETE FROM "{table_name}" WHERE rowid IN (SELECT rowid FROM "{table_name}" ORDER BY rowid ASC LIMIT {evict_count})')  # nosec B608 — input validated by SCP whitelist
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     except Exception as e:
         logger.debug(f"[V104.37] core/db_manager.py: e={e}")
 
@@ -914,11 +891,7 @@ def _migrate_verdict_cache_schema() -> None:
         col_list = ", ".join(sorted(common))
         try:
             db_exec(
-<<<<<<< HEAD
                 f"INSERT INTO verdict_cache ({col_list}) "  # nosec B608 — input validated by SCP whitelist  # noqa: S608
-=======
-                f"INSERT INTO verdict_cache ({col_list}) "  # nosec B608 — input validated by SCP whitelist
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 f"SELECT {col_list} FROM verdict_cache_old"
             )
             logger.info(
@@ -1039,11 +1012,7 @@ def _migrate_knowledge_schema() -> None:
         col_list = ", ".join(sorted(common))
         try:
             db_exec(
-<<<<<<< HEAD
                 f"INSERT OR IGNORE INTO knowledge ({col_list}) "  # nosec B608 — input validated by SCP whitelist  # noqa: S608
-=======
-                f"INSERT OR IGNORE INTO knowledge ({col_list}) "  # nosec B608 — input validated by SCP whitelist
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 f"SELECT {col_list} FROM knowledge_old"
             )
             logger.info(

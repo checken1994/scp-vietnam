@@ -18,58 +18,18 @@ select = [
 ignore = [
     "E402",   # Module level import not at top of file (needed for sys.path manipulation)
     "E501",   # Line too long (handled by line-length setting)
-<<<<<<< HEAD
     "E722",   # Bare except (will fix manually)
-=======
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     "E701",   # Multiple statements (will fix manually)
     "I001",   # Import block un-sorted (cosmetic)
     "E702",   # Multiple statements on one line (cosmetic)
     "F401",   # Unused imports (cosmetic)
     "W293",   # Blank line contains whitespace (cosmetic)
     "W291",   # Trailing whitespace (cosmetic)
-<<<<<<< HEAD
     "F821",   # Undefined name (lazy loading pattern)
     "F722",   # Annotation in wrong format
-=======
-    "F722",   # Annotation in wrong format
-    # RC-1 FIX: F821 (undefined name) and E722 (bare except) removed from ignore.
-    # Justification "lazy loading pattern" was bogus — grep TYPE_CHECKING = 0 hits.
-    # These checks now catch real bugs (32 F821 + 1 E722 fixed in Task 6-A).
-    # Task 7-B: 15 B324 MD5 → SHA-256 fixed, không cần ignore B324.
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F811"]  # Allow unused imports in __init__.py
 "scripts/*" = ["E402", "F401"]     # Allow in scripts
 "tests/*" = ["E402", "F401"]
-<<<<<<< HEAD
-=======
-
-# ============================================================
-# Bandit security scanner config (Task 7-B)
-# ============================================================
-# Verified: B324 MD5 = 0 (was 15, fixed in Task 7-B via SHA-256).
-# Exclude tests/ từ scan (test files chứa patterns intentional cho fuzz testing).
-[tool.bandit]
-exclude_dirs = ["tests/external_audit", "benchmark/attacks"]
-skips = []  # Không skip rule nào — all HIGH/MEDIUM/LOW cần pass
-targets = ["."]
-
-# ============================================================
-# Pytest config (Task 7-B)
-# ============================================================
-[tool.pytest.ini_options]
-minversion = "9.0"
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-asyncio_mode = "auto"
-filterwarnings = [
-    "ignore::DeprecationWarning",
-    "ignore::PendingDeprecationWarning",
-]
-
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f

@@ -28,9 +28,7 @@ from __future__ import annotations
 import json
 import logging
 import os
-
 import shutil  # [FALSE-POS-FIX] F402: moved module-level (was local import inside loop at L176 + L295)
-
 import sqlite3
 import time
 from pathlib import Path
@@ -176,12 +174,7 @@ def cleanup_data_directory(data_dir: str = "data") -> dict:
 
     # Remove __pycache__ if exists
     for cache_dir in data_path.rglob("__pycache__"):
-
         shutil.rmtree(cache_dir, ignore_errors=True)  # [FALSE-POS-FIX] F402: use module-level shutil import (line 296)
-
-        import shutil
-        shutil.rmtree(cache_dir, ignore_errors=True)
-
         results["removed_files"].append(str(cache_dir))
 
     return results
@@ -293,24 +286,14 @@ if __name__ == "__main__":
     with open(test_jsonl) as f:
         lines = f.readlines()
     print(f"  Final count: {len(lines)} (expected 200)")
-
     assert len(lines) == 200  # noqa: S101
-
-    if not (len(lines) == 200):
-        raise AssertionError(f'Assertion failed: len(lines) == 200')
-
 
     # Test 3: Full cleanup
     print("\nTest 3: Full cleanup_data_directory")
     r = cleanup_data_directory(tmpdir)
     print(f"  {r}")
 
-
     shutil.rmtree(tmpdir, ignore_errors=True)  # [FALSE-POS-FIX] F402: use module-level shutil
-
-    import shutil
-    shutil.rmtree(tmpdir, ignore_errors=True)
-
 
     # Test 4: Stats
     print("\nTest 4: Stats")

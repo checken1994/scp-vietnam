@@ -274,11 +274,7 @@ class DataPartitioner:
                             try:
                                 with open(_path, encoding="utf-8", errors="replace") as f:
                                     _day_lines = f.readlines()
-<<<<<<< HEAD
                             except Exception:  # noqa: S112
-=======
-                            except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                                 continue
                             # Only look at the most recent lines across all files
                             _remaining = _max_lines - _lines_seen
@@ -292,11 +288,7 @@ class DataPartitioner:
                                     if _existing_hash == _new_hash:
                                         _is_duplicate = True
                                         break
-<<<<<<< HEAD
                                 except Exception:  # noqa: S112
-=======
-                                except Exception:
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                                     continue
                         if not _is_duplicate:
                             _score += 0.35

@@ -112,11 +112,7 @@ class PolicyApplier:
         """
         actions: dict[str, Any] = {
             "fail_rate": None,
-<<<<<<< HEAD
             "pass_rate": None,  # nosec B105 — rate field, not a password
-=======
-            "pass_rate": None,
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             "unknown_rate": None,
             "use_sources": [],
             "avoid_sources": [],

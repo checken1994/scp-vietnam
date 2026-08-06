@@ -26,12 +26,8 @@ class VisionHandler:
             img_b64 = base64.b64encode(image_bytes).decode('utf-8')
             # Use OpenRouter vision model (llava via Ollama or GPT-4V via OpenRouter)
             # For now, use LLaVA via Ollama if available
-            import urllib.request, json, urllib.parse
+            import urllib.request, json
             url = "http://127.0.0.1:11434/api/generate"
-            # Validate URL scheme to prevent unexpected schemes (e.g., file:)
-            parsed = urllib.parse.urlparse(url)
-            if parsed.scheme not in ("http", "https"):
-                raise ValueError(f"Unsupported URL scheme: {parsed.scheme}")
             payload = {
                 "model": "llava",
                 "prompt": question,

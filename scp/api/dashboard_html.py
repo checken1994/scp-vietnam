@@ -186,50 +186,6 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #0a0a0a; color: 
 </div>
 
 <script>
-<<<<<<< HEAD
-// ============================================================
-// SCP Auto-Token Injector
-// Tự động lấy token từ URL (?token=...) hoặc localStorage
-// rồi gắn vào mọi request API → hết 401 Unauthorized
-// ============================================================
-(function () {
-  const urlParams = new URLSearchParams(window.location.search);
-  let TOKEN = urlParams.get('token') || localStorage.getItem('scp_token') || '';
-
-  // Lưu lại để lần sau không cần gõ ?token= nữa
-  if (TOKEN) {
-    localStorage.setItem('scp_token', TOKEN);
-  }
-
-  // Hiện cảnh báo nếu thiếu token
-  if (!TOKEN) {
-    console.warn('[SCP] Không tìm thấy token. Mở URL kèm ?token=YOUR_TOKEN');
-  }
-
-  // Ghi đè fetch gốc
-  const _originalFetch = window.fetch;
-  window.fetch = function (input, init = {}) {
-    init = init || {};
-    init.headers = init.headers || {};
-
-    if (TOKEN) {
-      if (init.headers instanceof Headers) {
-        if (!init.headers.has('Authorization')) {
-          init.headers.set('Authorization', 'Bearer ' + TOKEN);
-        }
-      } else {
-        if (!init.headers['Authorization'] && !init.headers['authorization']) {
-          init.headers['Authorization'] = 'Bearer ' + TOKEN;
-        }
-      }
-    }
-    return _originalFetch.call(this, input, init);
-  };
-
-  console.log('[SCP] Auto-token injector active' + (TOKEN ? ' (token loaded)' : ' (no token)'));
-})();
-=======
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 const TOKEN = (() => {
   // [RC-2 FIX Task 6-A] Hardcoded fallback token REMOVED — was a production
   // secret shipped in client-side JS (CODE-AUDIT-001 CRITICAL leak). Now the

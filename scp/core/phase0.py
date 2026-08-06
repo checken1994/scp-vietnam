@@ -334,11 +334,7 @@ class Phase0Store:
         try:
             stats = {}
             for table in ['evidences', 'conclusions', 'decision_history', 'reason_chains', 'evidence_links']:
-<<<<<<< HEAD
                 row = db_query_one(f"SELECT COUNT(*) as cnt FROM {table}")  # nosec B608 — input validated by SCP whitelist  # noqa: S608
-=======
-                row = db_query_one(f"SELECT COUNT(*) as cnt FROM {table}")  # nosec B608 — input validated by SCP whitelist
->>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 stats[table] = row["cnt"] if row else 0
             verdicts = db_query_all("SELECT verdict, COUNT(*) as cnt FROM conclusions GROUP BY verdict ORDER BY cnt DESC")
             stats['by_verdict'] = {r['verdict']: r['cnt'] for r in verdicts}
