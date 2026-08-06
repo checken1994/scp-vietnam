@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import json
 import logging
-import subprocess  # noqa: S404
+import subprocess  # nosec
 from pathlib import Path
 
 from scp.autofix.classifier import BugReport, BugTier
@@ -82,7 +82,7 @@ def _is_nosec_annotated(path: Path, line: int) -> bool:
         if 0 < line <= len(lines):
             return "nosec" in lines[line - 1] or "noqa" in lines[line - 1]
     except Exception as e:
-        logger.warning(repr(e))
+        logger.exception(f"[enterprise_scanners.py:84] silenced exception")
     return False
 
 

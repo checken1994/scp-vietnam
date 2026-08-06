@@ -125,7 +125,8 @@ if __name__ == "__main__":
 
         partitioner.write_error({"q": "test", "type": "low_confidence"})
         errors = partitioner.read_errors_today()
-        assert len(errors) == 1
+        if not (len(errors) == 1):
+            raise AssertionError(f'Assertion failed: len(errors) == 1')
         print("  ✓ errors written + read")
 
         partitioner.write_bypass({"type": "BYPASS", "attack": "jailbreak"})
@@ -137,7 +138,8 @@ if __name__ == "__main__":
 
         # Miss first
         r = cache.get("thủ đô VN là gì?")
-        assert r is None, f"Should be None on first call, got {r}"
+        if not (r is None, f"Should be None on first call, got {r}"):
+            raise AssertionError(f'Assertion failed: r is None, f"Should be None on first call, got {r}"')
         print("  ✓ cold miss: None")
 
         # Put

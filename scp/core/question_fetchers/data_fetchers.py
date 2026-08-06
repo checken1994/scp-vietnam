@@ -222,7 +222,7 @@ def fetch_rest_countries(n: int = 5) -> list[dict]:
             if not name:
                 continue
             # Random question type
-            qtype = random.choice(["capital", "population", "region"])
+            qtype = random.SystemRandom().choice(["capital", "population", "region"])
             if qtype == "capital" and caps:
                 question = f"Thủ đô của {name} là gì?"
                 answer = caps[0]

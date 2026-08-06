@@ -30,7 +30,7 @@ import asyncio
 import json
 import logging
 import os
-import subprocess
+import subprocess  # noqa: S404
 import sys
 import time
 from datetime import datetime

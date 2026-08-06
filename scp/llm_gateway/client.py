@@ -121,13 +121,34 @@ class OllamaProvider:
             if context:
                 messages.append({"role": "user", "content": context})
             messages.append({"role": "user", "content": question})
-            resp = await self._client.post(
-                f"{self.host}/api/chat",
-                json={"model": self.model, "messages": messages, "stream": False},
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            answer = data.get("message", {}).get("content", "").strip()
+            # [OLLAMA-FIX] deepseek-r1 (reasoning model) cần /api/generate,
+            # không phải /api/chat — /api/chat trả 400 cho reasoning models.
+            # Non-reasoning models (llama3.2, qwen2.5) dùng /api/chat OK.
+            is_reasoning = "r1" in self.model.lower() or "reason" in self.model.lower()
+
+            if is_reasoning:
+                # Reasoning model: dùng /api/generate (hỗ trợ thinking phase)
+                prompt_text = system_prompt + "\n\n" if system_prompt else ""
+                if context:
+                    prompt_text += context + "\n\n"
+                prompt_text += question
+                resp = await self._client.post(
+                    f"{self.host}/api/generate",
+                    json={"model": self.model, "prompt": prompt_text, "stream": False},
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                # /api/generate trả "response" (không phải "message.content")
+                answer = data.get("response", "").strip()
+            else:
+                # Non-reasoning model: dùng /api/chat (chuẩn)
+                resp = await self._client.post(
+                    f"{self.host}/api/chat",
+                    json={"model": self.model, "messages": messages, "stream": False},
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                answer = data.get("message", {}).get("content", "").strip()
             return (answer or None, f"ollama:{self.model}")
         except Exception as e:
             logger.debug(f"Ollama ({self.model}) failed: {e}")

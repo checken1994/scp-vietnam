@@ -344,7 +344,8 @@ async def _smoke_test() -> None:
     add_ms = (time.perf_counter() - t0) * 1000.0
     print(f"    added 100 errors in {add_ms:.2f} ms "
           f"({add_ms/100:.3f} ms/add)")
-    assert len(index.errors) == 100, f"expected 100, got {len(index.errors)}"
+    if not (len(index.errors) == 100, f"expected 100, got {len(index.errors)}"):
+        raise AssertionError(f'Assertion failed: len(index.errors) == 100, f"expected 100, got {len(index.errors)}"')
 
     domain_counts: dict[str, int] = defaultdict(int)
     for e in index.errors:
@@ -380,7 +381,8 @@ async def _smoke_test() -> None:
     for r in med_results:
         print(f"    - id={r['error_id']} sim={r['similarity']:.4f} "
               f"domain={r['error']['domain']}")
-        assert r["error"]["domain"] == "medical"
+        if not (r["error"]["domain"] == "medical"):
+            raise AssertionError(f'Assertion failed: r["error"]["domain"] == "medical"')
     print("    [OK] Domain filter correctly restricts results.")
 
     # --------------------------------------------------------
@@ -393,7 +395,8 @@ async def _smoke_test() -> None:
     print(f"    has_similar_error = {history['has_similar_error']}")
     print(f"    similar_count     = {len(history['similar_errors'])}")
     print(f"    recommendation    = {history['recommendation'][:90]}")
-    assert history["has_similar_error"] is True
+    if not history["has_similar_error"]:
+        raise AssertionError("history check should flag similar past mistakes")
     print("    [OK] History check flags similar past mistakes.")
 
     # --------------------------------------------------------
@@ -404,7 +407,8 @@ async def _smoke_test() -> None:
     for lesson in lessons:
         print(f"    - [{lesson['severity']}] {lesson['domain']}: "
               f"{lesson['lesson'][:60]}")
-    assert len(lessons) == 5
+    if not (len(lessons) == 5):
+        raise AssertionError(f'Assertion failed: len(lessons) == 5')
     print("    [OK] Lessons retrieved and sorted by severity.")
 
     # --------------------------------------------------------
@@ -476,7 +480,8 @@ async def _smoke_test() -> None:
     print(f"    query  = {vn_query}")
     print(f"    tokens = {_tokenize_impl(vn_query)}")
     print(f"    results = {len(vn_results)}")
-    assert len(vn_results) > 0, "Vietnamese query should still match"
+    if len(vn_results) == 0:
+        raise AssertionError("Vietnamese query should still match")
     print("    [OK] Vietnamese diacritics preserved; search returns hits.")
 
     # --------------------------------------------------------
@@ -485,10 +490,12 @@ async def _smoke_test() -> None:
     print("\n[8] Safe defaults — never raise")
     empty_results = await index.search_similar("", top_k=5)
     print(f"    empty query -> {len(empty_results)} results (safe default)")
-    assert empty_results == []
+    if empty_results != []:
+        raise AssertionError("empty query should return no results")
     garbage_history = await index.check_against_history("", "")
     print(f"    empty history check -> has_similar={garbage_history['has_similar_error']}")
-    assert garbage_history["has_similar_error"] is False
+    if garbage_history["has_similar_error"] is not False:
+        raise AssertionError("empty history check should not flag similar past mistakes")
     print("    [OK] Edge cases handled without exceptions.")
 
     # --------------------------------------------------------
@@ -503,7 +510,8 @@ async def _smoke_test() -> None:
     print(f"    coverage            = {s['coverage']}")
     print(f"    by_domain (top 3)   = {dict(list(s['by_domain'].items())[:3])}")
     print(f"    by_error_type (top 3)= {dict(list(s['by_error_type'].items())[:3])}")
-    assert s["total_errors"] >= 50_000
+    if s["total_errors"] < 50_000:
+        raise AssertionError(f"expected at least 50_000 errors, got {s['total_errors']}")
     print("    [OK] Stats reflect full 50K corpus.")
 
     # --------------------------------------------------------

@@ -47,11 +47,12 @@ class GeneratorKhamPha:
 
     def sinh_ngau_nhien(self) -> dict:
         """Generate a random question spec."""
-        domain = random.choice(list(self._POOLS.keys()))
-        template = random.choice(self._POOLS[domain])
-        a = random.randint(2, 999)
-        b = random.randint(2, 99)
-        letter = random.choice("ABCDEFGHIKLMNOPQRSTUVWXY")
+        rng = random.SystemRandom()
+        domain = rng.choice(list(self._POOLS.keys()))
+        template = rng.choice(self._POOLS[domain])
+        a = rng.randint(2, 999)
+        b = rng.randint(2, 99)
+        letter = rng.choice("ABCDEFGHIKLMNOPQRSTUVWXY")
         question = template.format(a=a, b=b, letter=letter)
         self.history.add(question)
         return {"question": question, "domain": domain}

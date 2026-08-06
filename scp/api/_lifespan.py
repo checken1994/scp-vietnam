@@ -24,13 +24,15 @@ except ImportError:
     stop_audit_fetcher = None
 
 try:
-    from scp.core.ai_threat_scanner import start_scanner as start_ai_scanner, stop_scanner as stop_ai_scanner
+    from scp.core.ai_threat_scanner import start_scanner as start_ai_scanner
+    from scp.core.ai_threat_scanner import stop_scanner as stop_ai_scanner
 except ImportError:
     start_ai_scanner = None
     stop_ai_scanner = None
 
 try:
-    from scp.core.harm_detector import start_detector as start_harm_detector, stop_detector as stop_harm_detector
+    from scp.core.harm_detector import start_detector as start_harm_detector
+    from scp.core.harm_detector import stop_detector as stop_harm_detector
 except ImportError:
     start_harm_detector = None
     stop_harm_detector = None

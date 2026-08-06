@@ -29,6 +29,7 @@ async def audit_findings(limit: int = 20, source: str = ""):
                 finding = json.loads(line)
                 if not source or finding.get("source") == source:
                     findings.append(finding)
-            except Exception: pass
+            except Exception as e:
+                logger.exception("Failed to parse audit finding: %s", e)
     findings.reverse()  # newest first
     return {"findings": findings[:limit], "total": len(findings)}

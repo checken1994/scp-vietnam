@@ -253,7 +253,9 @@ async def v105_toggle_tier3_auto(enabled: str):
     try:
         with open(audit, "a", encoding="utf-8") as f:
             f.write(_json.dumps(entry, ensure_ascii=False) + "\n")
-    except Exception: pass
+    except Exception as e:
+        import logging
+        logging.getLogger("scp.autofix").warning(f"Failed to write tier3 audit log: {e!r}")
 
     # Log to SCP console
     import logging as _logging

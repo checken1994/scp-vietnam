@@ -359,7 +359,59 @@ class AutoFixEngine:
             except Exception as _new_bug_err:
                 logger.debug(f"[V9.1-UPGRADE] new-bug check failed (fail-open): {_new_bug_err}")
 
-            return True, "fix verified OK (syntax + re-scan + no new bugs)"
+            # [DNA2-FIX] Check 4: RUN TESTS — "code sau fix còn hoạt động ĐÚNG không?"
+            # DNA #2: PASS ≠ ĐÚNG — syntax OK + ruff OK ≠ logic OK
+            # Phải chạy pytest để verify behavior thật
+            try:
+                import subprocess as _sp  # noqa: S404
+
+                # Tìm test file cho file vừa fix
+                # Ví dụ: scp/api_server.py → tests/test_api_server.py hoặc scp/tests/test_api_server.py
+                _file_name = filepath.stem  # "api_server"
+                _test_candidates = [
+                    f"tests/test_{_file_name}.py",
+                    f"scp/tests/test_{_file_name}.py",
+                    "tests/test_judge_characterization.py",  # fallback: judge tests
+                ]
+
+                _test_file = None
+                for _tc in _test_candidates:
+                    _tc_path = filepath.parent.parent / _tc if not filepath.is_absolute() else filepath.parent / _tc
+                    # Try relative to project root
+                    _root = filepath.parent
+                    while _root.name != "scp-vietnam" and _root.parent != _root:
+                        _root = _root.parent
+                    _tc_full = _root / _tc
+                    if _tc_full.exists():
+                        _test_file = str(_tc_full)
+                        break
+
+                if _test_file:
+                    # Run pytest on the test file — timeout 60s
+                    _result = _sp.run(
+                        [sys.executable, "-m", "pytest", _test_file, "-x", "--tb=short", "-q"],
+                        capture_output=True, text=True, timeout=60,
+                        cwd=str(_root) if _root.exists() else None,
+                    )
+
+                    if _result.returncode != 0:
+                        # Tests FAILED → fix broke behavior → ROLLBACK
+                        _fail_summary = _result.stdout[-500:] if _result.stdout else _result.stderr[-500:]
+                        return False, (
+                            f"TESTS FAILED after fix — code KHÔNG HOẠT ĐỘNG ĐÚNG: "
+                            f"pytest returncode={_result.returncode}\n"
+                            f"Output: {_fail_summary}"
+                        )
+                    else:
+                        logger.info(f"[DNA2-FIX] Tests PASSED: {_test_file}")
+                else:
+                    # No test file found — fail-open (can't verify behavior)
+                    logger.debug(f"[DNA2-FIX] No test file found for {filepath.name} — behavior check skipped")
+            except Exception as _test_err:
+                # fail-open: test runner error → don't block fix
+                logger.debug(f"[DNA2-FIX] Test check error (fail-open): {_test_err}")
+
+            return True, "fix verified OK (syntax + re-scan + no new bugs + tests pass)"
 
         except Exception as _verify_err:
             logger.debug(f"[V9.1-UPGRADE] _verify_fix error (fail-open): {_verify_err}")

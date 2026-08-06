@@ -286,7 +286,8 @@ if __name__ == "__main__":
     with open(test_jsonl) as f:
         lines = f.readlines()
     print(f"  Final count: {len(lines)} (expected 200)")
-    assert len(lines) == 200
+    if not (len(lines) == 200):
+        raise AssertionError(f'Assertion failed: len(lines) == 200')
 
     # Test 3: Full cleanup
     print("\nTest 3: Full cleanup_data_directory")

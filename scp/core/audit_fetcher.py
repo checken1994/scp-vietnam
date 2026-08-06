@@ -217,8 +217,8 @@ def get_audit_stats() -> dict[str, Any]:
                     total += 1
                 except json.JSONDecodeError:
                     continue
-    except Exception:
-        pass
+    except Exception as e:
+        logger.exception(f"[audit_fetcher.py:220] silenced exception")
 
     return {
         "total_findings": total,

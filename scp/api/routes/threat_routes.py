@@ -26,7 +26,8 @@ async def ai_threat_findings(limit: int = 20, source: str = ""):
                 t = json.loads(line)
                 if not source or t.get("source") == source:
                     findings.append(t)
-            except Exception: pass
+            except Exception as e:
+                logger.warning("Error parsing threat JSON: %s", e)
     findings.reverse()
     return {"findings": findings[:limit], "total": len(findings)}
 
@@ -46,6 +47,7 @@ async def harm_incidents(limit: int = 20, harm_type: str = ""):
                 inc = json.loads(line)
                 if not harm_type or inc.get("harm_type") == harm_type:
                     incidents.append(inc)
-            except Exception: pass
+            except Exception as e:
+                logger.warning("Error parsing incident JSON: %s", e)
     incidents.reverse()
     return {"incidents": incidents[:limit], "total": len(incidents)}

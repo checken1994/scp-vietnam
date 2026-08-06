@@ -302,7 +302,7 @@ class ThreatSimulatorEngine:
     def mutate(self, text: str, method: str = "") -> str:
         """Apply 1 mutation method to text."""
         if not method:
-            method = random.choice(MUTATION_METHODS)
+            method = random.SystemRandom().choice(MUTATION_METHODS)
 
         if method == "base64":
             return base64.b64encode(text.encode()).decode()

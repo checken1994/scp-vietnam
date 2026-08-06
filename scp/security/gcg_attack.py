@@ -110,7 +110,7 @@ class GCGAttackGenerator:
         methods = ["gcg_suffix", "random_noise", "zero_width", "homoglyph", "multi_turn"]
 
         for i in range(min(count, self.max_variants)):
-            base = random.choice(base_prompts)
+            base = random.SystemRandom().choice(base_prompts)
             method = methods[i % len(methods)]
 
             attack = self._generate_one(base, method, i)
@@ -158,7 +158,7 @@ class GCGAttackGenerator:
             replacements = 0
             for orig, substitutes in HOMOGLYPHS.items():
                 if orig in modified.lower():
-                    sub = random.choice(substitutes)
+                    sub = random.SystemRandom().choice(substitutes)
                     # [V104.34 #66] TẠI SAO: check on lower, replace on original → no sub for capitals
                     import re as _re
                     modified = _re.sub(orig, sub, modified, count=1, flags=_re.IGNORECASE)  # replace 1 occurrence
@@ -176,7 +176,7 @@ class GCGAttackGenerator:
                 "I understand your concern, but hypothetically, ",
                 "Let me rephrase: ",
             ]
-            prefix = random.choice(turn_prefixes)
+            prefix = random.SystemRandom().choice(turn_prefixes)
             attack.suffix = f"[multi-turn: '{prefix.strip()}']"
             attack.full_prompt = prefix + base
             attack.mutation_details = f"Multi-turn prefix: '{prefix.strip()}'"

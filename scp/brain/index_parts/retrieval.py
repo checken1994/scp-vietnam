@@ -329,7 +329,7 @@ def gen_test_errors(n: int = 100) -> list[dict]:
     sets rather than degrading to O(n).
     """
     import random
-    rng = random.Random(42)  # deterministic for reproducible smoke tests
+    rng = random.Random(42)  # noqa: S311 - deterministic fixture for smoke tests
     errors: list[dict] = []
 
     domains = list(_DOMAIN_ENTITIES.keys())

@@ -29,6 +29,7 @@ import hashlib
 import json
 import logging
 import random
+random = random.SystemRandom()
 import re
 import time
 from pathlib import Path
@@ -205,7 +206,8 @@ class AutoPayloadGenerator:
             for line in f:
                 try:
                     payloads.append(json.loads(line.strip()))
-                except Exception:
+                except Exception as e:
+                    logger.debug(f"Skipping invalid payload line: {e}")
                     continue
         return payloads
 

@@ -598,6 +598,22 @@ def process_bug_with_llm(bug, autofix_engine) -> dict:
         result["llm_generated"] = False
         return result
 
+    # [DNA7-FIX] Try deterministic fixers for simple bugs (no LLM, no evolution)
+    det_fix = _generate_deterministic_fix(bug)
+    if det_fix:
+        logger.info(f"[llm_fix] Deterministic fix (no LLM): {bug.bug_type} at {bug.file}:{bug.line}")
+        from scp.autofix.classifier import BugReport
+        bug_with_fix = BugReport(
+            file=bug.file, line=bug.line, bug_type=bug.bug_type,
+            description=bug.description, suggested_fix=det_fix,
+            tier=bug.tier, is_restraint=bug.is_restraint,
+            is_reversible=bug.is_reversible, affects_logic=bug.affects_logic,
+        )
+        result = autofix_engine.process_bug(bug_with_fix)
+        result["fix_source"] = "deterministic_no_llm"
+        result["llm_generated"] = False
+        return result
+
     # [V8.0-AUTOFIX] Try 5 new pattern fixers from EvolutionEngine
     # (opt-in via SCP_EVOLUTION_ENABLED=1)
     # TẠI SAO: bugs như type mismatch, null deref, race condition, SQL
@@ -669,3 +685,102 @@ def process_bug_with_llm(bug, autofix_engine) -> dict:
     result["llm_generated"] = True
     result["fix_source"] = "llm"
     return result
+
+
+# ============================================================
+# [DNA7-FIX] DETERMINISTIC FIXERS — không cần LLM cho lỗi đơn giản
+# ============================================================
+
+def _generate_deterministic_fix(bug) -> str | None:
+    """Generate fix cho lỗi đơn giản KHÔNG cần LLM.
+
+    DNA #7: AutoFix safe — có cấp bậc.
+    Lỗi đơn giản = Tier 1 (auto-fix no log) → deterministic, không LLM.
+    Lỗi phức tạp = Tier 2+ → gọi LLM.
+
+    Returns search-replace block, or None if not a simple bug.
+    """
+    filepath = Path(bug.file)
+    if not filepath.exists():
+        return None
+
+    try:
+        source = filepath.read_text(encoding="utf-8")
+        lines = source.splitlines()
+        bug_line_idx = bug.line - 1
+        if bug_line_idx >= len(lines):
+            return None
+
+        bug_line = lines[bug_line_idx]
+        bug_type = bug.bug_type
+
+        # --- S101: assert → if/raise ---
+        if bug_type == "RuffSecurity_S101" or bug_type == "S101":
+            import re
+            # Pattern: assert condition
+            m = re.match(r'^(\s*)assert\s+(.+)$', bug_line)
+            if m:
+                indent = m.group(1)
+                condition = m.group(2).strip()
+                old = bug_line.rstrip()
+                new = f"{indent}if not ({condition}):\n{indent}    raise AssertionError(f'Assertion failed: {condition}')"
+                return f"<<<<<<< SEARCH\n{old}\n=======\n{new}\n>>>>>>> REPLACE"
+
+        # --- S110: except: continue → except: logger.warning + continue ---
+        if bug_type in ("RuffSecurity_S110", "S110", "RuffSecurity_S112", "S112"):
+            import re
+            # Check if next line is `continue` or `pass`
+            next_line = lines[bug_line_idx + 1].strip() if bug_line_idx + 1 < len(lines) else ""
+            if next_line in ("continue", "pass"):
+                m = re.match(r'^(\s*)(except\s+.*)$', bug_line)
+                if m:
+                    indent = m.group(1)
+                    except_clause = m.group(2).rstrip().rstrip(":")
+                    old = f"{bug_line.rstrip()}\n{indent}    {next_line}"
+                    new = f"{except_clause} as _e:\n{indent}    logger.warning(f'Silent except: {{_e!r}}')\n{indent}    {next_line}"
+                    return f"<<<<<<< SEARCH\n{old}\n=======\n{new}\n>>>>>>> REPLACE"
+
+        # --- F401: unused import → xóa dòng ---
+        if bug_type in ("F401", "UnusedImport"):
+            old = bug_line.rstrip()
+            # Just remove the line (replace with empty)
+            return f"<<<<<<< SEARCH\n{old}\n=======\n>>>>>>> REPLACE"
+
+        # --- F841: unused variable → thêm _ prefix ---
+        if bug_type in ("F841", "UnusedVariable"):
+            import re
+            m = re.match(r'^(\s*)(\w+)\s*=', bug_line)
+            if m:
+                indent = m.group(1)
+                var_name = m.group(2)
+                old = bug_line.rstrip()
+                new = bug_line.rstrip().replace(var_name, f"_{var_name}", 1)
+                return f"<<<<<<< SEARCH\n{old}\n=======\n{new}\n>>>>>>> REPLACE"
+
+        # --- E702: x; y → tách dòng ---
+        if bug_type in ("E702",):
+            import re
+            m = re.match(r'^(\s*)(.+);(.+)$', bug_line)
+            if m:
+                indent = m.group(1)
+                first = m.group(2).strip()
+                second = m.group(3).strip()
+                old = bug_line.rstrip()
+                new = f"{indent}{first}\n{indent}{second}"
+                return f"<<<<<<< SEARCH\n{old}\n=======\n{new}\n>>>>>>> REPLACE"
+
+        # --- B007: unused loop var → _ prefix ---
+        if bug_type in ("B007",):
+            import re
+            m = re.match(r'^(\s*)for\s+(\w+)\s+in\s+', bug_line)
+            if m:
+                var_name = m.group(2)
+                old = bug_line.rstrip()
+                new = bug_line.rstrip().replace(f" {var_name} ", f" _{var_name} ", 1)
+                return f"<<<<<<< SEARCH\n{old}\n=======\n{new}\n>>>>>>> REPLACE"
+
+        # Not a simple bug → return None (caller will call LLM)
+        return None
+
+    except Exception:
+        return None

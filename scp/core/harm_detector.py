@@ -73,7 +73,7 @@ def _classify_harm(text: str) -> str | None:
     for _category, keywords in HARM_CATEGORIES.items():
         for kw in keywords:
             if kw in text_lower:
-                return category
+                return _category
     return None
 
 

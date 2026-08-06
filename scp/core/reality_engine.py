@@ -37,7 +37,7 @@ from scp.core.wikipedia_client import (
     search as _wiki_search,
 )
 
-VERDICT_PASS = "PASS"
+VERDICT_PASS = "PASS"  # noqa: S105
 VERDICT_FAIL = "FAIL"
 VERDICT_UNKNOWN = "UNKNOWN"
 

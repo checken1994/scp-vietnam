@@ -71,9 +71,9 @@ class HealthStateMachine:
 
 class RecoveryQueue:
     def create_issue(self, domain, question, ai_answer, error_type, cause, fix_action="none"):
-        import random
+        import secrets
         from datetime import datetime
-        issue_id = f"ISSUE-{datetime.now().strftime('%Y%m%d%H%M%S%f')}-{random.randint(0, 9999):04d}"
+        issue_id = f"ISSUE-{datetime.now().strftime('%Y%m%d%H%M%S%f')}-{secrets.randbelow(10000):04d}"
         try:
             db_exec("INSERT OR IGNORE INTO recovery_issues (id, timestamp, domain, question, ai_answer, error_type, cause, fix_action, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (issue_id, datetime.now().isoformat(), domain, question, ai_answer[:200] if ai_answer else "", error_type, cause[:200] if cause else "", fix_action, "OPEN"))
@@ -82,9 +82,9 @@ class RecoveryQueue:
 
 class KnowledgeMemory:
     def add(self, question, ai_answer, domain, error_type, cause, fix_action, fix_artifact, evidence, confidence):
-        import random
+        import secrets
         from datetime import datetime
-        know_id = f"KNOW-{datetime.now().strftime('%Y%m%d%H%M%S%f')}-{random.randint(1000,9999)}"
+        know_id = f"KNOW-{datetime.now().strftime('%Y%m%d%H%M%S%f')}-{secrets.randbelow(9000)+1000}"
         try:
             db_exec("INSERT OR IGNORE INTO knowledge_memory (id, timestamp, question, ai_answer, domain, error_type, cause, fix_action, fix_artifact, evidence, confidence, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (know_id, datetime.now().isoformat(), question, ai_answer[:200], domain, error_type, cause[:200], fix_action, fix_artifact[:200], evidence[:200], confidence, "active"))

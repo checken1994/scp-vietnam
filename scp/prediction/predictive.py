@@ -239,7 +239,7 @@ class QuestionGenerator:
                     if self._is_duplicate(q):
                         continue
                     self._add_seen(q)
-                    ai_pred = round(today_temp + random.uniform(-5, 5), 1)
+                    ai_pred = round(today_temp + random.SystemRandom().uniform(-5, 5), 1)
                     questions.append({
                         "question": q,
                         "ai_answer": f"nhiệt độ cao nhất {city} = {ai_pred}",
@@ -258,7 +258,7 @@ class QuestionGenerator:
             if self._is_duplicate(q):
                 continue
             self._add_seen(q)
-            ai_pred = round(current_price * random.uniform(0.9, 1.1), 2)
+            ai_pred = round(current_price * random.SystemRandom().uniform(0.9, 1.1), 2)
             questions.append({
                 "question": q,
                 "ai_answer": f"giá {coin['coin']} = {ai_pred}",
@@ -280,7 +280,7 @@ class QuestionGenerator:
                 if self._is_duplicate(q):
                     continue
                 self._add_seen(q)
-                ai_pred = round(current_rate * random.uniform(0.97, 1.03), 4)
+                ai_pred = round(current_rate * random.SystemRandom().uniform(0.97, 1.03), 4)
                 questions.append({
                     "question": q,
                     "ai_answer": f"1 USD = {ai_pred} {to_curr}",
@@ -298,7 +298,7 @@ class QuestionGenerator:
             q = f"Có bao nhiêu tiểu hành tinh gần Trái Đất hôm nay ({today})?"
             if not self._is_duplicate(q):
                 self._add_seen(q)
-                ai_pred = nasa["count"] + random.randint(-5, 5)
+                ai_pred = nasa["count"] + random.SystemRandom().randint(-5, 5)
                 questions.append({
                     "question": q,
                     "ai_answer": f"số tiểu hành tinh = {ai_pred}",

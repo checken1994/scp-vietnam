@@ -144,7 +144,7 @@ def fetch_with_retry(url, headers, timeout=10, max_retries=3):
 
     for attempt in range(max_retries):
         try:
-            req = urllib.request.Request(url, headers=headers)
+            req = urllib.request.Request(url, headers=headers)  # nosec S310
             with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec B310 — URL validated by SCP allowlist above
                 result = json.loads(resp.read().decode('utf-8'))
                 # [V29] Record success
