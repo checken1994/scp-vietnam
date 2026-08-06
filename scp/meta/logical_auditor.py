@@ -126,7 +126,11 @@ class LogicalAuditorEngine:
             "total_audits": 0,
             "total_issues_found": 0,
             "total_critical": 0,
+<<<<<<< HEAD
             "total_pass": 0,  # nosec B105 — stats counter key, not a password
+=======
+            "total_pass": 0,
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             "total_fail": 0,
             "total_unrefuted": 0,
             "total_errors": 0,

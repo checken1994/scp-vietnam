@@ -90,7 +90,11 @@ class SCPAgent:
     MAX_CACHE_SIZE = 10000
 
     def __init__(self, scp_url: str = "http://127.0.0.1:8000",
+<<<<<<< HEAD
                  scp_token: str = "",  # nosec B107 — empty default means "no token", NOT a hardcoded password
+=======
+                 scp_token: str = "",
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                  fallback_allow: bool = False):  # [ROOT-FIX] was True (fail-open = no protection)
         """
         Args:

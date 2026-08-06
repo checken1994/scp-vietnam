@@ -41,7 +41,11 @@ class HealthStateMachine:
 
     def record(self, domain, verdict):
         if domain not in self.cache_counters:
+<<<<<<< HEAD
             self.cache_counters[domain] = {"domain": domain, "pass": 0, "block": 0, "inapplicable": 0, "total": 0}  # nosec B105 — "pass" is a verdict counter key, not a password
+=======
+            self.cache_counters[domain] = {"domain": domain, "pass": 0, "block": 0, "inapplicable": 0, "total": 0}
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         c = self.cache_counters[domain]
         c["total"] += 1
         if verdict == "PASS": c["pass"] += 1
@@ -71,9 +75,15 @@ class HealthStateMachine:
 
 class RecoveryQueue:
     def create_issue(self, domain, question, ai_answer, error_type, cause, fix_action="none"):
+<<<<<<< HEAD
         import random
         from datetime import datetime
         issue_id = f"ISSUE-{datetime.now().strftime('%Y%m%d%H%M%S%f')}-{random.randint(0, 9999):04d}"  # noqa: S311
+=======
+        import secrets
+        from datetime import datetime
+        issue_id = f"ISSUE-{datetime.now().strftime('%Y%m%d%H%M%S%f')}-{secrets.randbelow(10000):04d}"
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         try:
             db_exec("INSERT OR IGNORE INTO recovery_issues (id, timestamp, domain, question, ai_answer, error_type, cause, fix_action, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (issue_id, datetime.now().isoformat(), domain, question, ai_answer[:200] if ai_answer else "", error_type, cause[:200] if cause else "", fix_action, "OPEN"))
@@ -82,9 +92,15 @@ class RecoveryQueue:
 
 class KnowledgeMemory:
     def add(self, question, ai_answer, domain, error_type, cause, fix_action, fix_artifact, evidence, confidence):
+<<<<<<< HEAD
         import random
         from datetime import datetime
         know_id = f"KNOW-{datetime.now().strftime('%Y%m%d%H%M%S%f')}-{random.randint(1000,9999)}"  # noqa: S311
+=======
+        import secrets
+        from datetime import datetime
+        know_id = f"KNOW-{datetime.now().strftime('%Y%m%d%H%M%S%f')}-{secrets.randbelow(9000)+1000}"
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         try:
             db_exec("INSERT OR IGNORE INTO knowledge_memory (id, timestamp, question, ai_answer, domain, error_type, cause, fix_action, fix_artifact, evidence, confidence, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (know_id, datetime.now().isoformat(), question, ai_answer[:200], domain, error_type, cause[:200], fix_action, fix_artifact[:200], evidence[:200], confidence, "active"))

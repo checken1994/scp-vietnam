@@ -483,7 +483,11 @@ class H8RedTeamBridge:
             "exfil_prompt": r"(?:reveal|show|print|display)\s+(?:your|the)\s+(?:system\s+)?(?:prompt|message|config)",
             "injection_new_instr": r"new\s+instructions?\s*:",
             "injection_system_role": r"system\s*:\s*",
+<<<<<<< HEAD
             "injection_role_token": r"<\|im_start\|>|<\|system\|>",  # nosec B105 — regex pattern detecting prompt-injection markers, not a credential
+=======
+            "injection_role_token": r"<\|im_start\|>|<\|system\|>",
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             "vn_injection_ignore": r"bỏ\s+qua\s+(?:tất\s+cả\s+)?(?:lệnh|hướng\s+dẫn)",
             "vn_injection_forget": r"quên\s+(?:tất\s+cả\s+)?(?:lệnh|hướng\s+dẫn)",
             "vn_jailbreak_role": r"bây\s+giờ\s+bạn\s+là",
@@ -556,7 +560,11 @@ class H8RedTeamBridge:
                         bypasses += 1
                     elif d.get("type") == "caught_with_signatures":
                         blocked += 1
+<<<<<<< HEAD
                 except Exception:  # noqa: S112
+=======
+                except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     continue
             self._stats["total_requests"] = requests
             self._stats["total_bypasses"] = bypasses
@@ -580,7 +588,11 @@ class H8RedTeamBridge:
                             bypasses.append(d)
                             if len(bypasses) >= limit:
                                 break
+<<<<<<< HEAD
                     except Exception:  # noqa: S112
+=======
+                    except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         continue
             return bypasses
         except Exception:
@@ -600,7 +612,11 @@ class H8RedTeamBridge:
                         analyses.append(json.loads(line))
                         if len(analyses) >= limit:
                             break
+<<<<<<< HEAD
                     except Exception:  # noqa: S112
+=======
+                    except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         continue
             return analyses
         except Exception:

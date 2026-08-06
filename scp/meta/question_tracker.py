@@ -309,22 +309,36 @@ class QuestionTracker:
 
             # By type — count log events from question_events table
             rows = db_query_all(
+<<<<<<< HEAD
                 f"SELECT question_type, COUNT(*) as cnt FROM question_events {ev_where} GROUP BY question_type",  # nosec B608 — input validated by SCP whitelist  # noqa: S608
+=======
+                f"SELECT question_type, COUNT(*) as cnt FROM question_events {ev_where} GROUP BY question_type",  # nosec B608 — input validated by SCP whitelist
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 ev_params
             ) or []
             by_type = {r["question_type"]: r["cnt"] for r in rows if r["question_type"]}
 
             # By source
             rows = db_query_all(
+<<<<<<< HEAD
                 f"SELECT source, COUNT(*) as cnt FROM question_events {ev_where} GROUP BY source",  # nosec B608 — input validated by SCP whitelist  # noqa: S608
+=======
+                f"SELECT source, COUNT(*) as cnt FROM question_events {ev_where} GROUP BY source",  # nosec B608 — input validated by SCP whitelist
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 ev_params
             ) or []
             by_source = {r["source"]: r["cnt"] for r in rows if r["source"]}
 
             # Total events + unique questions
+<<<<<<< HEAD
             total_row = db_query_one(f"SELECT COUNT(*) as cnt FROM question_events {ev_where}", ev_params) or {}  # nosec B608 — input validated by SCP whitelist  # noqa: S608
             total = total_row.get("cnt", 0)
             unique_row = db_query_one(f"SELECT COUNT(DISTINCT question_hash) as cnt FROM question_events {ev_where}", ev_params) or {}  # nosec B608 — input validated by SCP whitelist  # noqa: S608
+=======
+            total_row = db_query_one(f"SELECT COUNT(*) as cnt FROM question_events {ev_where}", ev_params) or {}  # nosec B608 — input validated by SCP whitelist
+            total = total_row.get("cnt", 0)
+            unique_row = db_query_one(f"SELECT COUNT(DISTINCT question_hash) as cnt FROM question_events {ev_where}", ev_params) or {}  # nosec B608 — input validated by SCP whitelist
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             unique = unique_row.get("cnt", 0)
 
             # Top repeated (from question_log aggregate table)

@@ -221,6 +221,7 @@ class SmartCache:
             import json
 
             from scp.core.db_manager import db_exec
+<<<<<<< HEAD
             # [DNA-FIX] Removed `default=str` — it silently converts non-serializable
             # objects (e.g. SLMResponse dataclass) to their str() repr, which
             # corrupts the cache (stores a string instead of a dict → confidence=0
@@ -235,6 +236,10 @@ class SmartCache:
                     f"({type(value).__name__}). Convert to dict before caching. Error: {te}"
                 )
                 return False  # reject — do NOT silently corrupt with default=str
+=======
+            # [SECURITY FIX] JSON instead of pickle — no RCE risk
+            value_blob = json.dumps(value, ensure_ascii=False, default=str).encode("utf-8")
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             cache_key = hashlib.sha256(
                 f"{namespace}::{identifier}".encode()
             ).hexdigest()

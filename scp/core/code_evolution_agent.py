@@ -30,13 +30,20 @@ import asyncio
 import json
 import logging
 import os
+<<<<<<< HEAD
+=======
+import subprocess  # noqa: S404
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
 
+<<<<<<< HEAD
 from scp.core.safe_process import safe_run
 
+=======
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 logger = logging.getLogger("scp.evolution")
 
 SCP_ROOT = Path(__file__).parent.parent.parent  # project root
@@ -236,7 +243,11 @@ FIX:"""
                 "max_tokens": 500,
                 "temperature": 0.1,
             }).encode()
+<<<<<<< HEAD
             req = urllib.request.Request(  # noqa: S310 — URL is a hardcoded https:// constant, scheme validated by SCP
+=======
+            req = urllib.request.Request(
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 "https://openrouter.ai/api/v1/chat/completions",
                 data=data,
                 headers={
@@ -245,7 +256,11 @@ FIX:"""
                 },
                 method="POST",
             )
+<<<<<<< HEAD
             with urllib.request.urlopen(req, timeout=30) as resp:  # noqa: S310 — scheme validated above; nosec B310 — URL validated by SCP
+=======
+            with urllib.request.urlopen(req, timeout=30) as resp:  # nosec B310 — URL validated by SCP
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 result = json.loads(resp.read())
                 return result.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
         except Exception as e:
@@ -255,7 +270,10 @@ FIX:"""
     async def _ask_ollama(self, prompt: str) -> str | None:
         """Gọi Ollama local."""
         try:
+<<<<<<< HEAD
             import urllib.parse
+=======
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             import urllib.request
             data = json.dumps({
                 "model": self._ollama_model,
@@ -263,16 +281,24 @@ FIX:"""
                 "stream": False,
                 "options": {"temperature": 0.1, "num_predict": 300},
             }).encode()
+<<<<<<< HEAD
             parsed = urllib.parse.urlparse(f"{self._ollama_host}/api/generate")
             if parsed.scheme not in ("http", "https"):
                 raise ValueError(f"Unsupported URL scheme: {parsed.scheme!r}")
             req = urllib.request.Request(  # noqa: S310 — scheme validated above
+=======
+            req = urllib.request.Request(
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 f"{self._ollama_host}/api/generate",
                 data=data,
                 headers={"Content-Type": "application/json"},
                 method="POST",
             )
+<<<<<<< HEAD
             with urllib.request.urlopen(req, timeout=60) as resp:  # noqa: S310 — scheme validated above; nosec B310 — URL validated by SCP
+=======
+            with urllib.request.urlopen(req, timeout=60) as resp:  # nosec B310 — URL validated by SCP
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 result = json.loads(resp.read())
                 return result.get("response", "").strip()
         except Exception as e:
@@ -428,11 +454,20 @@ FIX:"""
     def _run_tests(self) -> dict:
         """Run pytest and return result."""
         try:
+<<<<<<< HEAD
             result = safe_run(
                 [sys.executable, "-m", "pytest", str(self.tests_dir), "-q", "--tb=line",
                  "--deselect", "tests/test_v1041_matrix.py::test_full_matrix_coverage_70",
                  "--deselect", "tests/test_v1042_fast_learning.py::test_compounding_l2"],
                 timeout=120, cwd=str(SCP_ROOT),
+=======
+            result = subprocess.run(
+                [sys.executable, "-m", "pytest", str(self.tests_dir), "-q", "--tb=line",
+                 "--deselect", "tests/test_v1041_matrix.py::test_full_matrix_coverage_70",
+                 "--deselect", "tests/test_v1042_fast_learning.py::test_compounding_l2"],
+                capture_output=True, text=True, timeout=120,
+                cwd=str(SCP_ROOT),
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 env={**os.environ, "SCP_DEV_MODE": "1"},
             )
             passed = result.returncode == 0
@@ -447,13 +482,22 @@ FIX:"""
     def _commit_fix(self, bug: dict, fix: str, test_result: dict):
         """Commit fix to git."""
         try:
+<<<<<<< HEAD
             safe_run(["git", "add", "-A"], cwd=str(SCP_ROOT))
             safe_run(
+=======
+            subprocess.run(["git", "add", "-A"], cwd=str(SCP_ROOT), capture_output=True)
+            subprocess.run(
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 ["git", "commit", "-m",
                  f"[V104.48 AUTO] Fix {bug['pattern']} in {bug['file']}:{bug['line']}\n"
                  f"Bug: {bug['why'][:100]}\n"
                  f"Tests: {'PASS' if test_result['passed'] else 'FAIL'}"],
+<<<<<<< HEAD
                 cwd=str(SCP_ROOT),
+=======
+                cwd=str(SCP_ROOT), capture_output=True
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             )
         except Exception as e:
             logger.warning(f"Silent except: {e}")  # git may not be initialized

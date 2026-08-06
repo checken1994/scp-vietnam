@@ -19,15 +19,21 @@ Usage:
     from scp.ai_patterns import ChainOfThought, SelfConsistency, Reflection
 """
 
+<<<<<<< HEAD
 from builtins import float
 import logging
 import os
 import re
+=======
+import logging
+import os
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
 logger = logging.getLogger("scp.ai_patterns")
 
 
 # ============================================================
+<<<<<<< HEAD
 # HELPER: parse confidence số từ chuỗi (robust)
 # ============================================================
 def _parse_confidence(conf_str: str) -> float:
@@ -60,6 +66,8 @@ def _parse_confidence(conf_str: str) -> float:
 
 
 # ============================================================
+=======
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 # 1. CHAIN-OF-THOUGHT (CoT)
 # ============================================================
 class ChainOfThought:
@@ -161,8 +169,16 @@ class SelfConsistency:
                         else:
                             verdict = "UNCERTAIN"
                     elif "CONFIDENCE:" in line_upper:
+<<<<<<< HEAD
                         conf_str = line.split(":")[-1].strip()
                         conf = _parse_confidence(conf_str)
+=======
+                        try:
+                            conf_str = line.split(":")[-1].strip()
+                            conf = float(conf_str)
+                        except Exception:
+                            logger.exception("[ai_patterns.py:134] silenced exception")
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
                 verdicts.append(verdict)
                 confidences.append(conf)
@@ -279,8 +295,15 @@ FINAL_CONFIDENCE: <0.0-1.0>"""
                     else:
                         final_verdict = "UNCERTAIN"
                 elif "FINAL_CONFIDENCE:" in line_upper:
+<<<<<<< HEAD
                     conf_str = line.split(":")[-1].strip()
                     final_conf = _parse_confidence(conf_str)
+=======
+                    try:
+                        final_conf = float(line.split(":")[-1].strip())
+                    except Exception:
+                        logger.exception("[ai_patterns.py:254] silenced exception")
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
             return {
                 "verdict": final_verdict,
@@ -396,7 +419,11 @@ class TreeOfThoughts:
                 # Parse verdict from response
                 verdict = "UNCERTAIN"
                 conf = 0.5
+<<<<<<< HEAD
                 response_upper = response.upper()
+=======
+                response.upper()
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 # Look for the last VERDICT: line (in case LLM mentions it earlier)
                 for line in response.split("\n"):
                     line_upper = line.upper()
@@ -411,10 +438,20 @@ class TreeOfThoughts:
                             verdict = "UNCERTAIN"
                             conf = 0.4
                     elif "CONFIDENCE:" in line_upper:
+<<<<<<< HEAD
                         conf_str = line.split(":")[-1].strip()
                         parsed_conf = _parse_confidence(conf_str)
                         if 0.0 <= parsed_conf <= 1.0:
                             conf = parsed_conf
+=======
+                        try:
+                            conf_str = line.split(":")[-1].strip()
+                            parsed = float(conf_str)
+                            if 0.0 <= parsed <= 1.0:
+                                conf = parsed
+                        except Exception:
+                            logger.exception("[ai_patterns.py ToT] silenced exception")
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
                 verdicts.append(verdict)
                 confidences.append(conf)
@@ -472,4 +509,8 @@ def get_ai_pattern(pattern_name: str):
 __all__ = [
     "ChainOfThought", "SelfConsistency", "Reflection", "TreeOfThoughts",
     "get_ai_pattern",
+<<<<<<< HEAD
 ]
+=======
+]
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f

@@ -430,7 +430,11 @@ class HistorySLM(BaseSLM):
                         'User-Agent': _V74_UA,
                         'Accept': 'application/json',
                     })
+<<<<<<< HEAD
                     with urllib.request.urlopen(req, timeout=8) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
+=======
+                    with urllib.request.urlopen(req, timeout=8) as resp:  # nosec B310 — URL validated by SCP
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         data = _json.loads(resp.read().decode('utf-8'))
                     search_results = data.get("search", [])
                     if search_results:
@@ -442,7 +446,11 @@ class HistorySLM(BaseSLM):
                                 'User-Agent': _V74_UA,
                                 'Accept': 'application/json',
                             })
+<<<<<<< HEAD
                             with urllib.request.urlopen(req2, timeout=8) as resp2:  # nosec B310 — URL validated by SCP  # noqa: S310
+=======
+                            with urllib.request.urlopen(req2, timeout=8) as resp2:  # nosec B310 — URL validated by SCP
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                                 ent_data = _json.loads(resp2.read().decode('utf-8'))
                             entities = ent_data.get("entities", {})
                             if qid in entities:

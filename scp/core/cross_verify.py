@@ -191,7 +191,11 @@ def _fetch_wikipedia(entity: str) -> Optional[str]:
                     summary_data = fetch_with_retry(summary_url, {"User-Agent": "SCP-V91/1.0"}, timeout=5, max_retries=1)
                     if summary_data and summary_data.get("extract") and summary_data.get("type") != "disambiguation":
                         return summary_data["extract"][:300]
+<<<<<<< HEAD
                 except Exception:  # noqa: S112
+=======
+                except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     continue
     except Exception as e:
         logger.debug(f"Wikipedia fetch error: {e}")

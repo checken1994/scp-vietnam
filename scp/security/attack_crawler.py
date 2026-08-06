@@ -93,7 +93,11 @@ class AttackCrawler:
                     try:
                         entry = json.loads(line.strip())
                         self._seen_hashes.add(hashlib.sha256(entry.get("attack_text", "").encode()).hexdigest()[:16])  # [V104.32 #26a]
+<<<<<<< HEAD
                     except Exception:  # noqa: S112
+=======
+                    except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         continue
 
     def crawl_all(self) -> list[CrawledAttack]:
@@ -169,7 +173,11 @@ class AttackCrawler:
             try:
                 url = f"https://api.github.com/repos/{repo}/readme"
                 req = urllib.request.Request(url, headers=headers)
+<<<<<<< HEAD
                 with urllib.request.urlopen(req, timeout=15) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
+=======
+                with urllib.request.urlopen(req, timeout=15) as resp:  # nosec B310 — URL validated by SCP
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     data = json.loads(resp.read())
                     readme = data.get("content", "")
                     if readme:
@@ -187,8 +195,13 @@ class AttackCrawler:
 
             try:
                 url = f"https://api.github.com/repos/{repo}/issues?per_page=10&state=open"
+<<<<<<< HEAD
                 req = urllib.request.Request(url, headers=headers)  # noqa: S310
                 with urllib.request.urlopen(req, timeout=15) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
+=======
+                req = urllib.request.Request(url, headers=headers)
+                with urllib.request.urlopen(req, timeout=15) as resp:  # nosec B310 — URL validated by SCP
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     issues = json.loads(resp.read())
                     for issue in issues[:10]:
                         title = issue.get("title", "")
@@ -233,7 +246,11 @@ class AttackCrawler:
                         ds = load_dataset(ds_name, split=split_name, streaming=True, revision="main")  # nosec B615 — pinned revision
                         used_split = split_name
                         break
+<<<<<<< HEAD
                     except Exception:  # noqa: S112
+=======
+                    except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         continue
                 if ds is None:
                     # Thử không specify split (lấy tất cả)
@@ -281,7 +298,11 @@ class AttackCrawler:
                     for keyword in REDDIT_KEYWORDS:
                         url = f"https://www.reddit.com/r/{subreddit}/search.json?q={urllib.parse.quote(keyword)}&sort=new&limit=25&restrict_sr=1"
                         req = urllib.request.Request(url, headers=headers)
+<<<<<<< HEAD
                         with urllib.request.urlopen(req, timeout=5) as resp:  # [FIX] 5s timeout  # nosec B310 — URL validated by SCP  # noqa: S310
+=======
+                        with urllib.request.urlopen(req, timeout=5) as resp:  # [FIX] 5s timeout  # nosec B310 — URL validated by SCP
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                             data = json.loads(resp.read())
                             posts = data.get("data", {}).get("children", [])
                             for post in posts:
@@ -411,7 +432,11 @@ class AttackCrawler:
                         entry = json.loads(line.strip())
                         if not entry.get("tested"):
                             attacks.append(entry.get("attack_text", ""))
+<<<<<<< HEAD
                     except Exception:  # noqa: S112
+=======
+                    except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         continue
         return attacks
 

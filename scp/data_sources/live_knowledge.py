@@ -592,7 +592,11 @@ def fetch_live(query: str, domain: str = "",
              result["source"], json.dumps(sources_succeeded_list),
              result.get("confidence", 0.5),
              fetched_at, expires_at,
+<<<<<<< HEAD
              json.dumps(result.get("metadata", {})))  # [DNA-FIX] removed default=str — metadata is read back via json.loads (line 543)
+=======
+             json.dumps(result.get("metadata", {}), default=str))
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         )
     except Exception as e:
         logger.warning(f"Cache store error: {e}")

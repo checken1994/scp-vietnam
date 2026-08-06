@@ -186,6 +186,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #0a0a0a; color: 
 </div>
 
 <script>
+<<<<<<< HEAD
 // ============================================================
 // SCP Auto-Token Injector
 // Tự động lấy token từ URL (?token=...) hoặc localStorage
@@ -227,6 +228,8 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #0a0a0a; color: 
 
   console.log('[SCP] Auto-token injector active' + (TOKEN ? ' (token loaded)' : ' (no token)'));
 })();
+=======
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 const TOKEN = (() => {
   // [RC-2 FIX Task 6-A] Hardcoded fallback token REMOVED — was a production
   // secret shipped in client-side JS (CODE-AUDIT-001 CRITICAL leak). Now the

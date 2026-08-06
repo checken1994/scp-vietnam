@@ -108,7 +108,11 @@ def _try_base64_decode(text: str) -> list[str]:
                 printable = sum(1 for c in text_decoded if c.isprintable() or c in '\n\r\t ')
                 if len(text_decoded) > 0 and printable / len(text_decoded) > 0.8:
                     candidates.append(text_decoded)
+<<<<<<< HEAD
             except Exception:  # noqa: S112
+=======
+            except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 continue
     return candidates
 

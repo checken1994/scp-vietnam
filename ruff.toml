@@ -16,6 +16,7 @@ ignore = [
     "E402",   # Module level import not at top of file (needed for sys.path manipulation)
     "E501",   # Line too long (handled by line-length setting)
     "E701",   # Multiple statements on one line (legacy code style)
+<<<<<<< HEAD
     # [DNA2-FIX] S-series false positives — Ruff flag quá mức, không phân biệt context
     "S101",   # assert used — intentional in test/debug code (98% false positive)
     "S311",   # random not crypto — SCP uses random for domain selection, not crypto (100% false positive)
@@ -30,3 +31,11 @@ ignore = [
 "__init__.py" = ["F401", "F811"]
 "scripts/*" = ["E402", "F401", "E701"]
 "tests/*" = ["E402", "F401", "S101", "S603", "S607"]  # Tests can use assert + subprocess
+=======
+]
+
+[lint.per-file-ignores]
+"__init__.py" = ["F401", "F811"]  # Allow unused imports in __init__.py
+"scripts/*" = ["E402", "F401", "E701"]  # Allow in scripts (RC-1 FIX: removed E722)
+"tests/*" = ["E402", "F401"]
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f

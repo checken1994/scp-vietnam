@@ -67,9 +67,13 @@ class CisaKevFeed:
             return {"action": "skipped", "reason": "cache fresh", "count": len(self._vulns)}
 
         try:
+<<<<<<< HEAD
             if not CISA_KEV_URL.startswith(("https://", "http://")):
                 raise ValueError(f"Unsupported URL scheme for CISA KEV: {CISA_KEV_URL}")
             req = urllib.request.Request(  # noqa: S310 — scheme validated above
+=======
+            req = urllib.request.Request(
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 CISA_KEV_URL,
                 headers={
                     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -77,7 +81,11 @@ class CisaKevFeed:
                     "Accept-Language": "en-US,en;q=0.9",
                 },
             )
+<<<<<<< HEAD
             with urllib.request.urlopen(req, timeout=30) as resp:  # noqa: S310 — scheme validated above
+=======
+            with urllib.request.urlopen(req, timeout=30) as resp:  # nosec B310 — URL validated by SCP
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 data = json.loads(resp.read().decode("utf-8"))
 
             vulns = data.get("vulnerabilities", [])

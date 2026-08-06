@@ -30,6 +30,10 @@ import logging
 import os
 import threading
 import urllib.error
+<<<<<<< HEAD
+=======
+import urllib.parse
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 import urllib.request
 from difflib import SequenceMatcher
 
@@ -125,7 +129,11 @@ class MultiLLMChecker:
         }
 
         try:
+<<<<<<< HEAD
             req = urllib.request.Request(  # noqa: S310
+=======
+            req = urllib.request.Request(
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 f"{base_url}/chat/completions",
                 data=json.dumps(payload).encode("utf-8"),
                 headers={
@@ -136,7 +144,11 @@ class MultiLLMChecker:
                 },
                 method="POST",
             )
+<<<<<<< HEAD
             with urllib.request.urlopen(req, timeout=30) as resp:  # nosec B310 — OpenRouter API, validated URL  # noqa: S310
+=======
+            with urllib.request.urlopen(req, timeout=30) as resp:  # nosec B310 — OpenRouter API, validated URL
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 data = json.loads(resp.read().decode("utf-8"))
                 return data.get("choices", [{}])[0].get("message", {}).get("content", "")
         except urllib.error.HTTPError as e:
@@ -166,7 +178,11 @@ class MultiLLMChecker:
         }
 
         try:
+<<<<<<< HEAD
             req = urllib.request.Request(  # noqa: S310
+=======
+            req = urllib.request.Request(
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 f"{base_url}/chat/completions",
                 data=json.dumps(payload).encode("utf-8"),
                 headers={
@@ -175,7 +191,11 @@ class MultiLLMChecker:
                 },
                 method="POST",
             )
+<<<<<<< HEAD
             with urllib.request.urlopen(req, timeout=30) as resp:  # nosec B310 — Groq API, validated URL  # noqa: S310
+=======
+            with urllib.request.urlopen(req, timeout=30) as resp:  # nosec B310 — Groq API, validated URL
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 data = json.loads(resp.read().decode("utf-8"))
                 return data.get("choices", [{}])[0].get("message", {}).get("content", "")
         except urllib.error.HTTPError as e:

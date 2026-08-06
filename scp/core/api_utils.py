@@ -144,8 +144,13 @@ def fetch_with_retry(url, headers, timeout=10, max_retries=3):
 
     for attempt in range(max_retries):
         try:
+<<<<<<< HEAD
             req = urllib.request.Request(url, headers=headers)  # noqa: S310 — scheme validated by _validate_url_safe above
             with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310 — scheme validated above; nosec B310 — URL validated by SCP allowlist above
+=======
+            req = urllib.request.Request(url, headers=headers)  # nosec S310
+            with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec B310 — URL validated by SCP allowlist above
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 result = json.loads(resp.read().decode('utf-8'))
                 # [V29] Record success
                 if breaker:

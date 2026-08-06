@@ -18,9 +18,22 @@ lint:
 	@# ruff format --check scp/  # uncomment after bulk format pass
 
 test:
+<<<<<<< HEAD
 	python -m pytest scp/tests/external_audit/ -v
 	python -m pytest scp/tests/test_judge_characterization.py -v
 	-python -m pytest tests/test_golden_23.py -v 2>/dev/null || true  # can server dang chay
+=======
+	python -m pytest tests/ scp/tests/ -v --tb=short --maxfail=10 --continue-on-collection-errors
+
+test-golden:
+	python -m pytest tests/test_golden_23.py -v --tb=short
+
+test-external:
+	python -m pytest scp/tests/external_audit/ -v --tb=short
+
+test-judge:
+	python -m pytest scp/tests/test_judge_characterization.py -v --tb=short
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
 security:
 	@bandit -r scp/ -ll --exit-zero -f json -o /tmp/bandit-report.json

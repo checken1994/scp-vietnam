@@ -113,7 +113,11 @@ class APIWiringScanner:
                 continue
             try:
                 source = py_file.read_text(encoding="utf-8", errors="replace")
+<<<<<<< HEAD
             except Exception:  # noqa: S112
+=======
+            except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 continue
             for m in _ENV_REF_PATTERN.finditer(source):
                 var_name = m.group(1) or m.group(2) or m.group(3)

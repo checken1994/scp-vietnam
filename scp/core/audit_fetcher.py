@@ -145,8 +145,12 @@ def _save_findings(findings: list[dict]) -> None:
 
 def _audit_loop() -> None:
     """Background audit loop."""
+<<<<<<< HEAD
     # [FALSE-POS-FIX] F824: `global _running` removed — read-only access (while loop).
     # Assignment happens in start_audit_fetcher()/stop_audit_fetcher() which have their own global.
+=======
+    global _running
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     logger.info("[AuditFetcher] Background thread started")
     while _running:
         try:
@@ -218,8 +222,13 @@ def get_audit_stats() -> dict[str, Any]:
                     total += 1
                 except json.JSONDecodeError:
                     continue
+<<<<<<< HEAD
     except Exception as _e:  # noqa: S110
         logger.debug(f"[silent-except] {_e}")
+=======
+    except Exception as e:
+        logger.exception(f"[audit_fetcher.py:220] silenced exception")
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     return {
         "total_findings": total,

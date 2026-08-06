@@ -683,7 +683,11 @@ async def ask(req: AskRequest, request: Request):
                     try:
                         if _src.can_handle("fact_check"):
                             _fc_sources.append(_src)
+<<<<<<< HEAD
                     except Exception:  # noqa: S112
+=======
+                    except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         continue
             except Exception as _reg_err:
                 logger.debug(f"[OPT-22] registry lookup failed: {_reg_err}")
@@ -709,7 +713,11 @@ async def ask(req: AskRequest, request: Request):
                         _extra_contradicted += 1
                     elif _verdict == "TRUE":
                         _extra_verified += 1
+<<<<<<< HEAD
                 except Exception:  # noqa: S112
+=======
+                except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     continue
             if _extra_verified or _extra_contradicted:
                 fact_result["verified"] = fact_result.get("verified", 0) + _extra_verified

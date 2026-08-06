@@ -399,12 +399,17 @@ def _call_openrouter(prompt: str, max_tokens: int = 4000) -> str | None:
     }
 
     try:
+<<<<<<< HEAD
         full_url = f"{base_url}/chat/completions"
         parsed = urllib.parse.urlparse(full_url)
         if parsed.scheme not in ("http", "https"):
             raise ValueError(f"Unsupported URL scheme: {parsed.scheme!r}")
         req = urllib.request.Request(  # noqa: S310 — scheme validated above
             full_url,
+=======
+        req = urllib.request.Request(
+            f"{base_url}/chat/completions",
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             data=json.dumps(payload).encode("utf-8"),
             headers={
                 "Authorization": f"Bearer {api_key}",
@@ -414,7 +419,11 @@ def _call_openrouter(prompt: str, max_tokens: int = 4000) -> str | None:
             },
             method="POST",
         )
+<<<<<<< HEAD
         with urllib.request.urlopen(req, timeout=30) as resp:  # noqa: S310 — scheme validated above; nosec B310 — OpenRouter API call to validated URL
+=======
+        with urllib.request.urlopen(req, timeout=30) as resp:  # nosec B310 — OpenRouter API call to validated URL
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             data = json.loads(resp.read().decode("utf-8"))
             return data.get("choices", [{}])[0].get("message", {}).get("content", "")
     except urllib.error.HTTPError as e:
@@ -730,6 +739,7 @@ def _generate_deterministic_fix(bug) -> str | None:
                 new = f"{indent}if not ({condition}):\n{indent}    raise AssertionError(f'Assertion failed: {condition}')"
                 return f"<<<<<<< SEARCH\n{old}\n=======\n{new}\n>>>>>>> REPLACE"
 
+<<<<<<< HEAD
         # --- S110/S112: except: continue/pass → except: logger.warning + continue/pass ---
         if bug_type in ("RuffSecurity_S110", "S110", "RuffSecurity_S112", "S112"):
             import re
@@ -737,14 +747,27 @@ def _generate_deterministic_fix(bug) -> str | None:
             next_line_raw = lines[bug_line_idx + 1] if bug_line_idx + 1 < len(lines) else ""
             next_line_stripped = next_line_raw.strip()
             if next_line_stripped in ("continue", "pass"):
+=======
+        # --- S110: except: continue → except: logger.warning + continue ---
+        if bug_type in ("RuffSecurity_S110", "S110", "RuffSecurity_S112", "S112"):
+            import re
+            # Check if next line is `continue` or `pass`
+            next_line = lines[bug_line_idx + 1].strip() if bug_line_idx + 1 < len(lines) else ""
+            if next_line in ("continue", "pass"):
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 m = re.match(r'^(\s*)(except\s+.*)$', bug_line)
                 if m:
                     indent = m.group(1)
                     except_clause = m.group(2).rstrip().rstrip(":")
+<<<<<<< HEAD
                     next_indent = next_line_raw[:len(next_line_raw) - len(next_line_raw.lstrip())]
                     # FIX: giữ indent cho except_clause + next_indent cho body
                     old = f"{bug_line.rstrip()}\n{next_line_raw.rstrip()}"
                     new = f"{indent}{except_clause} as _e:\n{next_indent}logger.warning(f'Silent except: {{_e!r}}')\n{next_line_raw.rstrip()}"
+=======
+                    old = f"{bug_line.rstrip()}\n{indent}    {next_line}"
+                    new = f"{except_clause} as _e:\n{indent}    logger.warning(f'Silent except: {{_e!r}}')\n{indent}    {next_line}"
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     return f"<<<<<<< SEARCH\n{old}\n=======\n{new}\n>>>>>>> REPLACE"
 
         # --- F401: unused import → xóa dòng ---

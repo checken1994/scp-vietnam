@@ -26,10 +26,17 @@ from __future__ import annotations
 
 import json
 import logging
+<<<<<<< HEAD
 from pathlib import Path
 
 from scp.autofix.classifier import BugReport, BugTier
 from scp.core.safe_process import safe_run
+=======
+import subprocess  # nosec
+from pathlib import Path
+
+from scp.autofix.classifier import BugReport, BugTier
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
 logger = logging.getLogger("scp.autofix.enterprise")
 
@@ -81,8 +88,13 @@ def _is_nosec_annotated(path: Path, line: int) -> bool:
         lines = path.read_text(encoding="utf-8").splitlines()
         if 0 < line <= len(lines):
             return "nosec" in lines[line - 1] or "noqa" in lines[line - 1]
+<<<<<<< HEAD
     except Exception as _e:  # noqa: S110
         logger.debug(f"[silent-except] {_e}")
+=======
+    except Exception as e:
+        logger.exception(f"[enterprise_scanners.py:84] silenced exception")
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     return False
 
 
@@ -97,10 +109,17 @@ def scan_with_ruff(path: Path) -> list[dict]:
     if not _check_tool_available("ruff"):
         return []
     try:
+<<<<<<< HEAD
         result = safe_run(
             ["ruff", "check", "--preview", "--select=S",
              "--output-format=json", "--no-cache", str(path)],
             timeout=30,
+=======
+        result = subprocess.run(
+            ["ruff", "check", "--preview", "--select=S",
+             "--output-format=json", "--no-cache", str(path)],
+            capture_output=True, text=True, timeout=30,
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         )
         if result.returncode not in (0, 1):
             return []
@@ -138,9 +157,15 @@ def scan_with_bandit(path: Path) -> list[dict]:
     if not _check_tool_available("bandit"):
         return []
     try:
+<<<<<<< HEAD
         result = safe_run(
             ["bandit", "-ll", "-ii", "-q", "-f", "json", str(path)],
             timeout=30,
+=======
+        result = subprocess.run(
+            ["bandit", "-ll", "-ii", "-q", "-f", "json", str(path)],
+            capture_output=True, text=True, timeout=30,
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         )
         if result.returncode not in (0, 1):
             return []
@@ -175,9 +200,15 @@ def scan_with_vulture(path: Path) -> list[dict]:
     if not _check_tool_available("vulture"):
         return []
     try:
+<<<<<<< HEAD
         result = safe_run(
             ["vulture", str(path), "--min-confidence", "80"],
             timeout=30,
+=======
+        result = subprocess.run(
+            ["vulture", str(path), "--min-confidence", "80"],
+            capture_output=True, text=True, timeout=30,
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         )
         out = []
         for line in result.stdout.splitlines():
@@ -214,10 +245,17 @@ def scan_with_bugbear_dlint(path: Path) -> list[dict]:
     if not _check_tool_available("flake8"):
         return []
     try:
+<<<<<<< HEAD
         result = safe_run(
             ["python3", "-m", "flake8", "--select=B,DUO",
              "--max-line-length=200", str(path)],
             timeout=30,
+=======
+        result = subprocess.run(
+            ["python3", "-m", "flake8", "--select=B,DUO",
+             "--max-line-length=200", str(path)],
+            capture_output=True, text=True, timeout=30,
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         )
         out = []
         for line in result.stdout.splitlines():

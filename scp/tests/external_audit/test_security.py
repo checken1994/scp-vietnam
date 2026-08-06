@@ -18,12 +18,19 @@ from __future__ import annotations
 
 import os
 import re
+<<<<<<< HEAD
+=======
+import subprocess
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 from pathlib import Path
 
 import pytest
 
+<<<<<<< HEAD
 from scp.core.safe_process import safe_run
 
+=======
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 SCP_ROOT = Path(__file__).resolve().parent.parent.parent
 API_SERVER = SCP_ROOT / "api_server.py"
 # [Task 19-A] verify_admin was extracted to api_server_parts/helpers.py — check both.
@@ -92,7 +99,11 @@ def test_admin_routes_have_auth():
         if not _route_has_auth(src, lineno):
             missing_auth.append(f"  L{lineno}: {method.upper()} {path}")
 
+<<<<<<< HEAD
     assert not missing_auth, (  # noqa: S101
+=======
+    assert not missing_auth, (
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         "BFLA regression — admin routes without verify_admin (RC-2):\n"
         + "\n".join(missing_auth)
     )
@@ -118,7 +129,11 @@ def test_verify_admin_no_dev_mode_bypass():
         r'^def verify_admin\([^)]*\)[^:]*:(?:.|\n)*?^(?:def |class |\Z)',
         src, re.MULTILINE,
     )
+<<<<<<< HEAD
     assert m, "verify_admin function not found in api_server.py"  # noqa: S101
+=======
+    assert m, "verify_admin function not found in api_server.py"
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     # m.group(0) includes the trailing "def " of the next function — strip it.
     body = re.sub(r'\n(?:def |class ).*$', '', m.group(0), flags=re.MULTILINE)
 
@@ -131,7 +146,11 @@ def test_verify_admin_no_dev_mode_bypass():
         r'SCP_DEV_MODE[^"\n]*"1"[^:\n]*:[^\n]*\n\s*return\s+True',
         re.MULTILINE,
     )
+<<<<<<< HEAD
     assert not bypass_pattern.search(body), (  # noqa: S101
+=======
+    assert not bypass_pattern.search(body), (
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         "RC-2 regression: SCP_DEV_MODE bypass (return True) present in verify_admin body"
     )
 
@@ -171,7 +190,11 @@ def test_no_hardcoded_token_in_source():
                 continue
             if token in src:
                 offenders.append(str(md_file))
+<<<<<<< HEAD
     assert not offenders, (  # noqa: S101
+=======
+    assert not offenders, (
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         "RC-2 regression: hardcoded production token found in:\n  "
         + "\n  ".join(offenders)
     )
@@ -188,8 +211,14 @@ def test_bandit_no_new_high_severity_via_bandit():
     NOTE: this test does NOT fail on the 15 pre-existing B324 issues. It
     fails only if NEW HIGH-severity issues appear beyond the known baseline.
     """
+<<<<<<< HEAD
     result = safe_run(
         ["bandit", "-r", str(SCP_ROOT), "-f", "json", "-q"],
+=======
+    result = subprocess.run(
+        ["bandit", "-r", str(SCP_ROOT), "-f", "json", "-q"],
+        capture_output=True, text=True,
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     )
     if result.returncode not in (0, 1):
         pytest.skip(f"bandit failed to run: {result.stderr[:200]}")
@@ -213,7 +242,11 @@ def test_bandit_no_new_high_severity_via_bandit():
         (tid, fn) for (tid, fn) in new_categories
         if "/tests/external_audit/" not in fn
     }
+<<<<<<< HEAD
     assert not new_categories, (  # noqa: S101
+=======
+    assert not new_categories, (
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         "RC-10 regression: new HIGH-severity bandit issues appeared:\n  "
         + "\n  ".join(f"{tid} in {fn}" for tid, fn in new_categories)
     )

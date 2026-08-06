@@ -28,7 +28,10 @@ from __future__ import annotations
 import json
 import logging
 import os
+<<<<<<< HEAD
 import shutil  # [FALSE-POS-FIX] F402: moved module-level (was local import inside loop at L176 + L295)
+=======
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 import sqlite3
 import time
 from pathlib import Path
@@ -174,7 +177,12 @@ def cleanup_data_directory(data_dir: str = "data") -> dict:
 
     # Remove __pycache__ if exists
     for cache_dir in data_path.rglob("__pycache__"):
+<<<<<<< HEAD
         shutil.rmtree(cache_dir, ignore_errors=True)  # [FALSE-POS-FIX] F402: use module-level shutil import (line 296)
+=======
+        import shutil
+        shutil.rmtree(cache_dir, ignore_errors=True)
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         results["removed_files"].append(str(cache_dir))
 
     return results
@@ -286,14 +294,24 @@ if __name__ == "__main__":
     with open(test_jsonl) as f:
         lines = f.readlines()
     print(f"  Final count: {len(lines)} (expected 200)")
+<<<<<<< HEAD
     assert len(lines) == 200  # noqa: S101
+=======
+    if not (len(lines) == 200):
+        raise AssertionError(f'Assertion failed: len(lines) == 200')
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     # Test 3: Full cleanup
     print("\nTest 3: Full cleanup_data_directory")
     r = cleanup_data_directory(tmpdir)
     print(f"  {r}")
 
+<<<<<<< HEAD
     shutil.rmtree(tmpdir, ignore_errors=True)  # [FALSE-POS-FIX] F402: use module-level shutil
+=======
+    import shutil
+    shutil.rmtree(tmpdir, ignore_errors=True)
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     # Test 4: Stats
     print("\nTest 4: Stats")

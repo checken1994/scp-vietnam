@@ -285,7 +285,11 @@ class RaceConditionScanner:
                 tree = ast.parse(source, filename=str(path))
             except SyntaxError:
                 continue
+<<<<<<< HEAD
             except Exception:  # noqa: S112
+=======
+            except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 continue
 
             for node in ast.walk(tree):

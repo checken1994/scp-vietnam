@@ -37,6 +37,7 @@ from typing import Any
 
 
 def _hash(attack_type: str, question: str) -> str:
+<<<<<<< HEAD
     """Mirror the hash used in AttackPatternMemory.record_bypass.
 
     [SECURITY-FIX] B324: was hashlib.md5 (weak hash). Now SHA-256.
@@ -44,6 +45,10 @@ def _hash(attack_type: str, question: str) -> str:
     But SHA-256 costs nothing and silences the warning properly.
     """
     return hashlib.sha256(
+=======
+    """Mirror the hash used in AttackPatternMemory.record_bypass."""
+    return hashlib.md5(
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         f"{attack_type}:{(question or '')[:200]}".encode()
     ).hexdigest()
 

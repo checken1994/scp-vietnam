@@ -268,7 +268,11 @@ class EntertainmentSLM(BaseSLM):
                     req = urllib.request.Request(search_url, headers={
                         'User-Agent': 'SCP-V75-Bot/1.0 (educational research)'
                     })
+<<<<<<< HEAD
                     with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
+=======
+                    with urllib.request.urlopen(req, timeout=5) as resp:  # nosec B310 — URL validated by SCP
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         data = _json.loads(resp.read().decode('utf-8'))
                     results = data.get("results", [])
                     if results:
@@ -328,7 +332,11 @@ class EntertainmentSLM(BaseSLM):
                     import urllib.request
                     url = f"https://api.tvmaze.com/singlesearch/shows?q={urllib.parse.quote(show_name)}"
                     req = urllib.request.Request(url, headers={"User-Agent": "SCP-V91/1.0"})
+<<<<<<< HEAD
                     with urllib.request.urlopen(req, timeout=8) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
+=======
+                    with urllib.request.urlopen(req, timeout=8) as resp:  # nosec B310 — URL validated by SCP
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         show_data = _json.loads(resp.read().decode('utf-8'))
                     name = show_data.get("name", show_name)
                     genres = ", ".join(show_data.get("genres", []))

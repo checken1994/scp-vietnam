@@ -89,6 +89,7 @@ def play_audio(path: str):
         # Fallback: dùng os.startfile (Windows) hoặc afplay (Mac)
         import platform
         if platform.system() == "Windows":
+<<<<<<< HEAD
             os.startfile(path)  # type: ignore  # nosec B606 - Windows-native file open (no shell=True, safe by design)
             time.sleep(2)  # Đợi play
         elif platform.system() == "Darwin":
@@ -96,6 +97,12 @@ def play_audio(path: str):
             # Use subprocess.run with shell=False (list form) — no shell parsing
             import subprocess as _sp
             _sp.run(["afplay", path], check=False, timeout=30)  # noqa: S603,S607 — afplay is a hardcoded macOS tool, path is a temp file we control
+=======
+            os.startfile(path)  # type: ignore
+            time.sleep(2)  # Đợi play
+        elif platform.system() == "Darwin":
+            os.system(f"afplay '{path}'")
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     except Exception as e:
         logger.error(f"Play error: {e}")
     finally:
@@ -319,6 +326,7 @@ def open_file(path: str) -> str:
 
 
 def run_command(cmd: str) -> str:
+<<<<<<< HEAD
     """Chạy lệnh CMD/PowerShell → trả output.
 
     [SECURITY-FIX] B602: was shell=True → command injection vulnerability.
@@ -337,6 +345,13 @@ def run_command(cmd: str) -> str:
             return f"(blocked: '{parts[0]}' not in whitelist {sorted(ALLOWED)})"
         result = subprocess.run(  # noqa: S603 — shell=False, command whitelisted
             parts, shell=False, capture_output=True, text=True, timeout=30
+=======
+    """Chạy lệnh CMD/PowerShell → trả output."""
+    try:
+        import subprocess
+        result = subprocess.run(
+            cmd, shell=True, capture_output=True, text=True, timeout=30
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         )
         output = result.stdout.strip()
         if result.stderr:

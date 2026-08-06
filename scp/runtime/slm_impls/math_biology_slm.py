@@ -331,7 +331,11 @@ class BiologySLM(BaseSLM):
                     import json as _json
                     import urllib.request
                     url = f"https://www.fruityvice.com/api/fruit/{fruit}"
+<<<<<<< HEAD
                     req = urllib.request.Request(url, headers={  # noqa: S310
+=======
+                    req = urllib.request.Request(url, headers={
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                         'User-Agent': 'SCP-V75-Bot/1.0 (educational research)'
                     })
                     with safe_urlopen(req, timeout=5) as resp:

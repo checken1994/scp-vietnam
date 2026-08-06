@@ -16,10 +16,16 @@ from __future__ import annotations
 
 import ast
 import os
+<<<<<<< HEAD
+=======
+import subprocess
+import sys
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 from pathlib import Path
 
 import pytest
 
+<<<<<<< HEAD
 from scp.core.safe_process import safe_run, safe_run_python
 
 # Resolve SCP source root: tests/external_audit/../../ = scp-v105-fixed/
@@ -30,6 +36,11 @@ SCP_ROOT = Path(__file__).resolve().parent.parent.parent
 # literal inside the dict. The nosec on this line suppresses B105 cleanly.
 _TEST_TOKEN = "test-token-for-import-only"  # nosec B105 - test fixture token, not a real credential
 
+=======
+# Resolve SCP source root: tests/external_audit/../../ = scp-v105-fixed/
+SCP_ROOT = Path(__file__).resolve().parent.parent.parent
+
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
 # ---------------------------------------------------------------------------
 # RC-1: lint invariants (F821 + E722 must stay clean)
@@ -43,10 +54,18 @@ def test_no_undefined_names_via_ruff():
     ignore exposed 32 real bugs (logger/Optional/threading/sys/_tracker_log_deferred
     /PredictiveEngine undefined). This test guards against recurrence.
     """
+<<<<<<< HEAD
     result = safe_run(
         ["ruff", "check", "--select=F821", "--no-cache", str(SCP_ROOT)],
     )
     assert result.returncode == 0, (  # noqa: S101
+=======
+    result = subprocess.run(
+        ["ruff", "check", "--select=F821", "--no-cache", str(SCP_ROOT)],
+        capture_output=True, text=True,
+    )
+    assert result.returncode == 0, (
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         f"F821 errors found (RC-1 regression):\n{result.stdout}\n{result.stderr}"
     )
 
@@ -58,10 +77,18 @@ def test_no_bare_except_via_ruff():
     SystemExit — and silently hides bugs. V105 had 1 in judge.py:1689
     (tracker.log failure path). Fixed to `except Exception as e: logger.warning(...)`.
     """
+<<<<<<< HEAD
     result = safe_run(
         ["ruff", "check", "--select=E722", "--no-cache", str(SCP_ROOT)],
     )
     assert result.returncode == 0, (  # noqa: S101
+=======
+    result = subprocess.run(
+        ["ruff", "check", "--select=E722", "--no-cache", str(SCP_ROOT)],
+        capture_output=True, text=True,
+    )
+    assert result.returncode == 0, (
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         f"E722 errors found (RC-1 regression):\n{result.stdout}\n{result.stderr}"
     )
 
@@ -83,10 +110,18 @@ def test_no_hardcoded_token_via_grep():
     if not token:
         import pytest
         pytest.skip("SCP_AUTH_TOKEN_SECRET not set — cannot verify no-hardcoded-token")
+<<<<<<< HEAD
     result = safe_run(
         ["grep", "-rn", "--include=*.py", "--include=*.md", "--include=*.js",
          "--include=*.ts", "--include=*.tsx",
          token, str(SCP_ROOT)],
+=======
+    result = subprocess.run(
+        ["grep", "-rn", "--include=*.py", "--include=*.md", "--include=*.js",
+         "--include=*.ts", "--include=*.tsx",
+         token, str(SCP_ROOT)],
+        capture_output=True, text=True,
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     )
     # grep returns 0 (found) / 1 (not found) / 2 (error)
     # We want NOT FOUND → returncode != 0.
@@ -99,7 +134,11 @@ def test_no_hardcoded_token_via_grep():
         and "tests/" not in line  # [G5-FIX] skip ALL test files (may contain test tokens)
         and "/test_" not in line
     ]
+<<<<<<< HEAD
     assert not found_lines, (  # noqa: S101
+=======
+    assert not found_lines, (
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         "Hardcoded token still in source (RC-2 regression):\n"
         + "\n".join(found_lines)
     )
@@ -127,7 +166,11 @@ def test_no_dev_mode_bypass_via_grep():
         re.MULTILINE
     )
     matches = pattern.findall(src)
+<<<<<<< HEAD
     assert not matches, (  # noqa: S101
+=======
+    assert not matches, (
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         "SCP_DEV_MODE bypass still present in api_server.py (RC-2 regression):\n"
         + "\n---\n".join(matches)
     )
@@ -144,16 +187,27 @@ def test_evolution_enabled_default_via_grep():
     RC-2 flipped all 4 defaults to "1".
     """
     # Find any os.environ.get("SCP_EVOLUTION_ENABLED", "0") still present
+<<<<<<< HEAD
     result = safe_run(
         ["grep", "-rn", "--include=*.py",
          'SCP_EVOLUTION_ENABLED", "0"', str(SCP_ROOT)],
+=======
+    result = subprocess.run(
+        ["grep", "-rn", "--include=*.py",
+         'SCP_EVOLUTION_ENABLED", "0"', str(SCP_ROOT)],
+        capture_output=True, text=True,
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     )
     found_lines = [
         line for line in result.stdout.splitlines()
         if "__pycache__" not in line
         and "/tests/external_audit/" not in line  # skip our own test files
     ]
+<<<<<<< HEAD
     assert not found_lines, (  # noqa: S101
+=======
+    assert not found_lines, (
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         "SCP_EVOLUTION_ENABLED still defaults to 0 somewhere (RC-2 regression):\n"
         + "\n".join(found_lines)
     )
@@ -181,7 +235,11 @@ def test_all_python_files_parse():
             ast.parse(py_file.read_text(encoding="utf-8"))
         except SyntaxError as e:
             failures.append(f"{py_file}: {e}")
+<<<<<<< HEAD
     assert not failures, (  # noqa: S101
+=======
+    assert not failures, (
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         "Syntax errors introduced by fixes (cascade regression):\n"
         + "\n".join(failures)
     )
@@ -202,6 +260,7 @@ def test_api_server_imports():
     )
     env = {
         "PATH": "/usr/bin:/bin:/usr/local/bin",
+<<<<<<< HEAD
         "HOME": __import__("tempfile").gettempdir(),  # nosec B108 - test fixture, uses tempfile.gettempdir() (not hardcoded)
         # Skip heavy startup gates that might fail in CI without Ollama.
         "SCP_SKIP_STARTUP_GATE": "1",
@@ -209,6 +268,18 @@ def test_api_server_imports():
     }
     result = safe_run_python(code, timeout=60, env=env)
     assert "IMPORT_OK" in result.stdout, (  # noqa: S101
+=======
+        "HOME": __import__("tempfile").gettempdir(),  # noqa: B108
+        # Skip heavy startup gates that might fail in CI without Ollama.
+        "SCP_SKIP_STARTUP_GATE": "1",
+        "SCP_AUTH_TOKEN_SECRET": "test-token-for-import-only",
+    }
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        capture_output=True, text=True, env=env, timeout=60,
+    )
+    assert "IMPORT_OK" in result.stdout, (
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
         f"api_server.py failed to import (cascade regression):\n"
         f"stdout: {result.stdout}\nstderr: {result.stderr}"
     )

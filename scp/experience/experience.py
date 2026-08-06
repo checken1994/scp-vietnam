@@ -220,7 +220,11 @@ def _migrate_experiences_unique_sha256():
         if common:
             col_list = ", ".join(common)
             db_exec(
+<<<<<<< HEAD
                 f"INSERT OR IGNORE INTO experiences_new ({col_list}) "  # nosec B608 — input validated by SCP whitelist  # noqa: S608
+=======
+                f"INSERT OR IGNORE INTO experiences_new ({col_list}) "  # nosec B608 — input validated by SCP whitelist
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 f"SELECT {col_list} FROM experiences"
             )
         # If common is empty (shouldn't happen — both schemas share id,

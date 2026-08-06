@@ -222,8 +222,12 @@ def _alert_threats(threats: list[dict]) -> None:
 
 
 def _scan_loop() -> None:
+<<<<<<< HEAD
     # [FALSE-POS-FIX] F824: `global _running` removed — read-only access (while loop).
     # Assignment happens in start_scanner()/stop_scanner() which have their own global.
+=======
+    global _running
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     logger.info("[AIThreatScanner] Background thread started")
     while _running:
         try:
@@ -286,8 +290,15 @@ def get_threat_stats() -> dict[str, Any]:
                     src = t.get("source", "unknown")
                     counts[src] = counts.get(src, 0) + 1
                     total += 1
+<<<<<<< HEAD
                 except Exception:  # noqa: S112
                     continue
     except Exception as _e:  # noqa: S110
         logger.debug(f"[silent-except] {_e}")
+=======
+                except Exception:
+                    continue
+    except Exception:
+        pass
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     return {"total_threats": total, "sources": counts, "running": _running}

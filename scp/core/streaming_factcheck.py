@@ -16,6 +16,10 @@ import json
 import logging
 import os
 import re
+<<<<<<< HEAD
+=======
+import urllib.error
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 import urllib.parse
 import urllib.request
 from collections.abc import AsyncGenerator
@@ -114,8 +118,13 @@ class StreamingFactChecker:
             if not api_key:
                 return None  # skip if no key configured
             url = f"{GOOGLE_FACT_CHECK_API}?{params}&key={api_key}"
+<<<<<<< HEAD
             req = urllib.request.Request(url, headers={"User-Agent": "SCP-V104/1.0"})  # noqa: S310
             with urllib.request.urlopen(req, timeout=10) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
+=======
+            req = urllib.request.Request(url, headers={"User-Agent": "SCP-V104/1.0"})
+            with urllib.request.urlopen(req, timeout=10) as resp:  # nosec B310 — URL validated by SCP
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 data = json.loads(resp.read())
                 claims = data.get("claims", [])
                 if claims:

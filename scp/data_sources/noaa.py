@@ -20,7 +20,11 @@ class NOAADataSource(IDataSource):
     """NOAA NCDC CDO API — weather & climate data (requires NOAA_API_KEY)."""
 
     BASE_URL = "https://www.ncdc.noaa.gov/cdo-web/api/v2"
+<<<<<<< HEAD
     TOKEN_URL = "https://www.ncdc.noaa.gov/cdo-web/token"  # noqa: S105,S106  # nosec B105 — URL path contains word "token", not a credential
+=======
+    TOKEN_URL = "https://www.ncdc.noaa.gov/cdo-web/token"  # noqa: S105
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     # Common dataset IDs
     DATASET_MAP = {

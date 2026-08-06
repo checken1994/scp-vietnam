@@ -47,7 +47,13 @@ class BugReport:
     # [TIER3-AUTO] NEW: marks relaxation -- HARD LIMIT, never auto-approve
     # even when SCP_AUTO_APPROVE_TIER3=1. Set when RELAXATION_PATTERNS match.
     is_relaxation: bool = False  # If True -> always Tier 3, always human-only
+<<<<<<< HEAD
     # [BUGFIX] removed duplicate `is_relaxation` definition (was copy-pasted at L52)
+=======
+    # [TIER3-AUTO] NEW: marks relaxation -- HARD LIMIT, never auto-approve
+    # even when SCP_AUTO_APPROVE_TIER3=1. Set when RELAXATION_PATTERNS match.
+    is_relaxation: bool = False  # If True -> always Tier 3, always human-only
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
 
 class BugClassifier:

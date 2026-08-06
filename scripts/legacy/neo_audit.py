@@ -76,6 +76,7 @@ def check_component(comp):
     check_type = comp.get("type", "code")
     if check_type == "db":
         # Check DB table
+<<<<<<< HEAD
         # [SECURITY-FIX] B608: was f"SELECT COUNT(*) FROM {comp['name']}" — SQL injection
         # risk if comp['name'] ever became user-controlled. Now validate against
         # SQLite's allowed identifier pattern (letters, digits, underscores).
@@ -87,6 +88,11 @@ def check_component(comp):
             conn = sqlite3.connect(DB_PATH)
             # Use double-quoted identifier (SQLite's quoting for table names)
             cursor = conn.execute(f'SELECT COUNT(*) FROM "{_table}" LIMIT 1')  # noqa: S608 — table name validated by regex above
+=======
+        try:
+            conn = sqlite3.connect(DB_PATH)
+            cursor = conn.execute(f"SELECT COUNT(*) FROM {comp['name']} LIMIT 1")
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             cursor.fetchone()
             conn.close()
             return True

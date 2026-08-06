@@ -115,7 +115,11 @@ class Governance:
         # the "kill-capable" path. Currently used only for metadata — see
         # decision branches below which still distinguish CRITICAL vs HIGH
         # to preserve ESCALATE-on-HIGH semantics (DNA #5).
+<<<<<<< HEAD
         _has_kill_severity = any(  # noqa: F841 — metadata sentinel (see comment above: "currently used only for metadata")
+=======
+        _has_kill_severity = any(
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             s in CRITICAL_SEVERITIES for s in severities
             if s in Severity._value2member_map_
         )

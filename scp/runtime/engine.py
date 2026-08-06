@@ -350,9 +350,13 @@ class SCPV14(SCPV14ProcessMixin):
             import json
             import time
             data = self._serialize_verdict(verdict)
+<<<<<<< HEAD
             # [DNA-FIX] Removed default=str — _serialize_verdict already converts to dict.
             # If serialization fails, REJECT (don't silently corrupt with str() repr).
             blob = json.dumps(data, ensure_ascii=False)
+=======
+            blob = json.dumps(data, ensure_ascii=False, default=str)
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             ts = time.time()
             self._cache_conn.execute(
                 "INSERT OR REPLACE INTO verdicts (key, verdict, ts) VALUES (?, ?, ?)",

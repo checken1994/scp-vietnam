@@ -16,15 +16,21 @@ Routes:
 """
 from __future__ import annotations
 
+<<<<<<< HEAD
 import logging
 
+=======
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 from fastapi import APIRouter, Depends, HTTPException
 
 # Import shared deps from api_server (same pattern as api/chat.py + admin_v98.py)
 from scp.api._shared import verify_admin
 
+<<<<<<< HEAD
 logger = logging.getLogger("scp.api.v105")
 
+=======
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 router = APIRouter(tags=["v105"])
 
 
@@ -257,7 +263,13 @@ async def v105_toggle_tier3_auto(enabled: str):
     try:
         with open(audit, "a", encoding="utf-8") as f:
             f.write(_json.dumps(entry, ensure_ascii=False) + "\n")
+<<<<<<< HEAD
     except Exception as _e: logger.debug(f"[silent-except] {_e}")  # noqa: S110
+=======
+    except Exception as e:
+        import logging
+        logging.getLogger("scp.autofix").warning(f"Failed to write tier3 audit log: {e!r}")
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     # Log to SCP console
     import logging as _logging

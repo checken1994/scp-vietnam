@@ -315,7 +315,11 @@ class JudgeRouteMixin:
             try:
                 frame, conf = self.v13.classifier.classify(question)
             except Exception:
+<<<<<<< HEAD
                 frame, _ = "unknown", 0.0  # [FALSE-POS-FIX] F841: _ prefix marks intentionally-unused tuple element
+=======
+                frame, _conf = "unknown", 0.0
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             if frame != "unknown" and frame in self.slms:
                 domains.append(frame)
             elif frame == "conversion":

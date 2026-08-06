@@ -62,11 +62,15 @@ def backup_to_hf(cycle_num: int) -> bool:
     Called every cycle, but only uploads every BACKUP_INTERVAL_CYCLES AND at
     most once per BACKUP_MIN_SECONDS_BETWEEN (whichever gate is stricter).
     """
+<<<<<<< HEAD
     # [FALSE-POS-FIX] F824: removed `_last_backup_result` from global —
     # only dict key assignments (_last_backup_result["key"] = val), NOT name rebinding.
     # The other 3 names ARE assigned: _last_backup_cycle (L162), _last_backup_time (L163),
     # _backup_success_count (L164 +=).
     global _last_backup_cycle, _last_backup_time, _backup_success_count
+=======
+    global _last_backup_cycle, _last_backup_result, _last_backup_time, _backup_success_count
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
     import time as _time
     if cycle_num - _last_backup_cycle < BACKUP_INTERVAL_CYCLES:

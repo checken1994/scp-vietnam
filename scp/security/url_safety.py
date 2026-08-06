@@ -80,5 +80,10 @@ def safe_urlopen(url: str | urllib.request.Request, *, timeout: float = 30, allo
         url_str = str(url)
     validate_url(url_str, allow_internal=allow_internal)
     if isinstance(url, urllib.request.Request):
+<<<<<<< HEAD
         return urllib.request.urlopen(url, timeout=timeout, **kwargs)  # already validated above  # nosec B310  # noqa: S310
     return urllib.request.urlopen(url, timeout=timeout, **kwargs)  # already validated above  # nosec B310  # noqa: S310
+=======
+        return urllib.request.urlopen(url, timeout=timeout, **kwargs)  # already validated above  # nosec B310
+    return urllib.request.urlopen(url, timeout=timeout, **kwargs)  # already validated above  # nosec B310
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f

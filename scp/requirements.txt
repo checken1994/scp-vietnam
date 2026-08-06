@@ -10,7 +10,11 @@
 # Verified by codebase: api_server.py, api/chat.py dùng `from fastapi import ...`.
 fastapi==0.128.0
 uvicorn[standard]==0.44.0
+<<<<<<< HEAD
 starlette==0.51.0  # [V4-AUDIT] fix 2 high CVEs
+=======
+starlette>=0.40.0,<0.51.0  # [REAUDIT-FIX] fastapi 0.128.0 requires starlette<0.51.0
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
 # === Data validation (REQUIRED) ===
 # Verified by codebase: nhiều files dùng `from pydantic import BaseModel, Field`.
@@ -31,7 +35,11 @@ h11==0.16.0
 certifi==2025.8.3
 charset-normalizer==3.4.3
 idna==3.11
+<<<<<<< HEAD
 urllib3==2.5.4  # [V4-AUDIT] fix 4 critical CVEs
+=======
+urllib3>=2.5.0,<3.0.0  # [REAUDIT-FIX] 2.5.4 doesn't exist on PyPI — use range (latest 2.7.0 fixes CVEs)
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 
 # === Environment configuration (REQUIRED) ===
 # Verified: autofix/runner.py dùng `from dotenv import load_dotenv` (unconditional

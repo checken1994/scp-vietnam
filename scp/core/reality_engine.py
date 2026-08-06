@@ -37,7 +37,11 @@ from scp.core.wikipedia_client import (
     search as _wiki_search,
 )
 
+<<<<<<< HEAD
 VERDICT_PASS = "PASS"  # noqa: S105,S106  # nosec B105 — verdict constant, not a password
+=======
+VERDICT_PASS = "PASS"  # noqa: S105
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
 VERDICT_FAIL = "FAIL"
 VERDICT_UNKNOWN = "UNKNOWN"
 
@@ -185,11 +189,19 @@ class WikipediaDataSource:
                     return None
             # Fallback: original urllib.request path for non-Wikipedia URLs.
             import json
+<<<<<<< HEAD
             req = urllib.request.Request(url, headers={  # noqa: S310
                 'User-Agent': 'SCP-V73-Bot/1.0 (https://scp-vietnam.example.com; Vietnamese educational research project)',
                 'Accept': 'application/json'
             })
             with urllib.request.urlopen(req, timeout=15) as resp:  # nosec B310 — URL validated by SCP  # noqa: S310
+=======
+            req = urllib.request.Request(url, headers={
+                'User-Agent': 'SCP-V73-Bot/1.0 (https://scp-vietnam.example.com; Vietnamese educational research project)',
+                'Accept': 'application/json'
+            })
+            with urllib.request.urlopen(req, timeout=15) as resp:  # nosec B310 — URL validated by SCP
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                 return json.loads(resp.read().decode('utf-8'))
         except Exception: return None
 

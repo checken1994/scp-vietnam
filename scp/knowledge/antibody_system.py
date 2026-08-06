@@ -519,6 +519,7 @@ class DomainAntibodySystem:
                 relevant.append(ab_name)
 
         return relevant
+<<<<<<< HEAD
     def check_all(self, question: str, answer: str, domain: str = "general") -> list[dict]:
         """
         Phase 5 interface — run all relevant antibodies.
@@ -559,6 +560,9 @@ class DomainAntibodySystem:
                 d["passed"] = True
             normalized.append(d)
         return normalized
+=======
+
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
     def check(
         self,
         question: str,

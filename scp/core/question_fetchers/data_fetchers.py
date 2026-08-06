@@ -146,7 +146,11 @@ def fetch_fruityvice(n: int = 5) -> list[dict]:
                 "domain": "biology",
                 "category": "fruit",
             })
+<<<<<<< HEAD
         except Exception:  # noqa: S112
+=======
+        except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 
@@ -222,7 +226,11 @@ def fetch_rest_countries(n: int = 5) -> list[dict]:
             if not name:
                 continue
             # Random question type
+<<<<<<< HEAD
             qtype = random.choice(["capital", "population", "region"])  # noqa: S311
+=======
+            qtype = random.SystemRandom().choice(["capital", "population", "region"])
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             if qtype == "capital" and caps:
                 question = f"Thủ đô của {name} là gì?"
                 answer = caps[0]
@@ -240,7 +248,11 @@ def fetch_rest_countries(n: int = 5) -> list[dict]:
                 "domain": "geography",
                 "category": qtype,
             })
+<<<<<<< HEAD
         except Exception:  # noqa: S112
+=======
+        except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 
@@ -278,7 +290,11 @@ def fetch_sunrise_sunset(n: int = 2) -> list[dict]:
                 "domain": "geography",
                 "category": "astronomy",
             })
+<<<<<<< HEAD
         except Exception:  # noqa: S112
+=======
+        except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 
@@ -293,12 +309,21 @@ def fetch_public_holidays(n: int = 5) -> list[dict]:
     years = [2023, 2024]
     for _ in range(n):
         try:
+<<<<<<< HEAD
             country = random.choice(countries)  # noqa: S311
             year = random.choice(years)  # noqa: S311
             data = _http_get_json(f"https://date.nager.at/api/v3/PublicHolidays/{year}/{country}")
             if not isinstance(data, list) or not data:
                 continue
             holiday = random.choice(data)  # noqa: S311
+=======
+            country = random.choice(countries)
+            year = random.choice(years)
+            data = _http_get_json(f"https://date.nager.at/api/v3/PublicHolidays/{year}/{country}")
+            if not isinstance(data, list) or not data:
+                continue
+            holiday = random.choice(data)
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             name = holiday.get("name", "")
             date = holiday.get("date", "")
             local_name = holiday.get("localName", "")
@@ -313,7 +338,11 @@ def fetch_public_holidays(n: int = 5) -> list[dict]:
                 "domain": "history",
                 "category": "holiday",
             })
+<<<<<<< HEAD
         except Exception:  # noqa: S112
+=======
+        except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 
@@ -345,7 +374,11 @@ def fetch_stackoverflow(n: int = 3) -> list[dict]:
                 "domain": "technology",
                 "category": "programming",
             })
+<<<<<<< HEAD
         except Exception:  # noqa: S112
+=======
+        except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 
@@ -378,7 +411,11 @@ def fetch_genderize(n: int = 3) -> list[dict]:
                 "domain": "general",
                 "category": "name",
             })
+<<<<<<< HEAD
         except Exception:  # noqa: S112
+=======
+        except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 
@@ -411,7 +448,11 @@ def fetch_tv_maze(n: int = 3) -> list[dict]:
                 "domain": "entertainment",
                 "category": "tv_show",
             })
+<<<<<<< HEAD
         except Exception:  # noqa: S112
+=======
+        except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 
@@ -490,7 +531,11 @@ def fetch_open_meteo(n: int = 3) -> list[dict]:
                     "domain": "weather",
                     "category": "temperature",
                 })
+<<<<<<< HEAD
         except Exception:  # noqa: S112
+=======
+        except Exception:
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
             continue
     return results
 

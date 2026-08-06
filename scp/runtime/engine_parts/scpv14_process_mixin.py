@@ -162,7 +162,11 @@ class SCPV14ProcessMixin:
                 ]
                 for table, keep in cleanup_tables:
                     try:
+<<<<<<< HEAD
                         _dbx_cleanup(f"DELETE FROM {table} WHERE rowid NOT IN (SELECT rowid FROM {table} ORDER BY rowid DESC LIMIT {keep})")  # nosec B608 — input validated by SCP whitelist  # noqa: S608
+=======
+                        _dbx_cleanup(f"DELETE FROM {table} WHERE rowid NOT IN (SELECT rowid FROM {table} ORDER BY rowid DESC LIMIT {keep})")  # nosec B608 — input validated by SCP whitelist
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                     except Exception:
                         logger.exception("[engine.py:670] silenced exception")
                 # Delete completed reverify items
@@ -503,7 +507,11 @@ class SCPV14ProcessMixin:
                             entity=entity,
                             attribute=attribute,
                             pass_value=real_value,  # This is the correct answer
+<<<<<<< HEAD
                             pass_answer="REJECTED",  # Mark as rejected  # noqa: S105,S106  # nosec B106 — rejection status string, not a password
+=======
+                            pass_answer="REJECTED",  # Mark as rejected
+>>>>>>> 3c1d558671d09b1eb1de62d9b3a373c36929bd5f
                             question=question,
                         )
             except Exception as e:
