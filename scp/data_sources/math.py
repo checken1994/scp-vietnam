@@ -6,7 +6,11 @@ Note: Math SLM uses MathEvaluator directly, this is for completeness.
 
 import logging
 import re as _re
+<<<<<<< HEAD
 from typing import Any
+=======
+from typing import Any, Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 from scp.interfaces.data_source import IDataSource
 
@@ -88,7 +92,11 @@ class MathDataSource(IDataSource):
     def get_supported_intents(self) -> list[str]:
         return ["constant", "formula", "calculate"]
 
+<<<<<<< HEAD
     def can_handle(self, intent: str, entity: str = None) -> bool:
+=======
+    def can_handle(self, intent: str, entity: Optional[str] = None) -> bool:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         return intent in ["constant", "formula", "calculate"]
 
     def fetch(self, intent: str, entity: str, **kwargs):

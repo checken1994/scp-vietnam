@@ -160,7 +160,11 @@ async def analyze_prompt(req: AnalyzeRequest, request: Request):
 
     except Exception as e:
         logger.error(f"[Webhook] analyze error: {e}")
+<<<<<<< HEAD
         raise HTTPException(status_code=500, detail=f"Analysis error: {e}") from e
+=======
+        raise HTTPException(status_code=500, detail="Analysis failed — see server logs") from e
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 
 @router.post("/register")

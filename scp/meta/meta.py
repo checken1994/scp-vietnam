@@ -117,7 +117,11 @@ class GoalMemory:
     """
 
     def add_goal(self, description: str, goal_type: str = "goal",
+<<<<<<< HEAD
                  priority: int = 5, parent_id: int = None) -> int:
+=======
+                 priority: int = 5, parent_id: Optional[int] = None) -> int:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """Thêm goal mới."""
         ts = datetime.now().astimezone().isoformat()
         db_exec("""
@@ -503,8 +507,13 @@ class WorldModel:
             logger.error(f"WorldModel add_relation error: {e}")
             return False
 
+<<<<<<< HEAD
     def get_relations(self, subject: str = None, relation: str = None,
                       obj: str = None) -> list[dict]:
+=======
+    def get_relations(self, subject: Optional[str] = None, relation: Optional[str] = None,
+                      obj: Optional[str] = None) -> list[dict]:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """Truy vấn quan hệ."""
         conditions = []
         params = []

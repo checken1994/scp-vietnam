@@ -24,6 +24,10 @@ from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
 # /chat/sessions + /chat/{id}/history endpoints (previously NO auth — anyone
 # could list all active sessions + read any session's full history).
 from scp.api._shared import verify_admin
+<<<<<<< HEAD
+=======
+from typing import Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.chat")
 
@@ -41,7 +45,11 @@ class ConversationManager:
     def get_history(self, session_id: str) -> list[dict]:
         return self._sessions.get(session_id, [])
 
+<<<<<<< HEAD
     def add_message(self, session_id: str, role: str, content: str, metadata: dict = None):
+=======
+    def add_message(self, session_id: str, role: str, content: str, metadata: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         if session_id not in self._sessions:
             if len(self._sessions) >= self._max_sessions:
                 oldest = next(iter(self._sessions))

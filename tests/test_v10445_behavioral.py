@@ -2,14 +2,50 @@
 [V104.45] Behavioral tests for final deferred bugs: BV, BW, CP, CR, Z.
 """
 import os, sys
+<<<<<<< HEAD
+=======
+from pathlib import Path
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 SCP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, SCP_DIR)
 
 
+<<<<<<< HEAD
 def test_v10445_bv_healing_on_ask_path():
     """#BV: Healing engine must be initialized in judge and called after verdict."""
     judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
     with open(judge_path, encoding="utf-8") as f: content = f.read()
+=======
+def _read_module_tree(*subpaths: str) -> str:
+    """Read all .py files in a module directory tree + concat content.
+
+    [AUTOFIX-T1] Brittle tests grep'd single files. After refactors (judge.py
+    → judge_parts/, slms.py → slms_parts/, api_server.py → api_server_parts/
+    + api/routes/), markers moved but tests still looked at the old single
+    file → false failures. This helper reads the WHOLE tree so tests survive
+    future refactors. Behavior > file location.
+    """
+    root = Path(SCP_DIR).joinpath(*subpaths)
+    if root.is_file() and root.suffix == ".py":
+        return root.read_text(encoding="utf-8")
+    if not root.is_dir():
+        return ""
+    chunks: list[str] = []
+    for py in sorted(root.rglob("*.py")):
+        if "__pycache__" in py.name:
+            continue
+        try:
+            chunks.append(py.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+    return "\n".join(chunks)
+
+
+def test_v10445_bv_healing_on_ask_path():
+    """#BV: Healing engine must be initialized in judge and called after verdict."""
+    content = _read_module_tree("scp", "runtime", "judge.py")
+    content += _read_module_tree("scp", "runtime", "judge_parts")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.45 #BV' in content, "B-BV: marker not present"
     assert 'V14SelfHealingEngine' in content, "B-BV: healing engine not imported"
     assert 'self.healing_engine' in content, "B-BV: instance not created"
@@ -20,8 +56,13 @@ def test_v10445_bv_healing_on_ask_path():
 
 def test_v10445_bw_healing_success_measures_verdict():
     """#BW: Healing success must measure verdict improvement, not SQL DELETE."""
+<<<<<<< HEAD
     judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
     with open(judge_path, encoding="utf-8") as f: content = f.read()
+=======
+    content = _read_module_tree("scp", "runtime", "judge.py")
+    content += _read_module_tree("scp", "runtime", "judge_parts")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.45 #BW' in content, "B-BW: marker not present"
     assert 'verdict_improved' in content, "B-BW: verdict_improved not present"
 
@@ -39,8 +80,13 @@ def test_v10445_cp_multimodal_on_ask():
 
 def test_v10445_cr_autopayload_scheduled():
     """#CR: AutoPayloadGenerator must be scheduled in background."""
+<<<<<<< HEAD
     judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
     with open(judge_path, encoding="utf-8") as f: content = f.read()
+=======
+    content = _read_module_tree("scp", "runtime", "judge.py")
+    content += _read_module_tree("scp", "runtime", "judge_parts")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.45 #CR' in content, "B-CR: marker not present"
     assert 'AutoPayloadGenerator' in content, "B-CR: not imported"
     assert '_last_payload_gen' in content, "B-CR: scheduling not present"

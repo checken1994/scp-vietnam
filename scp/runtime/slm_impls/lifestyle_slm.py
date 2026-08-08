@@ -9,7 +9,11 @@ from __future__ import annotations
 
 import logging
 import time
+<<<<<<< HEAD
 from typing import Any
+=======
+from typing import Any, Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 from scp.runtime.slm_base import BaseSLM, SLMResponse
 from scp.security.url_safety import safe_urlopen  # noqa: B310
@@ -28,7 +32,11 @@ class GeneralSLM(BaseSLM):
     Strategy: extract entity, query Wikipedia summary, return first sentence
     as the "type" or "description".
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="GeneralSLM", domain="general", config=config)
         self._wiki = None
         try:
@@ -137,7 +145,11 @@ class ReligionSLM(BaseSLM):
     [V73] Religion/Literature SLM — Bible verses, quotes, scriptures.
     Uses bible-api.com for verse lookup.
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="ReligionSLM", domain="religion", config=config)
 
     def predict(self, question: str) -> SLMResponse:
@@ -195,7 +207,11 @@ class FoodSLM(BaseSLM):
     [V73] Food & Recipe SLM — recipes, nutrition, cocktails.
     Uses cached MealDB/CocktailDB/Fruityvice data from external_questions.
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="FoodSLM", domain="food", config=config)
 
     def predict(self, question: str) -> SLMResponse:
@@ -309,7 +325,11 @@ class CitySLM(BaseSLM):
     which only handles countries via REST Countries API).
     Uses Open-Meteo geocoding + Wikidata.
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="CitySLM", domain="geography", config=config)
 
     def predict(self, question: str) -> SLMResponse:
@@ -377,7 +397,11 @@ class HolidaySLM(BaseSLM):
     [V78] Holiday SLM — public holidays via date.nager.at API.
     Handles: "What is a public holiday in X?" (X = country code)
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="HolidaySLM", domain="history", config=config)
 
     def predict(self, question: str) -> SLMResponse:
@@ -466,7 +490,11 @@ class AnimalFactsSLM(BaseSLM):
     [V78] Animal Facts SLM — cat/dog facts via kinduff/catfact APIs.
     Handles: "Tell me a fact about cats/dogs."
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="AnimalFactsSLM", domain="biology", config=config)
 
     def predict(self, question: str) -> SLMResponse:
@@ -544,7 +572,11 @@ class AdviceSLM(BaseSLM):
     [V78] Advice SLM — life advice via adviceslip.com API.
     Handles: "What is a piece of useful life advice?"
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="AdviceSLM", domain="general", config=config)
 
     def predict(self, question: str) -> SLMResponse:
@@ -602,7 +634,11 @@ class ChuckNorrisSLM(BaseSLM):
     [V78] Chuck Norris SLM — jokes via chucknorris.io API.
     Handles: "Tell me a Chuck Norris fact."
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="ChuckNorrisSLM", domain="entertainment", config=config)
 
     def predict(self, question: str) -> SLMResponse:

@@ -8,6 +8,10 @@ Uses: sentence-transformers (local, free) + SQLite vector storage.
 """
 from __future__ import annotations
 import logging, hashlib, json, sqlite3, os
+<<<<<<< HEAD
+=======
+from typing import Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.capabilities.vector_db")
 
@@ -40,7 +44,11 @@ class VectorStore:
                 return None
         return self._model
     
+<<<<<<< HEAD
     def add(self, text: str, metadata: dict = None):
+=======
+    def add(self, text: str, metadata: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         model = self._get_model()
         if not model: return False
         emb = model.encode(text).tolist()
@@ -59,7 +67,11 @@ class VectorStore:
         conn = sqlite3.connect(self.db_path)
         rows = conn.execute("SELECT id, text, embedding, metadata FROM vectors LIMIT 1000").fetchall()
         results = []
+<<<<<<< HEAD
         for rid, text, emb_str, meta_str in rows:
+=======
+        for _rid, text, emb_str, meta_str in rows:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
             emb = json.loads(emb_str)
             # Cosine similarity
             import math

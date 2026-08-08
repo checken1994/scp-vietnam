@@ -58,10 +58,17 @@ def _check_rate_limit() -> bool:
 # Pattern an toàn: không thay đổi logic, chỉ thêm logging.
 import re as _re_module
 
+<<<<<<< HEAD
 _BARE_EXCEPT_PASS_PATTERN = _re_module.compile(
     r'^(\s*)(except\s+\w*(?:\s+as\s+\w+)?\s*:\s*\n)(\s*)pass\s*$',
     _re_module.MULTILINE
 )
+=======
+# [AUTOFIX-T1] Removed dead `_BARE_EXCEPT_PASS_PATTERN` regex — defined but never
+# applied (vulture: 90% unused). The deterministic bare-except-pass fixer lives
+# in scp/autofix/evolution*.py; this module routes fixes through the LLM path.
+# Wiring this regex fixer here is a Tier-3 (WHAT) change — reported, not auto-applied.
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 
 # ============================================================
@@ -418,7 +425,12 @@ def _call_openrouter(prompt: str, max_tokens: int = 4000) -> str | None:
             data = json.loads(resp.read().decode("utf-8"))
             return data.get("choices", [{}])[0].get("message", {}).get("content", "")
     except urllib.error.HTTPError as e:
+<<<<<<< HEAD
         logger.warning(f"[llm_fix] OpenRouter HTTP {e.code}: {e.read()[:200]}")
+=======
+        # [AUTOFIX-T1] `e.read()` returns bytes → log showed b'...' literal. Decode.
+        logger.warning(f"[llm_fix] OpenRouter HTTP {e.code}: {e.read().decode('utf-8', 'replace')[:200]}")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         return None
     except Exception as e:
         logger.warning(f"[llm_fix] OpenRouter call failed: {e}")

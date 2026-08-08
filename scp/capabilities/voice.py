@@ -9,6 +9,10 @@ TTS: edge-tts (Microsoft Edge TTS, free)
 """
 from __future__ import annotations
 import logging, tempfile, os
+<<<<<<< HEAD
+=======
+from typing import Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.capabilities.voice")
 
@@ -18,7 +22,11 @@ class VoiceHandler:
     def __init__(self):
         self._whisper_model = None
     
+<<<<<<< HEAD
     def transcribe(self, audio_bytes: bytes, language: str = None) -> str:
+=======
+    def transcribe(self, audio_bytes: bytes, language: Optional[str] = None) -> str:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """STT: audio bytes → text (Whisper local)."""
         try:
             import whisper

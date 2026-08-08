@@ -508,7 +508,11 @@ class ReasonChainStore:
 
     @staticmethod
     def create(chain_id: str, conclusion_id: str, total_steps: int = 1,
+<<<<<<< HEAD
                verified_by: list[str] = None, question: str = "") -> bool:
+=======
+               verified_by: Optional[list[str]] = None, question: str = "") -> bool:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """Create a reason chain. Returns True if created."""
         ts = datetime.now().isoformat()
         verified_str = ",".join(verified_by) if verified_by else ""

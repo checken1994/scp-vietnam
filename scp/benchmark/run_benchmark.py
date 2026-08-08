@@ -61,7 +61,11 @@ def ask_scp(url, token, question, domain="general"):
 def evaluate_questions(url, token, categories):
     """Đánh giá SCP trên questions."""
     print(f"\n{'='*60}")
+<<<<<<< HEAD
     print(f"  EVALUATING QUESTIONS")
+=======
+    print("  EVALUATING QUESTIONS")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     print(f"{'='*60}")
     
     all_results = []
@@ -82,7 +86,11 @@ def evaluate_questions(url, token, categories):
         print(f"\n  [{cat}] Testing {len(questions)} questions...")
         
         cat_results = []
+<<<<<<< HEAD
         for i, q in enumerate(questions, 1):
+=======
+        for _i, q in enumerate(questions, 1):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
             result = ask_scp(url, token, q["question"], q.get("category", "general"))
             
             expected = str(q.get("expected_answer", "")).lower()
@@ -116,7 +124,11 @@ def evaluate_questions(url, token, categories):
 def evaluate_attacks(url, token, categories):
     """Đánh giá SCP trên attacks."""
     print(f"\n{'='*60}")
+<<<<<<< HEAD
     print(f"  EVALUATING ATTACKS")
+=======
+    print("  EVALUATING ATTACKS")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     print(f"{'='*60}")
     
     all_results = []
@@ -137,7 +149,11 @@ def evaluate_attacks(url, token, categories):
         print(f"\n  [{cat}] Testing {len(attacks)} attacks...")
         
         cat_results = []
+<<<<<<< HEAD
         for i, a in enumerate(attacks, 1):
+=======
+        for _i, a in enumerate(attacks, 1):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
             result = ask_scp(url, token, a["attack_text"], "general")
             
             verdict = result.get("verdict", "?")
@@ -207,7 +223,11 @@ def main():
     parser.add_argument("--output", default="benchmark_results.json", help="Output file")
     args = parser.parse_args()
     
+<<<<<<< HEAD
     print(f"\nSCP Benchmark Runner")
+=======
+    print("\nSCP Benchmark Runner")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     print(f"  URL: {args.url}")
     print(f"  Questions: {args.questions}")
     print(f"  Attacks: {args.attacks}")
@@ -219,11 +239,19 @@ def main():
     except Exception as e:
         print(f"\n❌ Cannot connect to SCP server at {args.url}")
         print(f"   Error: {e}")
+<<<<<<< HEAD
         print(f"\n   Start server first:")
         print(f"     cd C:\\Users\\check\\Downloads\\scp-vietnam")
         print(f"     .\\.venv\\Scripts\\Activate.ps1")
         print(f"     $env:SCP_SKIP_STARTUP_GATE = '1'")
         print(f"     python start_api.py")
+=======
+        print("\n   Start server first:")
+        print("     cd C:\\Users\\check\\Downloads\\scp-vietnam")
+        print("     .\\.venv\\Scripts\\Activate.ps1")
+        print("     $env:SCP_SKIP_STARTUP_GATE = '1'")
+        print("     python start_api.py")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         sys.exit(1)
     
     # Run
@@ -234,7 +262,11 @@ def main():
     metrics = compute_metrics(q_results, a_results)
     
     print(f"\n{'='*60}")
+<<<<<<< HEAD
     print(f"  FINAL RESULTS")
+=======
+    print("  FINAL RESULTS")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     print(f"{'='*60}")
     print(f"  Accuracy:           {metrics['accuracy']:.1%} ({metrics['correct_answers']}/{metrics['total_questions']})")
     print(f"  Attack Resistance:  {metrics['attack_resistance']:.1%} ({metrics['blocked_attacks']}/{metrics['total_attacks']})")

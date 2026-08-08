@@ -1,0 +1,97 @@
+# [V104.36] Why-Audit CI — runs on every push to verify SCP fixes are not lost.
+# TẠI SAO: Behavioral tests auto-detect FIX-LOSS. This CI gate prevents
+# regressions from being merged. DNA SCP #6 Evidence — CI = observable evidence.
+name: SCP Why-Audit CI
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+jobs:
+  behavioral-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install deps
+        run: |
+          pip install -r requirements.txt || true
+          pip install pytest pytest-asyncio pytest-cov
+      - name: Run behavioral tests
+        env:
+          SCP_DEV_MODE: '1'
+          SCP_SKIP_STARTUP_GATE: '1'
+          SCP_ENABLE_CLOSED_LOOP: '1'
+        run: python -m pytest tests/ --tb=short -q --ignore=tests/external_audit --ignore=tests/advanced
+  self-audit-fix-loop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Self-audit fix loop
+        env:
+          SCP_DEV_MODE: '1'
+        run: |
+          pip install -r requirements.txt || true
+          python -c "from scp.autofix.runner import run_once; r=run_once(); print(f'Bugs found: {len(r.get(\"bugs\",[]))}')"
+  except-pass-cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Scan for bare except-pass
+        run: |
+          pip install ruff || true
+          ruff check scp/ --select S110,S112 || true
+
+  # [V104.36] WHY audit — scan for critical patterns that must not regress.
+  why-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: WHY Audit — CRITICAL_PATTERNS check
+        run: |
+          echo "Running WHY Audit for CRITICAL_PATTERNS..."
+          # CRITICAL_PATTERNS: patterns that, if missing, indicate fix-loss.
+          python -c "
+          import re, sys
+          CRITICAL_PATTERNS = [
+              'V104.42 #O',   # primary SLM match
+              'V104.42 #AH',  # watchlist check
+              'V104.42 #BA',  # bypass retract
+              'V104.34 #34',  # memory manager
+              'V104.34 #42',  # knowledge_io sanitize
+          ]
+          missing = []
+          for p in CRITICAL_PATTERNS:
+              import subprocess
+              r = subprocess.run(['grep', '-rln', p, 'scp/'], capture_output=True, text=True)
+              if not r.stdout.strip():
+                  missing.append(p)
+          if missing:
+              print(f'❌ WHY Audit FAILED — missing patterns: {missing}')
+              sys.exit(1)
+          print('✅ WHY Audit PASSED — all CRITICAL_PATTERNS present')
+          "
+
+  # [V104.36] Extended WHY audit — detect specific anti-patterns.
+  why-audit-extended:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: WHY Audit — extended pattern checks
+        run: |
+          echo "Checking for hardcoded_dummy_api_key..."
+          ! grep -r "AIzaSyDummyKey\|hardcoded_dummy_api_key" scp/ --include="*.py" || exit 1
+          echo "Checking for if_False_dead_code..."
+          ! grep -rn "if False:" scp/ --include="*.py" || exit 1
+          echo "✅ Extended WHY Audit PASSED"

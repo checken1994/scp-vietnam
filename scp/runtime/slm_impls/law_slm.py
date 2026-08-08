@@ -14,7 +14,11 @@ from __future__ import annotations
 
 import logging
 import time
+<<<<<<< HEAD
 from typing import Any
+=======
+from typing import Any, Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 from scp.runtime.slm_base import BaseSLM, SLMResponse
 
@@ -59,7 +63,11 @@ class LawSLM(BaseSLM):
                 "on December 10, 1948. 30 articles. Foundation of international human rights law.",
     }
 
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="LawSLM", domain="law", config=config)
         self._ds = None
         try:

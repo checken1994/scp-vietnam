@@ -10,7 +10,11 @@ from __future__ import annotations
 import logging
 import math
 import time
+<<<<<<< HEAD
 from typing import Any
+=======
+from typing import Any, Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 from scp.core.api_utils import fetch_with_retry
 from scp.runtime.slm_base import BaseSLM, SLMResponse
@@ -24,7 +28,11 @@ logger = logging.getLogger("scp.slms")
 class FinanceSLM(BaseSLM):
     """SLM chuyên về tài chính — dùng Frankfurter + CoinGecko (V29 fix)."""
 
+<<<<<<< HEAD
     def __init__(self, config: dict = None, registry = None):
+=======
+    def __init__(self, config: Optional[dict] = None, registry = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="FinSLM", domain="finance", config=config)
         self.registry = registry or None
         # [V29 FIX] Removed deprecated extractor — using direct API calls like ConversionSLM
@@ -127,7 +135,11 @@ class FinanceSLM(BaseSLM):
 class WeatherSLM(BaseSLM):
     """SLM chuyên về thời tiết — Open-Meteo API."""
 
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="WeatherSLM", domain="weather", config=config)
         self._geo_cache: dict[str, tuple[float, float]] = {}
 
@@ -246,7 +258,11 @@ class WeatherSLM(BaseSLM):
 class LogicSLM(BaseSLM):
     """SLM chuyên về logic — dùng math_evaluator cho boolean/comparison."""
 
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="LogicSLM", domain="logic", config=config)
         from scp.core.math_evaluator import MathEvalError, evaluate_expression
         self._eval = evaluate_expression
@@ -352,7 +368,11 @@ class LogicSLM(BaseSLM):
 class StatisticsSLM(BaseSLM):
     """SLM chuyên về thống kê — deterministic Python math."""
 
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="StatsSLM", domain="statistics", config=config)
 
     def _extract_numbers(self, question: str) -> list[float]:

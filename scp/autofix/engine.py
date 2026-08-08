@@ -228,6 +228,29 @@ class AutoFixEngine:
             tier_hint=bug.tier if bug.tier != BugTier.TIER_1_AUTO_FIX else None,
         )
 
+<<<<<<< HEAD
+=======
+        # [Idea 5 — VERIFY-THEN-PROMOTE] Adjust tier based on historical streak evidence.
+        # DNA SCP #12: "Không tăng quyền chỉ vì lập luận tăng" — promotion requires
+        # EVIDENCE (10 consecutive successes), not argument. Demotion is automatic
+        # after 3 consecutive failures. Only adjust Tier 1↔2 (never touch Tier 3/4).
+        try:
+            from scp.autofix.monitor import get_monitor as _get_monitor
+            _adj = _get_monitor().get_tier_adjustment(bug.bug_type)
+            if _adj != 0 and classified.tier in (BugTier.TIER_1_AUTO_FIX, BugTier.TIER_2_AUTO_FIX_LOG):
+                _new_tier_val = max(1, min(2, int(classified.tier) + _adj))
+                _new_tier = BugTier(_new_tier_val)
+                if _new_tier != classified.tier:
+                    logger.info(
+                        f"[Idea5] tier adjusted {bug.bug_type}: "
+                        f"Tier {int(classified.tier)} → Tier {int(_new_tier)} "
+                        f"(streak evidence, adj={_adj:+d})"
+                    )
+                    classified.tier = _new_tier
+        except Exception as _idea5_err:
+            logger.debug(f"[Idea5] tier adjustment skipped (fail-open): {_idea5_err}")
+
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         # Check cooldown (don't re-fix same bug)
         bug_key = f"{bug.file}:{bug.line}:{bug.bug_type}"
         now = time.time()
@@ -397,10 +420,20 @@ class AutoFixEngine:
             except Exception as _self_scan_err:
                 logger.debug(f"[WORLD-CLASS-GATE] self_scan_patch_diff fail-open: {_self_scan_err}")
 
+<<<<<<< HEAD
             # [WORLD-CLASS-GATE] Check 5: pytest — suite không được vỡ sau patch
             # TẠI SAO: 63% rollback rate (engine.py:55-56) xảy ra vì SCP KHÔNG chạy
             # pytest sau patch. audit_and_fix.py có gate này → 0% regression.
             # Gate: chỉ chạy nếu tests/ tồn tại + SCP_AUTOFIX_RUN_PYTEST=1 (opt-in).
+=======
+            # [WORLD-CLASS-GATE] Check 5: pytest — so sánh BASELINE vs POST-PATCH
+            # TẠI SAO: 63% rollback rate xảy ra khi KHÔNG chạy pytest. Nhưng nếu chạy
+            # tuyệt đối (fail = rollback), test suite có fail sẵn (DB malformed, sandbox)
+            # sẽ reject MỌI patch dù patch đúng. DNA SCP: "PASS ≠ ĐÚNG" — không reject
+            # patch chỉ vì test suite có fail sẵn; chỉ reject nếu patch LÀM TỆ HƠN.
+            # Fix: chạy pytest pre-patch (baseline) + post-patch, so sánh pass/fail count.
+            # Chỉ FAIL nếu post-patch có MORE failures hoặc FEWER passes.
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
             try:
                 if os.environ.get("SCP_AUTOFIX_RUN_PYTEST", "0") == "1":
                     import subprocess as _sp
@@ -412,6 +445,7 @@ class AutoFixEngine:
                         _tests_dir = _tests_dir.parent
                     _root = _tests_dir
                     if (_root / "tests").is_dir() or (_root / "scp" / "tests").is_dir():
+<<<<<<< HEAD
                         _proc = _sp.run(  # noqa: S603 — audited: sys.executable, hardcoded args
                             [_sys.executable, "-m", "pytest", "-q", "--timeout=60", "-x", str(filepath)],
                             cwd=str(_root), capture_output=True, text=True, timeout=90,
@@ -423,6 +457,102 @@ class AutoFixEngine:
                 logger.debug(f"[WORLD-CLASS-GATE] pytest verify fail-open: {_pytest_err}")
 
             return True, "fix verified OK (syntax + re-scan + no new bugs + self-scan + pytest)"
+=======
+                        # [AUTOFIX-T2-SMART] Parse pass/fail counts instead of returncode.
+                        # Test suite may have pre-existing failures (DB malformed, sandbox) —
+                        # only reject if patch makes things WORSE.
+                        _proc = _sp.run(  # noqa: S603 — audited: sys.executable, hardcoded args
+                            [_sys.executable, "-m", "pytest", "-q", "--timeout=60", str(filepath)],
+                            cwd=str(_root), capture_output=True, text=True, timeout=90,
+                            encoding="utf-8", errors="replace",
+                            check=False,
+                        )
+                        if _proc.returncode != 0:
+                            import re as _re
+                            _summary = (_proc.stdout or _proc.stderr or "").strip().splitlines()
+                            _last = _summary[-1] if _summary else ""
+                            _fail_m = _re.search(r'(\d+) failed', _last)
+                            _pass_m = _re.search(r'(\d+) passed', _last)
+                            _post_fails = int(_fail_m.group(1)) if _fail_m else 0
+                            _post_passes = int(_pass_m.group(1)) if _pass_m else 0
+                            # Get baseline (pre-patch) from backup file
+                            _backup_path = filepath.with_suffix(filepath.suffix + ".tier3bak")
+                            if not _backup_path.exists():
+                                _backup_path = filepath.with_suffix(filepath.suffix + ".audit_fix_backup")
+                            if _backup_path.exists():
+                                import shutil as _shutil
+                                _tmp_save = filepath.with_suffix(filepath.suffix + ".post_save")
+                                _shutil.copy(str(filepath), str(_tmp_save))
+                                try:
+                                    _shutil.copy(str(_backup_path), str(filepath))
+                                    _base_proc = _sp.run(
+                                        [_sys.executable, "-m", "pytest", "-q", "--timeout=60", str(filepath)],
+                                        cwd=str(_root), capture_output=True, text=True, timeout=90,
+                                        encoding="utf-8", errors="replace", check=False,
+                                    )
+                                    _base_summary = (_base_proc.stdout or "").strip().splitlines()
+                                    _base_last = _base_summary[-1] if _base_summary else ""
+                                    _base_fail_m = _re.search(r'(\d+) failed', _base_last)
+                                    _base_pass_m = _re.search(r'(\d+) passed', _base_last)
+                                    _base_fails = int(_base_fail_m.group(1)) if _base_fail_m else 0
+                                    _base_passes = int(_base_pass_m.group(1)) if _base_pass_m else 0
+                                finally:
+                                    _shutil.copy(str(_tmp_save), str(filepath))
+                                    _tmp_save.unlink(missing_ok=True)
+                                # Compare: only fail if patch makes things WORSE
+                                if _post_fails > _base_fails or _post_passes < _base_passes:
+                                    return False, (
+                                        f"pytest REGRESSION: baseline={_base_passes}p/{_base_fails}f "
+                                        f"→ post-patch={_post_passes}p/{_post_fails}f "
+                                        f"(patch made it worse) — ROLLBACK"
+                                    )
+                                else:
+                                    logger.info(
+                                        f"[WORLD-CLASS-GATE] pytest OK: baseline={_base_passes}p/{_base_fails}f "
+                                        f"→ post-patch={_post_passes}p/{_post_fails}f (no regression)"
+                                    )
+                            else:
+                                logger.debug("[WORLD-CLASS-GATE] no baseline backup — pytest gate skip (fail-open)")
+            except Exception as _pytest_err:
+                logger.debug(f"[WORLD-CLASS-GATE] pytest verify fail-open: {_pytest_err}")
+
+            # [AUTOFIX-T1-ROOTCAUSE] Check 6: ENTERPRISE RE-SCAN (Idea 3 from world-autofix research).
+            # TẠI SAO: Idea 3 (Copilot+CodeQL pattern) — sau fix, chạy lại TẤT CẢ scanner
+            # (ruff S,F,RUF,PLW,PLC,B,UP + bandit + vulture + mypy) trên file đã patch.
+            # Cascade control 1→2→3: fix bug A không được introduce bug B (mà scanner
+            # nội bộ Check 2/3 có thể không nhìn thấy vì chỉ chạy AST scanners nội bộ).
+            # Enterprise tools nhìn được SINK/TAINT/type mà AST nội bộ bỏ sót.
+            # Gate: chỉ FAIL nếu có bug MỚI (không có trong original_bugs) ở line gần fix.
+            try:
+                from scp.autofix.enterprise_scanners import scan_file_enterprise
+                _enterprise_findings = scan_file_enterprise(filepath)
+                _new_ent_bugs = []
+                _orig_lines = {getattr(b, "line", None) for b in original_bugs}
+                _orig_types = {(getattr(b, "line", None), getattr(b, "bug_type", "")) for b in original_bugs}
+                for f in _enterprise_findings:
+                    _f_line = f.get("line")
+                    _f_type = f.get("bug_type", "")
+                    # Skip if this finding matches an original bug (we KNEW about it)
+                    if (_f_line, _f_type) in _orig_types:
+                        continue
+                    # New enterprise finding near the fix line = likely introduced by patch
+                    for _ol in _orig_lines:
+                        if _f_line and _ol and abs(_f_line - _ol) <= 15:
+                            _new_ent_bugs.append(f)
+                            break
+                if _new_ent_bugs:
+                    _labels = [f"{f.get('bug_type','?')}@L{f.get('line','?')}" for f in _new_ent_bugs[:3]]
+                    return False, (
+                        f"enterprise re-scan found {len(_new_ent_bugs)} NEW bug(s) near fix: {_labels} — "
+                        f"REJECTED (cascade control: fix must not introduce new tool-detected bugs)"
+                    )
+            except ImportError:
+                logger.debug("[CASCADE] enterprise_scanners unavailable (fail-open)")
+            except Exception as _ent_err:
+                logger.debug(f"[CASCADE] enterprise re-scan fail-open: {_ent_err}")
+
+            return True, "fix verified OK (syntax + re-scan + no new bugs + self-scan + pytest + enterprise re-scan)"
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
         except Exception as _verify_err:
             logger.debug(f"[V9.1-UPGRADE] _verify_fix error (fail-open): {_verify_err}")
@@ -1136,7 +1266,11 @@ class AutoFixEngine:
         return result
 
     def _write_audit(self, bug: BugReport, action: str, attack_mode: bool = False,
+<<<<<<< HEAD
                      extra: dict = None):
+=======
+                     extra: dict | None = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """Write to audit log (append-only JSONL)."""
         entry = {
             "timestamp": time.time(),

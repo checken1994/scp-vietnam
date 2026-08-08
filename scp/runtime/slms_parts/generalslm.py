@@ -43,7 +43,11 @@ class SLMResponse:
 class BaseSLM(ABC):
     """Base class cho tất cả SLM chuyên biệt."""
 
+<<<<<<< HEAD
     def __init__(self, name: str, domain: str, config: dict = None):
+=======
+    def __init__(self, name: str, domain: str, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         self.name = name
         self.domain = domain
         self.config = config or {}
@@ -165,7 +169,11 @@ class GeneralSLM(BaseSLM):
     Strategy: extract entity, query Wikipedia summary, return first sentence
     as the "type" or "description".
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="GeneralSLM", domain="general", config=config)
         self._wiki = None
         try:

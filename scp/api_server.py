@@ -457,7 +457,21 @@ try:
         app.add_middleware(HTTPSRedirectMiddleware)
         logger.info("[Security] HTTPS redirect enabled (SCP_FORCE_HTTPS=1)")
     else:
+<<<<<<< HEAD
         logger.info("[Security] HTTPS redirect disabled (set SCP_FORCE_HTTPS=1 in prod)")
+=======
+        # [AUTOFIX-T2-SEC] Louder warning for production (non-localhost) deployments.
+        # DNA SCP #6 Evidence — log the risk explicitly so operators can't miss it.
+        _bind_host = os.environ.get("SCP_HOST", "127.0.0.1")
+        if _bind_host not in ("127.0.0.1", "localhost", "0.0.0.0"):
+            logger.warning(
+                "[Security] ⚠️  PRODUCTION DEPLOYMENT without HTTPS! "
+                f"Host={_bind_host} — set SCP_FORCE_HTTPS=1 or use a TLS-terminating "
+                f"reverse proxy. Without HTTPS, auth tokens travel in plaintext."
+            )
+        else:
+            logger.info("[Security] HTTPS redirect disabled (set SCP_FORCE_HTTPS=1 in prod)")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 except ImportError:
     logger.debug("[Security] HTTPSRedirectMiddleware unavailable (older FastAPI)")
 logger.info("[Security] CSRF protection: Bearer token auth (attacker cannot forge Authorization header)")

@@ -18,7 +18,11 @@ import logging
 import time
 from dataclasses import dataclass
 from pathlib import Path
+<<<<<<< HEAD
 from typing import Any
+=======
+from typing import Any, Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 # [ROOT-FIX Task 38-A / Issue 3] DNA #5 UNKNOWN > wrong answer: SEVERITY_ORDER
 # was missing "high", "medium", "low" — these fell back to 0 (treated as
@@ -109,8 +113,13 @@ class UserNotificationSystem:
         severity: str = "warning",
         title: str = "",
         message: str = "",
+<<<<<<< HEAD
         details: dict[str, Any] = None,
         actions_taken: list[str] = None,
+=======
+        details: Optional[dict[str, Any]] = None,
+        actions_taken: Optional[list[str]] = None,
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     ) -> dict[str, Any]:
         """Send notification to all configured channels.
 

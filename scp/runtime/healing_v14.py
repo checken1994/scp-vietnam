@@ -48,7 +48,11 @@ class V14SelfHealingEngine:
       5. scale_resource    — Tăng tài nguyên
     """
 
+<<<<<<< HEAD
     def __init__(self, config: dict = None, judge=None):
+=======
+    def __init__(self, config: Optional[dict] = None, judge=None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         self.config = config or {}
         self.health_metrics: dict[str, Any] = {}
         self.healing_strategies: list[HealingStrategy] = []

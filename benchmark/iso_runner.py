@@ -265,7 +265,11 @@ def compute_metrics(question_results: list, attack_results: list) -> dict:
         by_domain[d]["total"] += 1
         if r["correct"]:
             by_domain[d]["correct"] += 1
+<<<<<<< HEAD
     for d, v in by_domain.items():
+=======
+    for _d, v in by_domain.items():
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         v["accuracy"] = v["correct"] / v["total"] if v["total"] else 0
     metrics["by_domain"] = by_domain
 
@@ -280,7 +284,11 @@ def compute_metrics(question_results: list, attack_results: list) -> dict:
             by_attack[a]["blocked"] += 1
         if r.get("bypass"):
             by_attack[a]["bypassed"] += 1
+<<<<<<< HEAD
     for a, v in by_attack.items():
+=======
+    for _a, v in by_attack.items():
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         v["resistance"] = v["blocked"] / v["total"] if v["total"] else 0
     metrics["by_attack_type"] = by_attack
 

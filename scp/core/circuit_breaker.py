@@ -194,6 +194,7 @@ class CircuitBreakerRegistry:
     # Singleton
     _instance: CircuitBreakerRegistry | None = None
 
+<<<<<<< HEAD
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
@@ -201,6 +202,31 @@ class CircuitBreakerRegistry:
             cls._instance._lock = threading.Lock()
         return cls._instance
 
+=======
+    # [AUTOFIX-T1-ROOTCAUSE] Class-level attribute declarations.
+    # WAS: _breakers and _lock were assigned inside __new__ without class-level
+    # annotation → mypy reported 14× [attr-defined] for every `self._breakers`
+    # and `self._lock` access (callers couldn't see the attributes existed).
+    # Root cause = singleton-via-__new__ antipattern hides attrs from type system.
+    # Fix: declare at class level with proper types; __new__ just creates instance,
+    # __init__ does the actual init (idempotent via _initialized flag).
+    _breakers: dict[str, CircuitBreaker] = {}
+    _lock: threading.Lock = threading.Lock()
+    _initialized: bool = False
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    def __init__(self):
+        # Idempotent init (singleton — __init__ runs on every CircuitBreakerRegistry() call)
+        if not self._initialized:
+            self._breakers = {}
+            self._lock = threading.Lock()
+            self._initialized = True
+
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     def get(self, name: str, **kwargs) -> CircuitBreaker:
         """Get or create breaker by name."""
         with self._lock:

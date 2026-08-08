@@ -9,6 +9,10 @@ import logging
 import os
 
 from scp.interfaces.data_source import IDataSource
+<<<<<<< HEAD
+=======
+from typing import Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.data_sources.alphavantage")
 
@@ -39,7 +43,11 @@ class AlphaVantageDataSource(IDataSource):
     def get_supported_intents(self) -> list[str]:
         return ["stock_price", "forex_rate", "crypto_price", "finance"]
 
+<<<<<<< HEAD
     def can_handle(self, intent: str, entity: str = None) -> bool:
+=======
+    def can_handle(self, intent: str, entity: Optional[str] = None) -> bool:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         if not self.enabled:
             return False
         # Accept both intent-based and question-based calls

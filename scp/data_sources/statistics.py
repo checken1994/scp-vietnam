@@ -84,7 +84,11 @@ class StatisticsDataSource(IDataSource):
     def get_supported_intents(self) -> list[str]:
         return ["lookup", "query", "fact"]
 
+<<<<<<< HEAD
     def can_handle(self, intent: str, entity: str = None) -> bool:
+=======
+    def can_handle(self, intent: str, entity: Optional[str] = None) -> bool:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         return True
 
     def fetch(self, intent: str, entity: str, **kwargs):
@@ -152,8 +156,19 @@ class StatisticsDataSource(IDataSource):
             return Counter(values).most_common(1)[0][0]
         elif operation == "variance" or operation == "phương sai":
             mean = self.calculate("mean", values)
+<<<<<<< HEAD
             return sum((x - mean) ** 2 for x in values) / len(values)
         elif operation == "std" or operation == "độ lệch chuẩn":
             return math.sqrt(self.calculate("variance", values))
+=======
+            if mean is None:
+                return None  # [AUTOFIX-T1] mypy [operator]: mean can be None → TypeError
+            return sum((x - mean) ** 2 for x in values) / len(values)
+        elif operation == "std" or operation == "độ lệch chuẩn":
+            variance = self.calculate("variance", values)
+            if variance is None:
+                return None  # [AUTOFIX-T1] mypy [operator]: variance can be None
+            return math.sqrt(variance)
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
         return None

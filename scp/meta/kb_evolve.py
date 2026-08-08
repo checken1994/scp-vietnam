@@ -34,6 +34,10 @@ import threading
 import time
 from dataclasses import dataclass
 from pathlib import Path
+<<<<<<< HEAD
+=======
+from typing import Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.meta.kb_evolve")
 
@@ -210,7 +214,11 @@ class KBAccumulationStore:
                 logger.warning(f"[KB-EVOLVE] Save pattern failed: {e}")
                 return False
 
+<<<<<<< HEAD
     def get_patterns(self, bug_type: str = None) -> list[EvolvedPattern]:
+=======
+    def get_patterns(self, bug_type: Optional[str] = None) -> list[EvolvedPattern]:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """Get evolved patterns for a bug_type (or all if None)."""
         with self._lock:
             try:

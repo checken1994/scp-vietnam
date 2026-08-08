@@ -9,7 +9,11 @@ from __future__ import annotations
 import logging
 import time
 from datetime import datetime
+<<<<<<< HEAD
 from typing import Any
+=======
+from typing import Any, Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 from scp.core.db_manager import db_exec, db_query_one
 from scp.runtime.slm_base import BaseSLM, SLMResponse
@@ -218,7 +222,11 @@ class ChemistrySLM(BaseSLM):
         'californium': 'Cf',
     }
 
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="ChemSLM", domain="chemistry", config=config)
 
     def _extract_compound(self, question: str) -> str | None:
@@ -606,7 +614,11 @@ class RealitySLM(BaseSLM):
         'đơn vị thiên văn': ('AU', 1.496e11, 'm'),
     }
 
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="RealitySLM", domain="reality", config=config)
 
     def predict(self, question: str) -> SLMResponse:
@@ -683,7 +695,11 @@ class RealitySLM(BaseSLM):
 class AstronomySLM(BaseSLM):
     """SLM chuyên về thiên văn — dùng AstronomyDataSource (V44)."""
 
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="AstroSLM", domain="astronomy", config=config)
         self._ds = None
         try:

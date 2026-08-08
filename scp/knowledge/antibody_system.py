@@ -40,7 +40,11 @@ from __future__ import annotations
 import logging
 import re
 from dataclasses import dataclass
+<<<<<<< HEAD
 from typing import Any
+=======
+from typing import Any, Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 # [ROOT-FIX Task 38-A / Issue 1] DNA #6 Evidence: scp/meta/severity.py was
 # DEAD CODE (0 importers). Now antibody_system.py imports Severity enum so
@@ -525,7 +529,11 @@ class DomainAntibodySystem:
         question: str,
         answer: str,
         domain: str = "general",
+<<<<<<< HEAD
         ground_truth: dict[str, Any] = None,
+=======
+        ground_truth: Optional[dict[str, Any]] = None,
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     ) -> list[AntibodyResult]:
         """Run all relevant antibodies for this question.
 
@@ -603,7 +611,11 @@ class DomainAntibodySystem:
         question: str,
         answer: str,
         domain: str,
+<<<<<<< HEAD
         ground_truth: dict[str, Any] = None,
+=======
+        ground_truth: Optional[dict[str, Any]] = None,
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     ) -> AntibodyResult:
         """Run 1 antibody check."""
         antibody = self._antibody_map[ab_name]
@@ -1467,7 +1479,14 @@ class DomainAntibodySystem:
                 # Check style era
                 if found_style:
                     style_name, start, end = found_style
+<<<<<<< HEAD
                     if year < start - 5 or year > end + 5:
+=======
+                    # [AUTOFIX-T1] mypy [operator]: ensure int (STYLE_ERA values are int
+                    # but mypy infers str from dict key context). Cast for safety.
+                    start_i, end_i = int(start), int(end)
+                    if year < start_i - 5 or year > end_i + 5:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
                         result.passed = False
                         result.severity = "medium"
                         result.confidence = 0.7

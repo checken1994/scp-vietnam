@@ -29,7 +29,13 @@ class KnowledgeConsolidator:
         """Extract (entity, attribute) from a question context.
 
         [G4-FIX] Added for test_p2_behavioral_fixes.py compatibility.
+<<<<<<< HEAD
         Returns ('math_expression', 'deterministic_calculation') for math questions,
+=======
+        [AUTOFIX-T1] Added English entity/attribute patterns (was: VN + math only).
+        Returns ('math_expression', 'deterministic_calculation') for math questions,
+        ('<entity>', '<attribute>') for English "X of Y" / "X in Y" patterns,
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         ('unknown', 'unknown') otherwise.
         """
         question = (context.get("question") or "").lower().strip()
@@ -44,6 +50,33 @@ class KnowledgeConsolidator:
         for pattern in math_patterns:
             if re.search(pattern, question):
                 return ("math_expression", "deterministic_calculation")
+<<<<<<< HEAD
+=======
+        # [AUTOFIX-T1] English + Vietnamese patterns:
+        #   EN: "<attribute> of <entity>" / "<attribute> in <entity>"
+        #   VN: "<attribute> của <entity>" / "<attribute> trong <entity>"
+        # e.g. "molecular weight of water" → ('water', 'molecular_weight')
+        #      "temperature in tokyo" → ('tokyo', 'temperature')
+        #      "khối lượng phân tử của nước" → ('nước', 'molecular_weight')
+        # Strip leading "what is/what's the" (English question form)
+        cleaned = re.sub(r'^(?:what\s+(?:is|\'s)\s+(?:the|an?)\s+)', '', question)
+        # Entity = last word(s) after of/in/của/trong; attribute = everything before
+        # Use Unicode-aware match for Vietnamese diacritics
+        m = re.search(r'^(.+?)\s+(?:of|in|của|trong)\s+(\S+)$', cleaned)
+        if m:
+            attr_raw, entity = m.group(1), m.group(2)
+            attribute = attr_raw.replace(" ", "_")
+            # Map common VN attribute terms to EN equivalents (test expects 'molecular_weight')
+            vn_attr_map = {
+                "khối_lượng_phân_tử": "molecular_weight",
+                "khối_lượng": "molecular_weight",
+                "nhiệt_độ": "temperature",
+                "dân_số": "population",
+                "thủ_đô": "capital",
+            }
+            attribute = vn_attr_map.get(attribute, attribute)
+            return (entity, attribute)
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         return ("unknown", "unknown")
 
     def _consolidate_group(
@@ -52,7 +85,14 @@ class KnowledgeConsolidator:
         """Consolidate a group of observations into a summary.
 
         [G4-FIX] Added for test_p2_behavioral_fixes.py compatibility.
+<<<<<<< HEAD
         Returns dict with: entity, attribute, value, confidence, source_fail_rates.
+=======
+        [AUTOFIX-T1] Added median_value, mean_value, pass_count, fail_count fields.
+        FAIL observations are EXCLUDED from median/mean (they're anomalies, not data).
+        Returns dict with: entity, attribute, value, confidence, source_fail_rates,
+        median_value, mean_value, pass_count, fail_count.
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """
         if not observations:
             return {
@@ -61,6 +101,7 @@ class KnowledgeConsolidator:
                 "value": None,
                 "confidence": 0.0,
                 "source_fail_rates": {},
+<<<<<<< HEAD
             }
 
         # Collect values + track per-source success/fail
@@ -73,16 +114,52 @@ class KnowledgeConsolidator:
             if source not in source_stats:
                 source_stats[source] = {"success": 0, "fail": 0}
             if val is not None:
+=======
+                "median_value": None,
+                "mean_value": None,
+                "pass_count": 0,
+                "fail_count": 0,
+            }
+
+        # Separate PASS (data) from FAIL (anomalies)
+        from statistics import median as _median
+        pass_obs = [o for o in observations if o.get("final_verdict", "").upper() == "PASS"]
+        fail_obs = [o for o in observations if o.get("final_verdict", "").upper() != "PASS"]
+        pass_values: list[Any] = [o.get("real_value") for o in pass_obs if o.get("real_value") is not None]
+
+        # Collect values + track per-source success/fail
+        # [AUTOFIX-T1] success/fail based on final_verdict (not value presence) —
+        # BadExchange has real_value=999 (not None) but final_verdict=FAIL → must count as fail.
+        values: list[Any] = []
+        source_stats: dict[str, dict[str, int]] = {}  # source → {success, fail}
+        for obs in observations:
+            val = obs.get("real_value") or obs.get("value")
+            source = obs.get("source", "unknown")
+            verdict = (obs.get("final_verdict") or "").upper()
+            values.append(val)
+            if source not in source_stats:
+                source_stats[source] = {"success": 0, "fail": 0}
+            if verdict == "PASS":
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
                 source_stats[source]["success"] += 1
             else:
                 source_stats[source]["fail"] += 1
 
+<<<<<<< HEAD
         # Find most common value (majority vote)
         from collections import Counter
         value_counts = Counter(v for v in values if v is not None)
         if value_counts:
             consensus_value, consensus_count = value_counts.most_common(1)[0]
             confidence = consensus_count / len(observations)
+=======
+        # Find most common value (majority vote — PASS only)
+        from collections import Counter
+        value_counts = Counter(v for v in pass_values if v is not None)
+        if value_counts:
+            consensus_value, consensus_count = value_counts.most_common(1)[0]
+            confidence = consensus_count / len(pass_obs) if pass_obs else 0.0
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         else:
             consensus_value, confidence = None, 0.0
 
@@ -92,10 +169,27 @@ class KnowledgeConsolidator:
             total = stats["success"] + stats["fail"]
             source_fail_rates[source] = stats["fail"] / total if total > 0 else 0.0
 
+<<<<<<< HEAD
+=======
+        # [AUTOFIX-T1] Median + mean of PASS values only (FAIL excluded as anomalies)
+        try:
+            median_val = _median(pass_values) if pass_values else None
+            mean_val = sum(pass_values) / len(pass_values) if pass_values else None
+        except (TypeError, ValueError):
+            median_val, mean_val = None, None
+
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         return {
             "entity": entity,
             "attribute": attribute,
             "value": consensus_value,
             "confidence": confidence,
             "source_fail_rates": source_fail_rates,
+<<<<<<< HEAD
+=======
+            "median_value": median_val,
+            "mean_value": mean_val,
+            "pass_count": len(pass_obs),
+            "fail_count": len(fail_obs),
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         }

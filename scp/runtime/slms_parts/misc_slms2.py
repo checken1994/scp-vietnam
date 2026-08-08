@@ -44,7 +44,11 @@ class SLMResponse:
 class BaseSLM(ABC):
     """Base class cho tất cả SLM chuyên biệt."""
 
+<<<<<<< HEAD
     def __init__(self, name: str, domain: str, config: dict = None):
+=======
+    def __init__(self, name: str, domain: str, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         self.name = name
         self.domain = domain
         self.config = config or {}
@@ -162,7 +166,11 @@ class BaseSLM(ABC):
 class FinanceSLM(BaseSLM):
     """SLM chuyên về tài chính — dùng Frankfurter + CoinGecko (V29 fix)."""
 
+<<<<<<< HEAD
     def __init__(self, config: dict = None, registry = None):
+=======
+    def __init__(self, config: Optional[dict] = None, registry = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="FinSLM", domain="finance", config=config)
         self.registry = registry or None
         # [V29 FIX] Removed deprecated extractor — using direct API calls like ConversionSLM
@@ -266,7 +274,11 @@ class FinanceSLM(BaseSLM):
 class LogicSLM(BaseSLM):
     """SLM chuyên về logic — dùng math_evaluator cho boolean/comparison."""
 
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="LogicSLM", domain="logic", config=config)
         from scp.core.math_evaluator import MathEvalError, evaluate_expression
         self._eval = evaluate_expression
@@ -370,7 +382,11 @@ class LogicSLM(BaseSLM):
 class StatisticsSLM(BaseSLM):
     """SLM chuyên về thống kê — deterministic Python math."""
 
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="StatsSLM", domain="statistics", config=config)
 
     def _extract_numbers(self, question: str) -> list[float]:
@@ -476,7 +492,11 @@ class HolidaySLM(BaseSLM):
     [V78] Holiday SLM — public holidays via date.nager.at API.
     Handles: "What is a public holiday in X?" (X = country code)
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="HolidaySLM", domain="history", config=config)
 
     def predict(self, question: str) -> SLMResponse:
@@ -566,7 +586,11 @@ class AnimalFactsSLM(BaseSLM):
     [V78] Animal Facts SLM — cat/dog facts via kinduff/catfact APIs.
     Handles: "Tell me a fact about cats/dogs."
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="AnimalFactsSLM", domain="biology", config=config)
 
     def predict(self, question: str) -> SLMResponse:
@@ -646,7 +670,11 @@ class CitySLM(BaseSLM):
     which only handles countries via REST Countries API).
     Uses Open-Meteo geocoding + Wikidata.
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="CitySLM", domain="geography", config=config)
 
     def predict(self, question: str) -> SLMResponse:
@@ -711,7 +739,11 @@ class ReligionSLM(BaseSLM):
     [V73] Religion/Literature SLM — Bible verses, quotes, scriptures.
     Uses bible-api.com for verse lookup.
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="ReligionSLM", domain="religion", config=config)
 
     def predict(self, question: str) -> SLMResponse:
@@ -770,7 +802,11 @@ class AdviceSLM(BaseSLM):
     [V78] Advice SLM — life advice via adviceslip.com API.
     Handles: "What is a piece of useful life advice?"
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="AdviceSLM", domain="general", config=config)
 
     def predict(self, question: str) -> SLMResponse:
@@ -829,7 +865,11 @@ class ChuckNorrisSLM(BaseSLM):
     [V78] Chuck Norris SLM — jokes via chucknorris.io API.
     Handles: "Tell me a Chuck Norris fact."
     """
+<<<<<<< HEAD
     def __init__(self, config: dict = None):
+=======
+    def __init__(self, config: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="ChuckNorrisSLM", domain="entertainment", config=config)
 
     def predict(self, question: str) -> SLMResponse:

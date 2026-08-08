@@ -41,7 +41,11 @@ async def run_prediction_cycle():
         return {"status": "ok", "cycle": result}
     except Exception as e:
         logger.error(f"Prediction cycle failed: {e}", exc_info=True)
+<<<<<<< HEAD
         raise HTTPException(status_code=500, detail=str(e)) from e
+=======
+        raise HTTPException(status_code=500, detail="Prediction cycle failed — see server logs") from e
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 
 @router.get("/pending")
@@ -69,7 +73,11 @@ async def verify_predictions(req: VerifyRequest):
         return {"verified": len(results), "results": results}
     except Exception as e:
         logger.error(f"Verify failed: {e}", exc_info=True)
+<<<<<<< HEAD
         raise HTTPException(status_code=500, detail=str(e)) from e
+=======
+        raise HTTPException(status_code=500, detail="Verify failed — see server logs") from e
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 
 @router.get("/stats")

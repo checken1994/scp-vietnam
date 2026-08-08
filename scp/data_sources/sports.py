@@ -154,7 +154,11 @@ class SportsDataSource(IDataSource):
         return ['sports_olympic', 'sports_world_cup', 'sports_athlete',
                 'sports_rules', 'sports_info']
 
+<<<<<<< HEAD
     def can_handle(self, intent: str, entity: str = None) -> bool:
+=======
+    def can_handle(self, intent: str, entity: Optional[str] = None) -> bool:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         if intent in self.get_supported_intents():
             return True
         if entity:

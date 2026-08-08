@@ -432,6 +432,70 @@ class KnowledgeStore:
         with self._lock:
             return len(self._records)
 
+<<<<<<< HEAD
+=======
+    # [AUTOFIX-T1-RESTORE] V104.35 #50 + V104.38 #87 + #89 — behaviors removed when
+    # brain.py became a stub. Restored here in KnowledgeStore (the real logic location).
+    def update_or_verify(
+        self,
+        domain: str,
+        claim: str,
+        new_value: str,
+        confidence: float = 0.85,
+        source: str = "manual",
+    ) -> dict[str, Any]:
+        """Update an existing claim's value, resetting times_verified on change.
+
+        [V104.35 #50] When the verified_answer changes, times_verified MUST reset to 1
+        (was: kept incrementing → stale confidence on changed values).
+        [V104.38 #87] IntegrityError handling — if persist fails, log + don't crash.
+        """
+        with self._lock:
+            # Find existing record by domain + claim
+            existing = None
+            for r in self._records:
+                if r.get("domain") == domain and r.get("claim") == claim:
+                    existing = r
+                    break
+            if existing is None:
+                # New claim — add fresh
+                return self.add(domain, claim, new_value, confidence, source)
+            # Existing claim — check if value changed
+            old_value = existing.get("verified_answer", "")
+            if old_value != new_value:
+                # [V104.35 #50] Value changed → reset times_verified to 1
+                existing["verified_answer"] = new_value
+                existing["times_verified"] = 1
+                existing["confidence"] = max(0.0, min(1.0, confidence))
+                existing["source"] = source
+                existing["ts"] = time.time()
+            else:
+                # Same value → increment times_verified
+                existing["times_verified"] = existing.get("times_verified", 0) + 1
+            # [V104.38 #87] IntegrityError-safe persist
+            try:
+                _rewrite_jsonl(self.path, self._records)
+            except Exception as exc:
+                logger.warning(f"[KnowledgeStore] IntegrityError during update: {exc}")
+            return existing
+
+    @staticmethod
+    def relative_error(old_value: float | str, new_value: float | str) -> float:
+        """Compute symmetric relative error.
+
+        [V104.38 #89] Relative error must be symmetric: max(abs(old), abs(new), 1e-300)
+        in the denominator. Was: only abs(old_value) → asymmetric when new > old.
+        """
+        try:
+            old_f = float(old_value)
+            new_f = float(new_value)
+        except (TypeError, ValueError):
+            return float("inf")
+        # [V104.38 #89] symmetric: max(old, new, epsilon)
+        denom = max(abs(old_f), abs(new_f), 1e-300)
+        return abs(old_f - new_f) / denom
+
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     def clear(self) -> int:
         with self._lock:
             n = len(self._records)

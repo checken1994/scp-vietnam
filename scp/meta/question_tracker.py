@@ -178,7 +178,11 @@ class QuestionTracker:
     def log(self, question: str, source: str = "external",
             domain: str = "", verdict: str = "",
             confidence: float = 0.0, cycle_id: int = 0,
+<<<<<<< HEAD
             duration_ms: float = None, slm_count: int = None) -> str:
+=======
+            duration_ms: Optional[float] = None, slm_count: Optional[int] = None) -> str:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """
         Log 1 câu hỏi vào tracker.
 

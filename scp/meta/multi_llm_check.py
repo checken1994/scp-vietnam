@@ -32,6 +32,10 @@ import threading
 import urllib.error
 import urllib.request
 from difflib import SequenceMatcher
+<<<<<<< HEAD
+=======
+from typing import Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.meta.multi_llm_check")
 
@@ -57,7 +61,11 @@ def _check_rate_limit() -> bool:
 class MultiLLMChecker:
     """Cross-check LLM answers between providers to detect consensus illusion."""
 
+<<<<<<< HEAD
     def __init__(self, providers: list[str] = None):
+=======
+    def __init__(self, providers: Optional[list[str]] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         self.providers = providers or ["openrouter", "groq"]
         self._lock = threading.Lock()
 

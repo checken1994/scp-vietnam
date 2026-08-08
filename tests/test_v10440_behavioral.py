@@ -11,16 +11,51 @@ Tests verify:
 """
 import os
 import sys
+<<<<<<< HEAD
+=======
+from pathlib import Path
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 SCP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, SCP_DIR)
 
 
+<<<<<<< HEAD
 def test_v10440_m_slm_self_answer_not_pass():
     """#M: SLM self-answered must NOT be PASS (was: PASS, Evidence-First violation)."""
     judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
     with open(judge_path, encoding="utf-8") as f:
         content = f.read()
+=======
+def _read_module_tree(*subpaths: str) -> str:
+    """Read all .py files in a module directory tree + concat content.
+
+    [AUTOFIX-T1] Brittle tests grep'd single files. After refactors (judge.py
+    → judge_parts/, slms.py → slms_parts/), markers moved but tests still
+    looked at the old single file → false failures. This helper reads the
+    WHOLE tree so tests survive future refactors. Behavior > file location.
+    """
+    root = Path(SCP_DIR).joinpath(*subpaths)
+    if root.is_file() and root.suffix == ".py":
+        return root.read_text(encoding="utf-8")
+    if not root.is_dir():
+        return ""
+    chunks: list[str] = []
+    for py in sorted(root.rglob("*.py")):
+        if "__pycache__" in py.name:
+            continue
+        try:
+            chunks.append(py.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+    return "\n".join(chunks)
+
+
+def test_v10440_m_slm_self_answer_not_pass():
+    """#M: SLM self-answered must NOT be PASS (was: PASS, Evidence-First violation)."""
+    content = _read_module_tree("scp", "runtime", "judge.py")
+    content += _read_module_tree("scp", "runtime", "judge_parts")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.40 #M' in content, "B-M: marker not present"
     # Must set UNKNOWN (not PASS) when no AI answer
     assert 'verdict_type = "UNKNOWN"' in content
@@ -33,18 +68,28 @@ def test_v10440_m_slm_self_answer_not_pass():
 
 def test_v10440_k_adversary_conflict_sets_verdict():
     """#K: Adversary conflict must set verdict_type=CONFLICT (not just penalty)."""
+<<<<<<< HEAD
     judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
     with open(judge_path, encoding="utf-8") as f:
         content = f.read()
+=======
+    content = _read_module_tree("scp", "runtime", "judge.py")
+    content += _read_module_tree("scp", "runtime", "judge_parts")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.40 #K' in content, "B-K: marker not present"
     assert 'verdict_type = "CONFLICT"' in content, "B-K: CONFLICT not set on adversary conflict"
 
 
 def test_v10440_k_skip_adversary_not_bypassed():
     """#K-skip: Adversary must NOT be skipped at conf>=0.92."""
+<<<<<<< HEAD
     judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
     with open(judge_path, encoding="utf-8") as f:
         content = f.read()
+=======
+    content = _read_module_tree("scp", "runtime", "judge.py")
+    content += _read_module_tree("scp", "runtime", "judge_parts")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.40 #K-skip' in content, "B-K-skip: marker not present"
     # Old 0.92 bypass should NOT be active
     assert 'confidence < 0.92' not in content.replace('# ', '').replace('V104.40', ''), \
@@ -53,9 +98,14 @@ def test_v10440_k_skip_adversary_not_bypassed():
 
 def test_v10440_q_governance_kill_abstains():
     """#Q: Governance KILL must clear final_answer (abstain)."""
+<<<<<<< HEAD
     judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
     with open(judge_path, encoding="utf-8") as f:
         content = f.read()
+=======
+    content = _read_module_tree("scp", "runtime", "judge.py")
+    content += _read_module_tree("scp", "runtime", "judge_parts")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.40 #Q' in content, "B-Q: marker not present"
     assert 'verdict.final_answer = ""' in content, "B-Q: final_answer not cleared on KILL"
     assert 'governance_abstain' in content, "B-Q: abstain flag not set"
@@ -63,9 +113,14 @@ def test_v10440_q_governance_kill_abstains():
 
 def test_v10440_q_governance_escalate_sets_unknown():
     """#Q: Governance ESCALATE must set UNKNOWN (not auto-PASS)."""
+<<<<<<< HEAD
     judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
     with open(judge_path, encoding="utf-8") as f:
         content = f.read()
+=======
+    content = _read_module_tree("scp", "runtime", "judge.py")
+    content += _read_module_tree("scp", "runtime", "judge_parts")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'human_review_required' in content, "B-Q: human_review_required flag not set"
     # ESCALATE should change PASS to UNKNOWN
     assert 'ESCALATE' in content

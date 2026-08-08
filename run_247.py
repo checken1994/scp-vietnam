@@ -86,7 +86,12 @@ def is_running():
         if sys.platform == 'win32':
             try:
                 result = subprocess.run(['tasklist', '/FI', f'PID eq {pid}', '/NH'],
+<<<<<<< HEAD
                                       capture_output=True, text=True, timeout=5)
+=======
+                                      capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=5,
+                                      check=False)  # [AUTOFIX-T2] PLW1510 — nonzero exit = not running
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
                 if str(pid) in result.stdout:
                     return True, pid
                 return False, pid
@@ -396,7 +401,11 @@ def run_forever(interval=2000):  # [V90 OPT] 2000 Q/cycle for max throughput
                     except Exception as e:
                         logger.warning(f"[V72] Batch processing failed, falling back to sequential: {e}")
                         # Fallback to sequential
+<<<<<<< HEAD
                         for rq_idx, rq in enumerate(real_questions, 1):
+=======
+                        for _rq_idx, rq in enumerate(real_questions, 1):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
                             if shutdown_requested: break
                             try:
                                 q_text = rq.get("question", "")
@@ -539,7 +548,11 @@ def run_forever(interval=2000):  # [V90 OPT] 2000 Q/cycle for max throughput
             # PredictiveOrchestrator + Consolidator every 5 cycles, run in background thread
             if not shutdown_requested and cycle % 5 == 0:
                 import threading
+<<<<<<< HEAD
                 def _run_background():
+=======
+                def _run_background(engine=engine):  # [AUTOFIX-T1] B023: bind as default arg
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
                     if hasattr(engine, 'consolidator') and engine.consolidator:
                         try:
                             cons_result = engine.consolidator.consolidate_all()
@@ -578,7 +591,11 @@ def run_forever(interval=2000):  # [V90 OPT] 2000 Q/cycle for max throughput
             # 2 items/cycle avg, causing 3699-item backlog. Now: every cycle, limit=300
             # to actually clear backlog (3699/300 ≈ 12 cycles to drain, then steady-state).
             if not shutdown_requested and cycle % 2 == 0:
+<<<<<<< HEAD
                 def _run_reverify():
+=======
+                def _run_reverify(engine=engine):  # [AUTOFIX-T1] B023: bind as default arg
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
                     try:
                         if hasattr(engine, 'judge') and engine.judge and hasattr(engine.judge, 'reverify_scheduler'):
                             sched = engine.judge.reverify_scheduler
@@ -727,17 +744,34 @@ def stop():
     try:
         if sys.platform == 'win32':
             # [FIX] Windows: use taskkill /F /T to kill process tree
+<<<<<<< HEAD
             subprocess.run(['taskkill', '/PID', str(pid), '/F', '/T'], capture_output=True)
+=======
+            subprocess.run(['taskkill', '/PID', str(pid), '/F', '/T'], capture_output=True,
+                            encoding="utf-8", errors="replace",  # [AUTOFIX-T2] Windows UTF-8
+                            check=False)  # [AUTOFIX-T2] PLW1510 — best-effort kill
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
             # Wait and verify
             for _ in range(5):
                 time.sleep(1)
                 result = subprocess.run(['tasklist', '/FI', f'PID eq {pid}', '/NH'],
+<<<<<<< HEAD
                                       capture_output=True, text=True, timeout=5)
+=======
+                                      capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=5,
+                                      check=False)  # [AUTOFIX-T2] PLW1510
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
                 if str(pid) not in result.stdout:
                     break
             else:
                 # Last resort: kill all python
+<<<<<<< HEAD
                 subprocess.run(['taskkill', '/F', '/IM', 'python.exe'], capture_output=True)
+=======
+                subprocess.run(['taskkill', '/F', '/IM', 'python.exe'], capture_output=True,
+                                encoding="utf-8", errors="replace",  # [AUTOFIX-T2] Windows UTF-8
+                                check=False)  # [AUTOFIX-T2] PLW1510 — last-resort, best-effort
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         else:
             os.kill(pid, signal.SIGTERM)
             for _ in range(10):

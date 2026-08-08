@@ -123,8 +123,38 @@ class BugClassifier:
                 affects_logic=True,  # mark as logic-affecting (human review)
             )
 
+<<<<<<< HEAD
         combined = f"{file} {bug_type} {description} {suggested_fix}"
         combined.lower()
+=======
+        # [AUTOFIX-T1-ROOTCAUSE] NEVER_AUTO_FIX — rules with high false-positive rate
+        # or systemic patterns that change behavior. Always Tier 3 (human review).
+        # Idea 4 from world-autofix research (Pylint discipline):
+        #   PLW2901 (redef loop var) — often intentional (parse-and-normalize)
+        #   PLW0211 (staticmethod+self) — needs human judgment (drop decorator OR drop self)
+        #   BLE001  (blind except)     — SCP's deliberate fail-open pattern (1298 instances)
+        #   B015    (constant expr)    — often assert-style, needs context
+        #   PLW1510 (subprocess no check) — may be intentional fire-and-forget
+        #   B006/B008 (mutable/func default) — needs refactor, not patch
+        #   RUF012  (mutable class default) — needs default_factory, structural change
+        # Triggered by rule code embedded in bug_type (e.g. "Ruff_PLW0211", "Bandit_B110").
+        _NEVER_AUTO_FIX_RULES = {
+            "PLW2901", "PLW0211", "BLE001", "B015", "PLW1510",
+            "B006", "B008", "RUF012", "S110", "S112",
+        }
+        for _rule in _NEVER_AUTO_FIX_RULES:
+            if _rule in bug_type:
+                return BugReport(
+                    file=file, line=line, bug_type=bug_type,
+                    description=description, suggested_fix=suggested_fix,
+                    tier=BugTier.TIER_3_PERMISSION,
+                    affects_logic=True,
+                )
+
+        combined = f"{file} {bug_type} {description} {suggested_fix}"
+        # [AUTOFIX-T1] Removed dead `combined.lower()` — result discarded (F841).
+        # re.search() below uses re.IGNORECASE, so case-folding was redundant.
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
         # [TIER3-AUTO] Check RELAXATION first -- if relaxation match, it's
         # always Tier 3 + is_relaxation=True (HARD LIMIT, never auto-approve).

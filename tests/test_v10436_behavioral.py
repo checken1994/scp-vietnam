@@ -14,11 +14,16 @@ Tests verify:
 """
 import os
 import sys
+<<<<<<< HEAD
+=======
+from pathlib import Path
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 SCP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, SCP_DIR)
 
 
+<<<<<<< HEAD
 def test_v10436_56_wire_predictive_engine_in_api_server():
     """#56-wire: api_server.py must create PredictiveEngine with judge."""
     api_path = os.path.join(SCP_DIR, 'scp', 'api_server.py')
@@ -27,17 +32,71 @@ def test_v10436_56_wire_predictive_engine_in_api_server():
     assert 'V104.36 #56-wire' in content, "B56-wire: marker not in api_server.py"
     assert 'PredictiveEngine(judge=_judge)' in content, \
         "B56-wire: PredictiveEngine not wired with judge"
+=======
+def _read_module_tree(*subpaths: str) -> str:
+    """Read all .py files in a module directory tree + concat content.
+
+    [AUTOFIX-T1] Brittle tests grep'd single files. After refactors (judge.py
+    → judge_parts/, slms.py → slms_parts/, api_server.py → api_server_parts/
+    + api/routes/, real_question_fetcher.py → question_fetchers/), markers
+    moved but tests still looked at the old single file → false failures.
+    This helper reads the WHOLE tree so tests survive future refactors.
+    Behavior > file location.
+    """
+    root = Path(SCP_DIR).joinpath(*subpaths)
+    if root.is_file() and root.suffix == ".py":
+        return root.read_text(encoding="utf-8")
+    if not root.is_dir():
+        return ""
+    chunks: list[str] = []
+    for py in sorted(root.rglob("*.py")):
+        if "__pycache__" in py.name:
+            continue
+        try:
+            chunks.append(py.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+    return "\n".join(chunks)
+
+
+def test_v10436_56_wire_predictive_engine_in_api_server():
+    """#56-wire: api_server tree must create PredictiveOrchestrator (aka PredictiveEngine) with judge."""
+    # [AUTOFIX-T1] Read whole API tree (api_server.py + api_server_parts/ + api/routes/)
+    # Class was renamed PredictiveEngine → PredictiveOrchestrator; alias kept in api_server.py.
+    content = (_read_module_tree("scp", "api_server.py")
+               + _read_module_tree("scp", "api_server_parts")
+               + _read_module_tree("scp", "api", "routes"))
+    assert 'V104.36 #56-wire' in content, "B56-wire: marker not in api tree"
+    # Accept either old name (PredictiveEngine) or new (PredictiveOrchestrator)
+    has_wiring = ('PredictiveEngine(judge=_judge)' in content
+                  or 'PredictiveOrchestrator(judge=_judge)' in content
+                  or 'PredictiveOrchestrator(judge=' in content)
+    assert has_wiring, "B56-wire: PredictiveOrchestrator not wired with judge"
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert '_predictive_engine' in content, "B56-wire: singleton not declared"
 
 
 def test_v10436_56_wire_predictive_engine_in_run_247():
+<<<<<<< HEAD
     """#56-wire: run_247.py must create PredictiveEngine with judge."""
+=======
+    """#56-wire: run_247.py must create PredictiveEngine/Orchestrator with judge."""
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     run_path = os.path.join(SCP_DIR, 'run_247.py')
     with open(run_path, encoding="utf-8") as f:
         content = f.read()
     assert 'V104.36 #56-wire' in content, "B56-wire: marker not in run_247.py"
+<<<<<<< HEAD
     assert 'PredictiveEngine(judge=v98_judge)' in content, \
         "B56-wire: PredictiveEngine not wired with judge in run_247"
+=======
+    # Accept either name
+    has_wiring = ('PredictiveEngine(judge=v98_judge)' in content
+                  or 'PredictiveOrchestrator(judge=v98_judge)' in content
+                  or 'PredictiveOrchestrator(judge=' in content
+                  or 'PredictiveEngine(judge=' in content)
+    assert has_wiring, "B56-wire: PredictiveEngine not wired with judge in run_247"
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 
 def test_v10436_67_batch_no_cache_poisoning():
@@ -87,9 +146,14 @@ def test_v10436_70_smart_classifier_word_boundary():
 
 def test_v10436_75_nasa_apod_no_loop_break():
     """#75: fetch_nasa_apod must not have loop+break (was: always ≤1 result)."""
+<<<<<<< HEAD
     rf_path = os.path.join(SCP_DIR, 'scp', 'core', 'real_question_fetcher.py')
     with open(rf_path, encoding="utf-8") as f:
         content = f.read()
+=======
+    content = _read_module_tree("scp", "core", "real_question_fetcher.py")
+    content += _read_module_tree("scp", "core", "question_fetchers")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.36 #75' in content, "B75: marker not present"
     # Old loop+break pattern should NOT be active
     assert 'break  # 1 per call (DEMO_KEY limit)' not in content.replace('# ', ''), \
@@ -98,9 +162,14 @@ def test_v10436_75_nasa_apod_no_loop_break():
 
 def test_v10436_76_no_duplicate_country_codes():
     """#76: cca2_list must be deduplicated (was: AO/PL/PW appeared twice)."""
+<<<<<<< HEAD
     rf_path = os.path.join(SCP_DIR, 'scp', 'core', 'real_question_fetcher.py')
     with open(rf_path, encoding="utf-8") as f:
         content = f.read()
+=======
+    content = _read_module_tree("scp", "core", "real_question_fetcher.py")
+    content += _read_module_tree("scp", "core", "question_fetchers")
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.36 #76' in content, "B76: marker not present"
     assert 'dict.fromkeys(cca2_list)' in content, "B76: dedup not present"
     # Count occurrences of "AO" — should appear only once in the list now

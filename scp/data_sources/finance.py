@@ -95,7 +95,11 @@ class FinanceDataSource(IDataSource):
             'stock_price',
         ]
 
+<<<<<<< HEAD
     def can_handle(self, intent: str, entity: str = None) -> bool:
+=======
+    def can_handle(self, intent: str, entity: Optional[str] = None) -> bool:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         if intent in self.get_supported_intents():
             return True
         if entity:

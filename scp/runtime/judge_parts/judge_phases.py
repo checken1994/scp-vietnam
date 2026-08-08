@@ -81,7 +81,11 @@ in the judge() docstring (added by Task G4-C).
 from __future__ import annotations
 
 import logging
+<<<<<<< HEAD
 from typing import Any
+=======
+from typing import Any, Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 # [G4-FIX P0-12] judge_phases.py is NOT WIRED into judgecore_mixin.judge().
 # It runs in SHADOW MODE from judge.py:927 (judge_async wrapper) for
@@ -100,7 +104,11 @@ class JudgeContext:
     Carries all state needed by phases — avoids long parameter lists.
     """
     def __init__(self, question: str, ai_answer: str = "", cycle_count: int = 0,
+<<<<<<< HEAD
                  source: str = "", v98_context: dict = None):
+=======
+                 source: str = "", v98_context: Optional[dict] = None):
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         self.question = question
         self.ai_answer = ai_answer
         self.cycle_count = cycle_count

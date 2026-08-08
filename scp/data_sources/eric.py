@@ -12,6 +12,10 @@ import logging
 import os
 
 from scp.interfaces.data_source import IDataSource
+<<<<<<< HEAD
+=======
+from typing import Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.data_sources.eric")
 
@@ -47,7 +51,11 @@ class ERICDataSource(IDataSource):
         return ["education", "pedagogy", "research_paper", "curriculum",
                 "teaching_method", "academic"]
 
+<<<<<<< HEAD
     def can_handle(self, intent: str, entity: str = None) -> bool:
+=======
+    def can_handle(self, intent: str, entity: Optional[str] = None) -> bool:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         if not self.enabled:
             return False
         if intent in self.get_supported_intents():

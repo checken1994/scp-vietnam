@@ -322,7 +322,11 @@ def run_deep_audit(max_bugs: int = 0) -> dict:
     return run_once(ast_scan=True, max_bugs=max_bugs)
 
 
+<<<<<<< HEAD
 def pre_startup_audit(max_bugs: int = None) -> dict:
+=======
+def pre_startup_audit(max_bugs: int | None = None) -> dict:
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     """[STARTUP-GATE] Pre-startup audit (backward-compat wrapper).
 
     [ROOT-FIX 46] max_bugs default: env SCP_MAX_STARTUP_BUGS or 200 (was 50).

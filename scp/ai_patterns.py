@@ -21,6 +21,10 @@ Usage:
 
 import logging
 import os
+<<<<<<< HEAD
+=======
+from typing import Optional
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.ai_patterns")
 
@@ -90,7 +94,11 @@ class SelfConsistency:
         question: str,
         answer: str,
         system_prompt: str,
+<<<<<<< HEAD
         n_samples: int = None,
+=======
+        n_samples: Optional[int] = None,
+>>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     ) -> dict:
         """Verify answer using self-consistency voting.
 
