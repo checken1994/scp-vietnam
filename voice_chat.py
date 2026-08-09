@@ -336,14 +336,10 @@ def run_command(cmd: str) -> str:
         if parts[0] not in ALLOWED:
             return f"(blocked: '{parts[0]}' not in whitelist {sorted(ALLOWED)})"
         result = subprocess.run(  # noqa: S603 — shell=False, command whitelisted
-<<<<<<< HEAD
-            parts, shell=False, capture_output=True, text=True, timeout=30
-=======
             parts, shell=False, capture_output=True, text=True,
             encoding="utf-8", errors="replace",  # [AUTOFIX-T2] Windows: force UTF-8
             timeout=30,
             check=False,  # [AUTOFIX-T2] PLW1510 — returncode/stderr parsed manually below
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         )
         output = result.stdout.strip()
         if result.stderr:

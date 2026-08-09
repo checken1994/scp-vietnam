@@ -1,20 +1,11 @@
 # SCP V104 — Core dependencies (only what's actually imported)
 fastapi>=0.115.0
 uvicorn>=0.30.0
-<<<<<<< HEAD
-=======
 uvicorn[standard]>=0.30.0
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 pydantic>=2.9.0
 pyyaml>=6.0
 requests>=2.31.0
 huggingface_hub>=0.20.0
-<<<<<<< HEAD
-
-# Testing tools (optional — install separately)
-# pip install hypothesis icontract mutmut semgrep pytest
-python-dotenv>=1.0.0
-=======
 python-dotenv>=1.0.0
 
 # [AUTOFIX-T1] Missing deps found by import scan (were imported but not listed)
@@ -23,4 +14,3 @@ defusedxml>=0.7.0
 
 # Testing tools (optional — install separately)
 # pip install hypothesis icontract mutmut semgrep pytest
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)

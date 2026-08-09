@@ -12,10 +12,7 @@ from __future__ import annotations
 import logging
 
 from scp.interfaces.data_source import IDataSource
-<<<<<<< HEAD
-=======
 from typing import Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.data_sources.undata")
 
@@ -47,11 +44,7 @@ class UNDataDataSource(IDataSource):
                 "energy_stats", "population_stats", "political_science",
                 "un_data"]
 
-<<<<<<< HEAD
-    def can_handle(self, intent: str, entity: str = None) -> bool:
-=======
     def can_handle(self, intent: str, entity: Optional[str] = None) -> bool:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         if not self.enabled:
             return False
         if intent in self.get_supported_intents():

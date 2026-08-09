@@ -41,9 +41,6 @@ _SCP_ROOT = Path(__file__).resolve().parent.parent.parent  # .../scp-vietnam/ (f
 _SCAN_ROOT = Path(__file__).resolve().parent.parent  # .../scp-vietnam/scp/ (actual scan target)
 
 # Tools that must be installed (fail-open if missing)
-<<<<<<< HEAD
-_ENTERPRISE_TOOLS = ["ruff", "bandit", "vulture", "flake8"]
-=======
 _ENTERPRISE_TOOLS = ["ruff", "bandit", "vulture", "flake8", "mypy"]
 
 # [AUTOFIX-T1-ROOTCAUSE] Expanded ruff rule selection.
@@ -57,7 +54,6 @@ _ENTERPRISE_TOOLS = ["ruff", "bandit", "vulture", "flake8", "mypy"]
 # This is the ROOT CAUSE fix for the "SCP catches 1/7" gap (see worklog Task 4-a §4).
 # Symptom fixes (the 26 individual bugs we patched in Task 5-8) all flow from this gap.
 _RUFF_SELECT = "S,F,RUF,PLW,PLC,B,UP"
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 
 def _check_tool_available(tool: str) -> bool:
@@ -106,11 +102,6 @@ def _is_nosec_annotated(path: Path, line: int) -> bool:
 # 1. RUFF S-SERIES (security rules)
 # ============================================================
 def scan_with_ruff(path: Path) -> list[dict]:
-<<<<<<< HEAD
-    """Run Ruff S-series on a single file. Returns findings.
-
-    Detects: S101 (assert), S105 (password), S608 (SQL), S311 (random), etc.
-=======
     """Run Ruff (expanded rule set) on a single file. Returns findings.
 
     [AUTOFIX-T1-ROOTCAUSE] Was `--select=S` only (security). Now `S,F,RUF,PLW,PLC,B,UP`
@@ -122,17 +113,12 @@ def scan_with_ruff(path: Path) -> list[dict]:
       - B011 (assert False), B007 (unused loop var)
       - UP (pyupgrade)
     Each finding keeps its rule code so downstream can NEVER_AUTO_FIX filter.
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     """
     if not _check_tool_available("ruff"):
         return []
     try:
         result = safe_run(
-<<<<<<< HEAD
-            ["ruff", "check", "--preview", "--select=S",
-=======
             ["ruff", "check", "--preview", f"--select={_RUFF_SELECT}",
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
              "--output-format=json", "--no-cache", str(path)],
             timeout=30,
         )
@@ -202,8 +188,6 @@ def scan_with_bandit(path: Path) -> list[dict]:
 
 
 # ============================================================
-<<<<<<< HEAD
-=======
 # 5. MYPY (dynamic type-check — the "deep" prong of the 4-prong mission)
 # ============================================================
 def scan_with_mypy(path: Path) -> list[dict]:
@@ -269,7 +253,6 @@ def scan_with_mypy(path: Path) -> list[dict]:
 
 
 # ============================================================
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 # 3. VULTURE (dead code)
 # ============================================================
 def scan_with_vulture(path: Path) -> list[dict]:
@@ -372,11 +355,8 @@ def scan_file_enterprise(path: Path) -> list[dict]:
     findings.extend(scan_with_bandit(path))
     findings.extend(scan_with_vulture(path))
     findings.extend(scan_with_bugbear_dlint(path))
-<<<<<<< HEAD
-=======
     findings.extend(scan_with_mypy(path))  # [AUTOFIX-T1] deep type-check prong
     findings.extend(scan_for_secrets(path))  # [AUTOFIX-T2-SEC] hardcoded secret detection
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
     return findings
 
@@ -524,8 +504,6 @@ def should_skip_for_llm(bug_type: str) -> bool:
     return False
 
 
-<<<<<<< HEAD
-=======
 def _deterministic_fix_ruf013(path: Path, line: int, source: str) -> str | None:
     """RUF013: implicit Optional — `def f(x: T = None)` → `def f(x: T | None = None)`.
 
@@ -573,7 +551,6 @@ def _deterministic_fix_ruf013(path: Path, line: int, source: str) -> str | None:
     return f"<<<<<<< SEARCH\n{original}\n=======\n{replacement}\n>>>>>>> REPLACE"
 
 
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def get_deterministic_fix(bug_type: str, path: Path, line: int, source: str) -> str | None:
     """Get deterministic SEARCH/REPLACE block for a bug (no LLM needed).
 
@@ -585,11 +562,6 @@ def get_deterministic_fix(bug_type: str, path: Path, line: int, source: str) -> 
         return _deterministic_fix_s311(path, line, source)
     if "S105" in bug_type:
         return _deterministic_fix_s105(path, line, source)
-<<<<<<< HEAD
-    return None
-
-
-=======
     if "RUF013" in bug_type:
         return _deterministic_fix_ruf013(path, line, source)
     # [AUTOFIX-T1-DETERMINISTIC] PLC0415 + F841 — 935+2 issues, 62% of high-severity.
@@ -723,7 +695,6 @@ def scan_for_secrets(path: Path) -> list[dict]:
     return out
 
 
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 __all__ = [
     "scan_file_enterprise",
     "scan_scp_enterprise",
@@ -731,11 +702,8 @@ __all__ = [
     "scan_with_bandit",
     "scan_with_vulture",
     "scan_with_bugbear_dlint",
-<<<<<<< HEAD
-=======
     "scan_with_mypy",
     "scan_for_secrets",
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     "should_skip_for_llm",
     "get_deterministic_fix",
 ]

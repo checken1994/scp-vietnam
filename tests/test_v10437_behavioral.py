@@ -174,11 +174,7 @@ def test_v10437_83_parser_crypto_forward_iteration():
         for line in lines:
             stripped = re.sub(r'#.*', '', line)
             if 'for num_str in' in stripped and 'reversed' in stripped:
-<<<<<<< HEAD
-                assert False, f"B83: still using reversed in active code: {line.strip()}"
-=======
                 raise AssertionError(f"B83: still using reversed in active code: {line.strip()}")
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         # Must use > 100 (not > 10) in active code
         assert 'value > 100' in method_body, "B83: threshold not raised to > 100"
 
@@ -201,11 +197,7 @@ def test_v10437_except_pass_cleanup_applied():
     # Use Python os.walk instead
     import os
     marker_count = 0
-<<<<<<< HEAD
-    for root, dirs, files in os.walk(os.path.join(SCP_DIR, 'scp')):
-=======
     for root, _dirs, files in os.walk(os.path.join(SCP_DIR, 'scp')):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         for f in files:
             if not f.endswith('.py'):
                 continue

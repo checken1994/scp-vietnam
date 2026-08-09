@@ -688,12 +688,6 @@ class RealityJudge(JudgeBgMixin, JudgeCoreMixin, JudgeRouteMixin, JudgeUtilMixin
     # ============================================================
     # [V73] Value Extraction — extract comparable values from answers
     # ============================================================
-<<<<<<< HEAD
-    @staticmethod
-
-    def _get_exp_policies(self) -> dict[str, Any]:
-        """[V93.6] Load experience-derived policies from disk (TTL cached, cheap)."""
-=======
     def _get_exp_policies(self) -> dict[str, Any]:
         """[V93.6] Load experience-derived policies from disk (TTL cached, cheap).
 
@@ -704,7 +698,6 @@ class RealityJudge(JudgeBgMixin, JudgeCoreMixin, JudgeRouteMixin, JudgeUtilMixin
         Found by: ruff PLW0211 (staticmethod-with-self) + manual audit (SCP DNA #5:
         'SCP also must be audited'). Tier-1 fix (HOW, 1 correct answer).
         """
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         now = time.time()
         if now - self._exp_policies_ts < self._exp_policies_ttl:
             return self._exp_policies
@@ -848,11 +841,7 @@ class RealityJudge(JudgeBgMixin, JudgeCoreMixin, JudgeRouteMixin, JudgeUtilMixin
 
     async def judge_async(self, question: str, ai_answer: str = "",
                           cycle_count: int = 0, source: str = "",
-<<<<<<< HEAD
-                          v98_context: dict = None) -> Any:
-=======
                           v98_context: Optional[dict] = None) -> Any:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """Async version of judge() — uses extracted phases + direct LLM await.
 
         [OPT-8] Benefits over sync judge():
@@ -907,11 +896,7 @@ class RealityJudge(JudgeBgMixin, JudgeCoreMixin, JudgeRouteMixin, JudgeUtilMixin
 
     async def judge_with_react_fallback(self, question: str, ai_answer: str = "",
                                          cycle_count: int = 0, source: str = "",
-<<<<<<< HEAD
-                                         v98_context: dict = None) -> Any:
-=======
                                          v98_context: Optional[dict] = None) -> Any:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """[OPT-9] Judge with ReActAgent fallback for low-confidence routing.
 
         Flow:

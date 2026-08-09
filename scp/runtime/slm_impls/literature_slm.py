@@ -11,11 +11,7 @@ from __future__ import annotations
 
 import logging
 import time
-<<<<<<< HEAD
-from typing import Any
-=======
 from typing import Any, Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 from scp.runtime.slm_base import BaseSLM, SLMResponse
 
@@ -92,11 +88,7 @@ class LiteratureSLM(BaseSLM):
                                        "with Horace Walpole's 'The Castle of Otranto'.",
     }
 
-<<<<<<< HEAD
-    def __init__(self, config: dict = None):
-=======
     def __init__(self, config: Optional[dict] = None):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="LiteratureSLM", domain="literature", config=config)
         self._gutenberg = None
         try:

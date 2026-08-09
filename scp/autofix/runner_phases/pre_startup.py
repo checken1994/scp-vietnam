@@ -22,11 +22,7 @@ import os
 logger = logging.getLogger("scp.autofix.runner")
 
 
-<<<<<<< HEAD
-def pre_startup_audit(run_deep_audit_fn, max_bugs: int = None) -> dict:
-=======
 def pre_startup_audit(run_deep_audit_fn, max_bugs: int | None = None) -> dict:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     """[STARTUP-GATE] Chạy deep audit TRƯỚC khi server start.
 
     [ROOT-FIX 46] max_bugs default changed 50 → 200 (env: SCP_MAX_STARTUP_BUGS).

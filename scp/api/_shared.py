@@ -3,12 +3,8 @@
 Route modules import from here instead of api_server.py.
 """
 import logging
-<<<<<<< HEAD
-from typing import Any
-=======
 import time
 from typing import Any, Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 # [G5-FIX] Header import at module level — verify_admin uses it in signature
 try:
@@ -23,9 +19,6 @@ logger = logging.getLogger("scp.api")
 _AUTH_DEFAULT = Header("", alias="Authorization") if Header else ""
 
 
-<<<<<<< HEAD
-def verify_admin(authorization: str = Header("", alias="Authorization"), token: str = None):
-=======
 # [AUTOFIX-T2-SEC] Rate limiting for auth endpoints — prevents brute-force.
 # Simple in-memory sliding-window limiter: max 5 failed attempts per IP per 60s.
 # DNA SCP #12: "Không tăng quyền chỉ vì lập luận tăng" — rate limit là capability
@@ -55,7 +48,6 @@ def verify_admin(
     token: Optional[str] = None,
     request: Any = None,
 ):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     """Verify admin token — timing-safe, NO dev-mode bypass, RAISES on failure.
 
     [G2-FIX PERM-01] Previous version returned bool. When used as
@@ -64,19 +56,14 @@ def verify_admin(
 
     [G5-FIX] Use Header() for authorization — FastAPI auto-populates it
     from the Authorization header. We extract the Bearer token from it.
-<<<<<<< HEAD
-=======
 
     [AUTOFIX-T2-SEC] Rate limiting: max 5 failed attempts per IP per 60s.
     After threshold → 429 Too Many Requests. Prevents brute-force token guessing.
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     """
     import os
     import secrets as _secrets
 
     from fastapi import HTTPException
-<<<<<<< HEAD
-=======
     # Extract client IP for rate limiting
     client_ip = "unknown"
     if request is not None and hasattr(request, "client") and request.client:
@@ -87,7 +74,6 @@ def verify_admin(
         logger.warning(f"[RATE-LIMIT] IP {client_ip} blocked — too many auth failures")
         raise HTTPException(status_code=429, detail="Too many auth attempts — try again later")
 
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     auth_password = os.environ.get("SCP_AUTH_PASSWORD", "")
     auth_token = os.environ.get("SCP_AUTH_TOKEN_SECRET", "")
     # Deny by default if NEITHER is configured (no dev-mode bypass).
@@ -103,10 +89,7 @@ def verify_admin(
         else:
             provided = authorization.strip()
     if not provided:
-<<<<<<< HEAD
-=======
         _record_auth_failure(client_ip)
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         raise HTTPException(status_code=401, detail="Missing auth token")
     ok = False
     if auth_token:
@@ -120,10 +103,7 @@ def verify_admin(
         except (TypeError, ValueError) as e:
             logger.warning(f"Silent except: {e}")
     if not ok:
-<<<<<<< HEAD
-=======
         _record_auth_failure(client_ip)
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         raise HTTPException(status_code=401, detail="Invalid auth token")
     return True
 

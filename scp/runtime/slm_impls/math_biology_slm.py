@@ -8,11 +8,7 @@ from __future__ import annotations
 
 import logging
 import time
-<<<<<<< HEAD
-from typing import Any
-=======
 from typing import Any, Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 from scp.runtime.slm_base import BaseSLM, SLMResponse
 from scp.security.url_safety import safe_urlopen  # noqa: B310
@@ -30,11 +26,7 @@ class MathSLM(BaseSLM):
     - So sánh: ==, !=, <, >, <=, >=
     """
 
-<<<<<<< HEAD
-    def __init__(self, config: dict = None):
-=======
     def __init__(self, config: Optional[dict] = None):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="MathSLM", domain="math", config=config)
         # [V35] RealityEngine deleted (dead code)
         # [v27] Import deterministic evaluator
@@ -147,11 +139,7 @@ class MathSLM(BaseSLM):
 class BiologySLM(BaseSLM):
     """SLM chuyên về sinh học — dùng V13 constants + GBIF."""
 
-<<<<<<< HEAD
-    def __init__(self, config: dict = None, registry = None):
-=======
     def __init__(self, config: Optional[dict] = None, registry = None):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="BioSLM", domain="biology", config=config)
         self.registry = registry or None  # DataSourceRegistry deprecated
         self.extractor = None  # IntentExtractor deprecated

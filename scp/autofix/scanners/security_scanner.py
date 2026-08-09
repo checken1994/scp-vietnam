@@ -66,21 +66,9 @@ _CRED_SAFE_VALUE_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
-<<<<<<< HEAD
-# Function calls that deserialize untrusted data (CWE-502)
-_UNSAFE_DESERIALIZE = {
-    ("pickle", "loads"), ("pickle", "load"),
-    ("marshal", "loads"), ("marshal", "load"),
-    ("shelve", "open"),  # shelve uses pickle internally
-    ("yaml", "load"),    # yaml.load without SafeLoader
-    ("json", "loads"),   # JSON itself is safe but can carry __reduce__ — too noisy, skip
-}
-
-=======
 # [AUTOFIX-T1] Removed dead `_UNSAFE_DESERIALIZE` set — never referenced.
 # CWE-502 detection currently handles ONLY `yaml.load(...)` inline (~L150).
 # pickle/marshal/shelve detection MISSING — wiring it is Tier-3 (WHAT).
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 def _is_string_constant(node) -> str | None:
     """Return string value if node is a Constant string, else None."""

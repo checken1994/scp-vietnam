@@ -7,8 +7,6 @@ Tracks:
   - Success rate (by bug type)
   - Failure breakdown (LLM vs format vs validation vs rollback)
   - Provider performance (which LLM provider succeeds most)
-<<<<<<< HEAD
-=======
 
 [Idea 5 — VERIFY-THEN-PROMOTE] (Sourcery pattern):
   Per-bug_type success/failure streak tracking.
@@ -17,7 +15,6 @@ Tracks:
   - Streak resets on opposite outcome.
   DNA SCP #12: "Không tăng quyền chỉ vì lập luận tăng" — promotion requires
   EVIDENCE (streak), not just argument. Demotion is automatic on failure.
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 """
 from __future__ import annotations
 
@@ -27,13 +24,10 @@ from dataclasses import dataclass, field
 
 logger = logging.getLogger("scp.autofix.monitor")
 
-<<<<<<< HEAD
-=======
 # [Idea 5] Promotion/demotion thresholds
 _PROMOTE_STREAK = 10   # consecutive successes → promote Tier 2 → Tier 1
 _DEMOTE_STREAK = 3     # consecutive failures → demote Tier 1 → Tier 2
 
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 @dataclass
 class FixAttempt:
@@ -52,14 +46,6 @@ class AutoFixMonitor:
     def __init__(self, max_history: int = 1000):
         self._attempts: list[FixAttempt] = []
         self._max_history = max_history
-<<<<<<< HEAD
-
-    def record(self, attempt: FixAttempt) -> None:
-        """Record a fix attempt."""
-        self._attempts.append(attempt)
-        if len(self._attempts) > self._max_history:
-            self._attempts = self._attempts[-self._max_history:]
-=======
         # [Idea 5] Per-bug_type streak tracking
         self._success_streaks: dict[str, int] = {}
         self._failure_streaks: dict[str, int] = {}
@@ -124,7 +110,6 @@ class AutoFixMonitor:
             "promote_threshold": _PROMOTE_STREAK,
             "demote_threshold": _DEMOTE_STREAK,
         }
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
     def get_stats(self) -> dict:
         """Get aggregated stats."""
@@ -158,16 +143,10 @@ class AutoFixMonitor:
             by_provider[a.provider]["total"] += 1
             if a.success:
                 by_provider[a.provider]["success"] += 1
-<<<<<<< HEAD
-        for p in by_provider:
-            t = by_provider[p]["total"]
-            by_provider[p]["success_rate"] = by_provider[p]["success"] / t if t > 0 else 0.0
-=======
         # [AUTOFIX-T1] PLC0206 — iterate with .items() instead of key→index.
         for _p, stats in by_provider.items():
             t = stats["total"]
             stats["success_rate"] = stats["success"] / t if t > 0 else 0.0
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
         return {
             "total_attempts": total,

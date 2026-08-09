@@ -11,11 +11,7 @@ from __future__ import annotations
 
 import logging
 import time
-<<<<<<< HEAD
-from typing import Any
-=======
 from typing import Any, Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 from scp.runtime.slm_base import BaseSLM, SLMResponse
 
@@ -60,11 +56,7 @@ class AgricultureSLM(BaseSLM):
                                 "less water, no soil-borne diseases.",
     }
 
-<<<<<<< HEAD
-    def __init__(self, config: dict = None):
-=======
     def __init__(self, config: Optional[dict] = None):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="AgricultureSLM", domain="agriculture", config=config)
         self._ds = None
         try:

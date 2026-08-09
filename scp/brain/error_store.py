@@ -432,8 +432,6 @@ class KnowledgeStore:
         with self._lock:
             return len(self._records)
 
-<<<<<<< HEAD
-=======
     # [AUTOFIX-T1-RESTORE] V104.35 #50 + V104.38 #87 + #89 — behaviors removed when
     # brain.py became a stub. Restored here in KnowledgeStore (the real logic location).
     def update_or_verify(
@@ -495,7 +493,6 @@ class KnowledgeStore:
         denom = max(abs(old_f), abs(new_f), 1e-300)
         return abs(old_f - new_f) / denom
 
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     def clear(self) -> int:
         with self._lock:
             n = len(self._records)

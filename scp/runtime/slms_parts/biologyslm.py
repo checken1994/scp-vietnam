@@ -43,11 +43,7 @@ class SLMResponse:
 class BaseSLM(ABC):
     """Base class cho tất cả SLM chuyên biệt."""
 
-<<<<<<< HEAD
-    def __init__(self, name: str, domain: str, config: dict = None):
-=======
     def __init__(self, name: str, domain: str, config: Optional[dict] = None):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         self.name = name
         self.domain = domain
         self.config = config or {}
@@ -164,11 +160,7 @@ class BaseSLM(ABC):
 class BiologySLM(BaseSLM):
     """SLM chuyên về sinh học — dùng V13 constants + GBIF."""
 
-<<<<<<< HEAD
-    def __init__(self, config: dict = None, registry = None):
-=======
     def __init__(self, config: Optional[dict] = None, registry = None):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="BioSLM", domain="biology", config=config)
         self.registry = registry or None  # DataSourceRegistry deprecated
         self.extractor = None  # IntentExtractor deprecated

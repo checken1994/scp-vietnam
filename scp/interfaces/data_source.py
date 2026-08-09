@@ -46,11 +46,7 @@ class IDataSource(ABC):
         pass
 
     @abstractmethod
-<<<<<<< HEAD
-    def can_handle(self, intent: str, entity: str = None) -> bool:
-=======
     def can_handle(self, intent: str, entity: Optional[str] = None) -> bool:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """Kiểm tra xem source này có xử lý được intent không."""
         pass
 

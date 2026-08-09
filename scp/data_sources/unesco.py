@@ -11,10 +11,7 @@ from __future__ import annotations
 import logging
 
 from scp.interfaces.data_source import IDataSource
-<<<<<<< HEAD
-=======
 from typing import Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.data_sources.unesco")
 
@@ -81,11 +78,7 @@ class UNESCODataSource(IDataSource):
         return ["education", "literacy", "school_enrollment", "teacher_ratio",
                 "gender_parity", "education_stats"]
 
-<<<<<<< HEAD
-    def can_handle(self, intent: str, entity: str = None) -> bool:
-=======
     def can_handle(self, intent: str, entity: Optional[str] = None) -> bool:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         if not self.enabled:
             return False
         if intent in self.get_supported_intents():
@@ -136,11 +129,7 @@ class UNESCODataSource(IDataSource):
             return None
 
     def _query_indicator(self, indicator_code: str, label: str,
-<<<<<<< HEAD
-                          country_code: str = None) -> dict | None:
-=======
                           country_code: Optional[str] = None) -> dict | None:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         import httpx
         try:
             params = {

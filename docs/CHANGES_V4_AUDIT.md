@@ -71,15 +71,9 @@
    - Hoặc generate mới: `python -c "import secrets; print('scp-v3-' + secrets.token_hex(16))"`
 
 2. **REVOKE 3 OpenRouter keys** tại https://openrouter.ai/keys
-<<<<<<< HEAD
-   - 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
-   - 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
-   - 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
-=======
    - sk-or-v1-[REDACTED-LEAKED-KEY]
    - sk-or-v1-[REDACTED-LEAKED-KEY]
    - sk-or-v1-[REDACTED-LEAKED-KEY]
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 3. **Upgrade deps**: `pip install -r scp/requirements.txt`
 

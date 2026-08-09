@@ -33,10 +33,7 @@ import os
 
 from scp.core.wikipedia_client import fetch_summary as _wiki_fetch_summary  # [G3-CONSOLIDATE RE-05]
 from scp.interfaces.data_source import IDataSource
-<<<<<<< HEAD
-=======
 from typing import Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.data_sources.wikiart")
 
@@ -72,11 +69,7 @@ class WikiArtDataSource(IDataSource):
         return ["artist", "artwork", "art_movement", "painting", "art_style",
                 "visual_art", "biography"]
 
-<<<<<<< HEAD
-    def can_handle(self, intent: str, entity: str = None) -> bool:
-=======
     def can_handle(self, intent: str, entity: Optional[str] = None) -> bool:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         if not self.enabled:
             return False
         if intent in self.get_supported_intents():

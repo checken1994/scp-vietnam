@@ -137,11 +137,7 @@ def get_db():
     finally:
         _db_lock.release()
 
-<<<<<<< HEAD
-def db_exec(sql: str, params=(), db_path: str = None) -> int:
-=======
 def db_exec(sql: str, params=(), db_path: Optional[str] = None) -> int:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     """Execute a SQL statement. If db_path is provided, use a per-path connection
     (cached) instead of the global DB_PATH — but STILL under _db_lock.
 
@@ -229,11 +225,7 @@ def db_batch_flush() -> int:
 
 _read_lock = threading.Lock()  # [V89] Light lock for reads — WAL allows concurrent reads
 
-<<<<<<< HEAD
-def db_query_all(sql: str, params=(), db_path: str = None) -> list[dict]:
-=======
 def db_query_all(sql: str, params=(), db_path: Optional[str] = None) -> list[dict]:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     # [V89] Don't use _db_lock for reads on the GLOBAL conn — WAL allows
     # concurrent reads. Only protect against connection creation race.
     # [FIX-CRIT-135 BUG 4] TẠI SAO: when db_path is provided, we MUST NOT use
@@ -254,11 +246,7 @@ def db_query_all(sql: str, params=(), db_path: Optional[str] = None) -> list[dic
         conn = get_db()
         return [dict(r) for r in conn.execute(sql, params).fetchall()]
 
-<<<<<<< HEAD
-def db_query_one(sql: str, params=(), db_path: str = None) -> Optional[dict]:
-=======
 def db_query_one(sql: str, params=(), db_path: Optional[str] = None) -> Optional[dict]:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     # [V89] Light lock for reads on the GLOBAL conn.
     # [FIX-CRIT-135 BUG 4] per-path branch MUST use _db_lock (see db_query_all).
     if db_path:

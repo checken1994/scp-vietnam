@@ -228,8 +228,6 @@ class AutoFixEngine:
             tier_hint=bug.tier if bug.tier != BugTier.TIER_1_AUTO_FIX else None,
         )
 
-<<<<<<< HEAD
-=======
         # [Idea 5 — VERIFY-THEN-PROMOTE] Adjust tier based on historical streak evidence.
         # DNA SCP #12: "Không tăng quyền chỉ vì lập luận tăng" — promotion requires
         # EVIDENCE (10 consecutive successes), not argument. Demotion is automatic
@@ -250,7 +248,6 @@ class AutoFixEngine:
         except Exception as _idea5_err:
             logger.debug(f"[Idea5] tier adjustment skipped (fail-open): {_idea5_err}")
 
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         # Check cooldown (don't re-fix same bug)
         bug_key = f"{bug.file}:{bug.line}:{bug.bug_type}"
         now = time.time()
@@ -420,12 +417,6 @@ class AutoFixEngine:
             except Exception as _self_scan_err:
                 logger.debug(f"[WORLD-CLASS-GATE] self_scan_patch_diff fail-open: {_self_scan_err}")
 
-<<<<<<< HEAD
-            # [WORLD-CLASS-GATE] Check 5: pytest — suite không được vỡ sau patch
-            # TẠI SAO: 63% rollback rate (engine.py:55-56) xảy ra vì SCP KHÔNG chạy
-            # pytest sau patch. audit_and_fix.py có gate này → 0% regression.
-            # Gate: chỉ chạy nếu tests/ tồn tại + SCP_AUTOFIX_RUN_PYTEST=1 (opt-in).
-=======
             # [WORLD-CLASS-GATE] Check 5: pytest — so sánh BASELINE vs POST-PATCH
             # TẠI SAO: 63% rollback rate xảy ra khi KHÔNG chạy pytest. Nhưng nếu chạy
             # tuyệt đối (fail = rollback), test suite có fail sẵn (DB malformed, sandbox)
@@ -433,7 +424,6 @@ class AutoFixEngine:
             # patch chỉ vì test suite có fail sẵn; chỉ reject nếu patch LÀM TỆ HƠN.
             # Fix: chạy pytest pre-patch (baseline) + post-patch, so sánh pass/fail count.
             # Chỉ FAIL nếu post-patch có MORE failures hoặc FEWER passes.
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
             try:
                 if os.environ.get("SCP_AUTOFIX_RUN_PYTEST", "0") == "1":
                     import subprocess as _sp
@@ -445,19 +435,6 @@ class AutoFixEngine:
                         _tests_dir = _tests_dir.parent
                     _root = _tests_dir
                     if (_root / "tests").is_dir() or (_root / "scp" / "tests").is_dir():
-<<<<<<< HEAD
-                        _proc = _sp.run(  # noqa: S603 — audited: sys.executable, hardcoded args
-                            [_sys.executable, "-m", "pytest", "-q", "--timeout=60", "-x", str(filepath)],
-                            cwd=str(_root), capture_output=True, text=True, timeout=90,
-                        )
-                        if _proc.returncode != 0:
-                            _tail = "\n".join(_proc.stdout.strip().splitlines()[-10:])
-                            return False, f"pytest FAIL after patch (exit={_proc.returncode}): {_tail[:200]}"
-            except Exception as _pytest_err:
-                logger.debug(f"[WORLD-CLASS-GATE] pytest verify fail-open: {_pytest_err}")
-
-            return True, "fix verified OK (syntax + re-scan + no new bugs + self-scan + pytest)"
-=======
                         # [AUTOFIX-T2-SMART] Parse pass/fail counts instead of returncode.
                         # Test suite may have pre-existing failures (DB malformed, sandbox) —
                         # only reject if patch makes things WORSE.
@@ -552,7 +529,6 @@ class AutoFixEngine:
                 logger.debug(f"[CASCADE] enterprise re-scan fail-open: {_ent_err}")
 
             return True, "fix verified OK (syntax + re-scan + no new bugs + self-scan + pytest + enterprise re-scan)"
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
         except Exception as _verify_err:
             logger.debug(f"[V9.1-UPGRADE] _verify_fix error (fail-open): {_verify_err}")
@@ -1266,11 +1242,7 @@ class AutoFixEngine:
         return result
 
     def _write_audit(self, bug: BugReport, action: str, attack_mode: bool = False,
-<<<<<<< HEAD
-                     extra: dict = None):
-=======
                      extra: dict | None = None):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """Write to audit log (append-only JSONL)."""
         entry = {
             "timestamp": time.time(),

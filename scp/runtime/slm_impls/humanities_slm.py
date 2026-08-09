@@ -8,11 +8,7 @@ from __future__ import annotations
 
 import logging
 import time
-<<<<<<< HEAD
-from typing import Any
-=======
 from typing import Any, Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 from scp.runtime.slm_base import BaseSLM, SLMResponse, _token_boundary_match_slms
 from scp.security.url_safety import safe_urlopen  # noqa: B310
@@ -26,11 +22,7 @@ logger = logging.getLogger("scp.slms")
 class GeographySLM(BaseSLM):
     """SLM chuyên về địa lý — dùng local DB + REST Countries API."""
 
-<<<<<<< HEAD
-    def __init__(self, config: dict = None):
-=======
     def __init__(self, config: Optional[dict] = None):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="GeoSLM", domain="geography", config=config)
         # Local cache (mirror of data_sources/geography.py)
         self._local = {
@@ -515,11 +507,7 @@ class GeographySLM(BaseSLM):
 class HistorySLM(BaseSLM):
     """SLM chuyên về lịch sử — dùng local DB + Wikipedia fallback."""
 
-<<<<<<< HEAD
-    def __init__(self, config: dict = None):
-=======
     def __init__(self, config: Optional[dict] = None):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="HistorySLM", domain="history", config=config)
         self._local = {
             '938': 'Ngô Quyền đánh bại Nam Hán',

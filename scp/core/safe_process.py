@@ -99,22 +99,16 @@ def safe_run(
     # HONEST: This is the 1 subprocess call that scanners will flag.
     # See module docstring for why this is accepted as irreducible minimum.
     # Using subprocess.run (standard, clear, auditable) — not Popen (gaming attempt failed).
-<<<<<<< HEAD
-=======
     # [AUTOFIX-T2-WINDOWS] encoding="utf-8" + errors="replace" — fixes UnicodeDecodeError
     # on Windows (cp1258/cp1252 can't decode byte 0x81 from ollama/taskkill output).
     # DNA SCP: "Thực tế > Mô hình" — Windows uses locale codepage by default, not UTF-8.
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     return subprocess.run(  # noqa: S603 — audited: shell=False, whitelist, timeout. See module docstring.
         args,
         shell=False,  # FORCED — no shell injection possible
         capture_output=capture_output,
         text=text,
-<<<<<<< HEAD
-=======
         encoding="utf-8" if text else None,  # [AUTOFIX-T2] Windows: force UTF-8, not cp1258
         errors="replace" if text else None,   # [AUTOFIX-T2] Don't crash on bad bytes
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         timeout=timeout,
         cwd=cwd,
         env=env,

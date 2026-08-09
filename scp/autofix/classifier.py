@@ -123,10 +123,6 @@ class BugClassifier:
                 affects_logic=True,  # mark as logic-affecting (human review)
             )
 
-<<<<<<< HEAD
-        combined = f"{file} {bug_type} {description} {suggested_fix}"
-        combined.lower()
-=======
         # [AUTOFIX-T1-ROOTCAUSE] NEVER_AUTO_FIX — rules with high false-positive rate
         # or systemic patterns that change behavior. Always Tier 3 (human review).
         # Idea 4 from world-autofix research (Pylint discipline):
@@ -154,7 +150,6 @@ class BugClassifier:
         combined = f"{file} {bug_type} {description} {suggested_fix}"
         # [AUTOFIX-T1] Removed dead `combined.lower()` — result discarded (F841).
         # re.search() below uses re.IGNORECASE, so case-folding was redundant.
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
         # [TIER3-AUTO] Check RELAXATION first -- if relaxation match, it's
         # always Tier 3 + is_relaxation=True (HARD LIMIT, never auto-approve).

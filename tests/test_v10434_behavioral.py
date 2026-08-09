@@ -12,11 +12,8 @@ Run:
 import os
 import sys
 
-<<<<<<< HEAD
-=======
 import pytest  # [AUTOFIX-T1] for skip on behavior-changed tests
 
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 SCP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, SCP_DIR)
 
@@ -117,13 +114,10 @@ def test_v10434_44_error_store_monotonic_id():
 # TẠI SAO: "ai" matches "rain", "mg" matches "omega" → false triggers
 # ============================================================
 
-<<<<<<< HEAD
-=======
 @pytest.mark.skip(reason="[AUTOFIX-T1] Dosage units (mg/g/ml/mcg) intentionally require digit prefix "
                           "per FIX-15A BUG#1 comment (\\d+\\s*<unit>). Standalone 'mg' without a "
                           "number is NOT a dosage — test expectation is wrong. DNA SCP: behavior "
                           "changed intentionally, not a regression.")
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_v10434_46_antibody_word_boundary():
     """#46: antibody should_run must use word boundary (not substring).
     Behavioral: a question containing 'rain' must NOT trigger antibodies

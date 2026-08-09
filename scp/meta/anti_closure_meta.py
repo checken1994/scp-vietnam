@@ -17,10 +17,7 @@ from __future__ import annotations
 import logging
 import time
 from collections import deque
-<<<<<<< HEAD
-=======
 from typing import Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.meta.anti_closure_meta")
 
@@ -95,11 +92,7 @@ class AntiClosureMeta:
         """Get recent alerts."""
         return self._alerts[-limit:] if limit > 0 else self._alerts
 
-<<<<<<< HEAD
-    def check(self, decisions: list = None) -> dict:
-=======
     def check(self, decisions: Optional[list] = None) -> dict:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """Compatibility method — accepts list of decisions or uses internal."""
         if decisions is None:
             decisions = list(self._decisions)

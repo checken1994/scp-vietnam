@@ -10,22 +10,12 @@ Tests verify:
 """
 import os
 import sys
-<<<<<<< HEAD
-=======
 from pathlib import Path
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 SCP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, SCP_DIR)
 
 
-<<<<<<< HEAD
-def test_v10439_a_closed_loop_env_var_guard():
-    """#A: Closed-loop must use env var guard (not if False)."""
-    judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
-    with open(judge_path, encoding="utf-8") as f:
-        content = f.read()
-=======
 def _read_module_tree(*subpaths: str) -> str:
     """Read all .py files in a module directory tree + concat content.
 
@@ -54,7 +44,6 @@ def test_v10439_a_closed_loop_env_var_guard():
     """#A: Closed-loop must use env var guard (not if False)."""
     content = _read_module_tree("scp", "runtime", "judge.py")
     content += _read_module_tree("scp", "runtime", "judge_parts")
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.39 #A' in content, "B-A: marker not present"
     assert 'SCP_ENABLE_CLOSED_LOOP' in content, "B-A: env var guard not present"
     # Old if False pattern should NOT be active
@@ -66,14 +55,8 @@ def test_v10439_a_closed_loop_env_var_guard():
 
 def test_v10439_a_feedback_re_enabled():
     """#A: Feedback (record_outcome) must be re-enabled."""
-<<<<<<< HEAD
-    judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
-    with open(judge_path, encoding="utf-8") as f:
-        content = f.read()
-=======
     content = _read_module_tree("scp", "runtime", "judge.py")
     content += _read_module_tree("scp", "runtime", "judge_parts")
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'if _enable_closed_loop and self.policy_applier and applied_principle_ids' in content, \
         "B-A: feedback not re-enabled"
 
@@ -115,14 +98,8 @@ def test_v10439_c_calibration_fail_not_correct():
 
 def test_v10439_f_why_engine_re_enabled():
     """#F: WHY engine must be re-enabled via env var."""
-<<<<<<< HEAD
-    judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
-    with open(judge_path, encoding="utf-8") as f:
-        content = f.read()
-=======
     content = _read_module_tree("scp", "runtime", "judge.py")
     content += _read_module_tree("scp", "runtime", "judge_parts")
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.39 #F' in content, "B-F: marker not present"
     assert 'if _enable_closed_loop and self.why_engine' in content, \
         "B-F: WHY engine not re-enabled"
@@ -146,11 +123,7 @@ def test_v10439_g_curiosity_entity_guard():
     for i, line in enumerate(lines):
         stripped = re.sub(r'#.*', '', line)
         if 'entity = ' in stripped and 'or question[:50]' in stripped:
-<<<<<<< HEAD
-            assert False, f"B-G: line {i+1} still uses question[:50] as entity: {line.strip()}"
-=======
             raise AssertionError(f"B-G: line {i+1} still uses question[:50] as entity: {line.strip()}")
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 
 def test_v10439_a_enable_closed_loop_env_var_works():

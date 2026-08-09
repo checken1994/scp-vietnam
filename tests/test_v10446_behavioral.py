@@ -6,16 +6,11 @@ Tests verify:
   - BI short-circuit early-returns (not overwritten by pipeline)
 """
 import os, sys
-<<<<<<< HEAD
-=======
 from pathlib import Path
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 SCP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, SCP_DIR)
 
 
-<<<<<<< HEAD
-=======
 def _read_module_tree(*subpaths: str) -> str:
     """Read all .py files in a module directory tree + concat content.
 
@@ -40,7 +35,6 @@ def _read_module_tree(*subpaths: str) -> str:
     return "\n".join(chunks)
 
 
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_v10446_why_signature_correct():
     """WHY create_verification_plan must accept 1 arg (question only)."""
     from scp.meta.why_engine import WhyEngine
@@ -70,13 +64,8 @@ def test_v10446_bi_early_return():
     REACHABLE — i.e. the `if` guard around it can be True (tier<=2, PASS,
     answer non-empty, conf>=0.85, v100_kb_hits non-empty). Without (b), the
     fix could be dead code (e.g. guard inverted) and the grep test would still pass."""
-<<<<<<< HEAD
-    judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
-    with open(judge_path, encoding="utf-8") as f: content = f.read()
-=======
     content = _read_module_tree("scp", "runtime", "judge.py")
     content += _read_module_tree("scp", "runtime", "judge_parts")
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     # Structural: markers must be present
     assert 'V104.46 #BI' in content, "B-BI: marker not present"
     assert 'return verdict' in content, "B-BI: early-return missing"

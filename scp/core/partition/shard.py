@@ -24,10 +24,7 @@ import threading
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-<<<<<<< HEAD
-=======
 from typing import Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.core.data_partitioner")
 
@@ -166,11 +163,7 @@ class DataPartitioner:
     def errors_archive_path(self, date_str: str) -> Path:
         return self.data_dir / "errors" / "archive" / f"{date_str}.jsonl.gz"
 
-<<<<<<< HEAD
-    def write_error(self, error_record: dict, when: datetime = None) -> None:
-=======
     def write_error(self, error_record: dict, when: Optional[datetime] = None) -> None:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """Append 1 error vào errors/{today}.jsonl."""
         if when is None:
             when = datetime.now()
@@ -339,11 +332,7 @@ class DataPartitioner:
         except Exception as _audit_err:
             logger.debug(f"[V9.1-UPGRADE] audit log error (fail-open): {_audit_err}")
 
-<<<<<<< HEAD
-    def write_bypass(self, bypass_record: dict, when: datetime = None) -> None:
-=======
     def write_bypass(self, bypass_record: dict, when: Optional[datetime] = None) -> None:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """Append 1 bypass vào bypasses/{today}.jsonl.
 
         [V9.0-WHY-GATE] WHY gates data storage — don't store bypasses WHY rejects.

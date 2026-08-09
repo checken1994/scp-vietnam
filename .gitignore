@@ -1,29 +1,45 @@
+# Secrets — NEVER commit
+.env
+.env.local
+.env.*.local
+*.env
+
+# API keys / tokens
+secrets.json
+credentials.json
+*api_key*
+*secret*
+
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.venv/
-venv/
-env/
-ENV/
-.env
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+
+# Logs / audit trails (may contain sensitive data)
 *.log
+data/audit*.jsonl
+data/bypass*.jsonl
+data/permission*.jsonl
+data/counter_*.jsonl
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
 
 # IDE
 .vscode/
 .idea/
 *.swp
 
-# Dữ liệu lớn (nếu có)
-data/
-*.sqlite3
-*.db
-
-# File cấu hình nhạy cảm
-.env
-config.local.yaml
-
-# Các file hệ thống
-Thumbs.db
+# OS
 .DS_Store
+Thumbs.db
+
+# Dependency graph (10MB, regenerable)
+scp_dependency_graph_new.json

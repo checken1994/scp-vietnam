@@ -9,11 +9,7 @@ from __future__ import annotations
 
 import logging
 import time
-<<<<<<< HEAD
-from typing import Any
-=======
 from typing import Any, Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 from scp.runtime.slm_base import BaseSLM, SLMResponse
 
@@ -87,11 +83,7 @@ class PhilosophySLM(BaseSLM):
                           "Key concepts: wu wei (non-action), yin-yang, simplicity.",
     }
 
-<<<<<<< HEAD
-    def __init__(self, config: dict = None):
-=======
     def __init__(self, config: Optional[dict] = None):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="PhilosophySLM", domain="philosophy", config=config)
 
     def predict(self, question: str) -> SLMResponse:

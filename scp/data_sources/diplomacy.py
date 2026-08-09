@@ -3,10 +3,7 @@ import logging
 import re as _re
 
 from scp.interfaces.data_source import IDataSource
-<<<<<<< HEAD
-=======
 from typing import Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger(__name__)
 # [V104.32 #7] word-boundary matching for short keys
@@ -38,11 +35,7 @@ class DiplomacyDataSource(IDataSource):
     def get_supported_intents(self) -> list[str]:
         return ["lookup", "query", "fact"]
 
-<<<<<<< HEAD
-    def can_handle(self, intent: str, entity: str = None) -> bool:
-=======
     def can_handle(self, intent: str, entity: Optional[str] = None) -> bool:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         return True
 
     def fetch(self, intent: str, entity: str, **kwargs):

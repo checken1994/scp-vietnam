@@ -21,10 +21,8 @@ Usage:
 
 import logging
 import os
-<<<<<<< HEAD
-=======
+from collections import Counter
 from typing import Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.ai_patterns")
 
@@ -94,11 +92,7 @@ class SelfConsistency:
         question: str,
         answer: str,
         system_prompt: str,
-<<<<<<< HEAD
-        n_samples: int = None,
-=======
         n_samples: Optional[int] = None,
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     ) -> dict:
         """Verify answer using self-consistency voting.
 
@@ -116,7 +110,7 @@ class SelfConsistency:
 
         for i in range(n):
             try:
-                response, provider = llm_client.chat_sync(
+                response, _ = llm_client.chat_sync(
                     question, context="", system_prompt=system_prompt
                 )
                 if not response:

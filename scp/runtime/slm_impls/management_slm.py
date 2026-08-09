@@ -9,11 +9,7 @@ from __future__ import annotations
 
 import logging
 import time
-<<<<<<< HEAD
-from typing import Any
-=======
 from typing import Any, Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 from scp.runtime.slm_base import BaseSLM, SLMResponse
 
@@ -82,11 +78,7 @@ class ManagementSLM(BaseSLM):
                                        "future state. Frameworks: Kotter 8-step, ADKAR, Lewin's 3-stage.",
     }
 
-<<<<<<< HEAD
-    def __init__(self, config: dict = None):
-=======
     def __init__(self, config: Optional[dict] = None):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         super().__init__(name="ManagementSLM", domain="management", config=config)
 
     def predict(self, question: str) -> SLMResponse:

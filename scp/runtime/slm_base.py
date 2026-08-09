@@ -14,11 +14,7 @@ import logging
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-<<<<<<< HEAD
-from typing import Any
-=======
 from typing import Any, Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.slms")
 
@@ -52,11 +48,7 @@ class SLMResponse:
 class BaseSLM(ABC):
     """Base class cho tất cả SLM chuyên biệt."""
 
-<<<<<<< HEAD
-    def __init__(self, name: str, domain: str, config: dict = None):
-=======
     def __init__(self, name: str, domain: str, config: Optional[dict] = None):
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         self.name = name
         self.domain = domain
         self.config = config or {}

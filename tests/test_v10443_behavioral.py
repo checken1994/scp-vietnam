@@ -12,16 +12,11 @@ Tests verify:
   - #CF: RealLearning checks SourceWatchlist
 """
 import os, sys
-<<<<<<< HEAD
-=======
 from pathlib import Path
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 SCP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, SCP_DIR)
 
 
-<<<<<<< HEAD
-=======
 def _read_module_tree(*subpaths: str) -> str:
     """Read all .py files in a module directory tree + concat content.
 
@@ -46,7 +41,6 @@ def _read_module_tree(*subpaths: str) -> str:
     return "\n".join(chunks)
 
 
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_v10443_bo_cross_check_compares_values():
     """#BO: LiveKnowledge must compare values, not just count sources."""
     lk_path = os.path.join(SCP_DIR, 'scp', 'data_sources', 'live_knowledge.py')
@@ -59,14 +53,9 @@ def test_v10443_bo_cross_check_compares_values():
 
 def test_v10443_bs_domain_slm_respects_ds_confidence():
     """#BS: _DomainSLM must respect DataSource confidence (not always 0.85)."""
-<<<<<<< HEAD
-    slms_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'slms.py')
-    with open(slms_path, encoding="utf-8") as f: content = f.read()
-=======
     content = _read_module_tree("scp", "runtime", "slms.py")
     content += _read_module_tree("scp", "runtime", "slms_parts")
     content += _read_module_tree("scp", "runtime", "slm_impls")
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.43 #BS' in content, "B-BS: marker not present"
     assert '_ds_conf' in content, "B-BS: DS confidence check not present"
     assert 'result.get("confidence")' in content, "B-BS: DS confidence not read"
@@ -74,13 +63,8 @@ def test_v10443_bs_domain_slm_respects_ds_confidence():
 
 def test_v10443_bi_kb_short_circuit():
     """#BI: KB must short-circuit for high-tier + high-conf hits."""
-<<<<<<< HEAD
-    judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
-    with open(judge_path, encoding="utf-8") as f: content = f.read()
-=======
     content = _read_module_tree("scp", "runtime", "judge.py")
     content += _read_module_tree("scp", "runtime", "judge_parts")
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.43 #BI' in content, "B-BI: marker not present"
     assert 'KB short-circuit' in content, "B-BI: short-circuit logic not present"
     assert '_hit_tier <= 2' in content, "B-BI: tier check not present"
@@ -115,27 +99,14 @@ def test_v10443_by_threatsim_writes_rules():
 
 def test_v10443_cb_unified_detector_on_hot_path():
     """#CB: UnifiedDetector must be called on hot path."""
-<<<<<<< HEAD
-    judge_path = os.path.join(SCP_DIR, 'scp', 'runtime', 'judge.py')
-    with open(judge_path, encoding="utf-8") as f: content = f.read()
-=======
     content = _read_module_tree("scp", "runtime", "judge.py")
     content += _read_module_tree("scp", "runtime", "judge_parts")
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     assert 'V104.43 #CB' in content, "B-CB: marker not present"
     assert 'unified_detector.detect' in content or 'self.unified_detector.detect' in content, \
         "B-CB: detect() not called on hot path"
 
 
 def test_v10443_cf_real_learning_watchlist():
-<<<<<<< HEAD
-    """#CF: RealLearning must check SourceWatchlist before KB write."""
-    rl_path = os.path.join(SCP_DIR, 'scp', 'core', 'real_learning_engine.py')
-    with open(rl_path, encoding="utf-8") as f: content = f.read()
-    assert 'V104.43 #CF' in content, "B-CF: marker not present"
-    assert 'SourceWatchlist' in content, "B-CF: SourceWatchlist not imported"
-    assert 'is_blocked' in content, "B-CF: is_blocked not called"
-=======
     """#CF: RealLearning tree must check SourceWatchlist before KB write."""
     # [AUTOFIX-T1] real_learning_engine.py is a stub; behavior in fast_learning_engine.py.
     rl_path = os.path.join(SCP_DIR, 'scp', 'core', 'real_learning_engine.py')
@@ -149,4 +120,3 @@ def test_v10443_cf_real_learning_watchlist():
             pass
     assert 'SourceWatchlist' in content, "B-CF: SourceWatchlist not imported in learning tree"
     assert 'is_blocked' in content, "B-CF: is_blocked not called in learning tree"
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)

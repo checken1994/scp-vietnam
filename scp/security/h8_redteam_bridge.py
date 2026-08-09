@@ -28,11 +28,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
-<<<<<<< HEAD
-from typing import Any
-=======
 from typing import Any, Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.security.h8_redteam")
 
@@ -177,11 +173,7 @@ class H8RedTeamBridge:
                 signatures.append(sig)
         return signatures
 
-<<<<<<< HEAD
-    def is_bypass(self, verdict: str, question: str, classification: dict = None) -> tuple[bool, list[str]]:
-=======
     def is_bypass(self, verdict: str, question: str, classification: Optional[dict] = None) -> tuple[bool, list[str]]:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
         """Determine if this is a bypass.
 
         Bypass = verdict PASS + attack signatures present.

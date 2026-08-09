@@ -307,10 +307,6 @@ class TypeContractScanner:
                         f"({f['left']} + {f['right']}) — raises TypeError."
                     )
                     fix = "Convert both operands to str (str(num)) or both to numeric."
-<<<<<<< HEAD
-                    fix = "Convert both operands to str (str(num)) or both to numeric."
-=======
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
                 elif kind == "str_index_on_list":
                     desc = (
                         f"TypeMismatch: variable `{f['var']}` is typed `{f['vtype']}` "

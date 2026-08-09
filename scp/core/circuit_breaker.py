@@ -194,15 +194,6 @@ class CircuitBreakerRegistry:
     # Singleton
     _instance: CircuitBreakerRegistry | None = None
 
-<<<<<<< HEAD
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-            cls._instance._breakers: dict[str, CircuitBreaker] = {}
-            cls._instance._lock = threading.Lock()
-        return cls._instance
-
-=======
     # [AUTOFIX-T1-ROOTCAUSE] Class-level attribute declarations.
     # WAS: _breakers and _lock were assigned inside __new__ without class-level
     # annotation → mypy reported 14× [attr-defined] for every `self._breakers`
@@ -226,7 +217,6 @@ class CircuitBreakerRegistry:
             self._lock = threading.Lock()
             self._initialized = True
 
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     def get(self, name: str, **kwargs) -> CircuitBreaker:
         """Get or create breaker by name."""
         with self._lock:

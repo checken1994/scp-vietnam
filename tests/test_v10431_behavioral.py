@@ -12,17 +12,10 @@ import sys
 import sqlite3
 import tempfile
 
-<<<<<<< HEAD
-SCP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.insert(0, SCP_DIR)
-
-
-=======
 import pytest  # [AUTOFIX-T1] for skip decorator on stubbed-behavior tests
 
 SCP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, SCP_DIR)
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_b1_geography_api_intent_mapping():
     """B1: Geography API fallback must return field matching intent, not always capital."""
     from scp.data_sources.geography import GeographyDataSource
@@ -46,21 +39,11 @@ def test_b1_geography_api_intent_mapping():
         assert geo.fetch('capital', 'usa')['value'] == 'Washington D.C.'
     finally:
         geo_mod.requests.get = orig_get
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_b5_geography_unsupported_intent():
     """B5: Unsupported intent returns None, not silent fallback to capital."""
     from scp.data_sources.geography import GeographyDataSource
     geo = GeographyDataSource()
     assert geo.fetch('nonexistent_intent', 'việt nam') is None
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_b2_medical_token_boundary():
     """B2: Short substring keys ('a', 'in', 'h') must NOT match longer entities."""
     from scp.data_sources.medical import _token_boundary_match, _MIN_FUZZY_KEY_LEN
@@ -109,11 +92,6 @@ def test_b3_consolidator_pass_only_median():
             os.unlink(tmp.name)
         except PermissionError:
             pass  # [FIX] Windows: file still locked — let OS clean temp
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_b4_finance_health_check_real():
     """B4: health_check actually pings API, caches result, returns bool."""
     from scp.data_sources.finance import FinanceDataSource
@@ -121,21 +99,11 @@ def test_b4_finance_health_check_real():
     hc = fin.health_check()
     assert isinstance(hc, bool)
     assert '_health_cache' in fin._cache
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_b6_crypto_unknown_coin_value_none():
     """B6: Unknown coin → value=None (was: 0.0 → caller treats as real price)."""
     from scp.core.crypto_verifier import fetch_crypto_price
     result = fetch_crypto_price('nonexistent_coin_xyz')
     assert result.value is None
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_b6_crypto_all_failed_value_none():
     """B6: All crypto sources failed → value=None."""
     from scp.core.crypto_verifier import fetch_crypto_price
@@ -155,11 +123,6 @@ def test_b6_crypto_all_failed_value_none():
         assert result.value is None
     finally:
         cv.SOURCE_FETCHERS = orig_fetchers
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_b6_chemistry_all_failed_value_none():
     """B6: Chemistry multi-source all-fail → value=None (was: 0.0)."""
     import scp.core.multi_source_verifier as msv
@@ -171,11 +134,6 @@ def test_b6_chemistry_all_failed_value_none():
         assert result.get('ok') is False
     finally:
         msv._fetch_pubchem, msv._fetch_wikidata = orig_p, orig_w
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_b7_crypto_result_has_sources_incomplete():
     """B7: CryptoResult dataclass has sources_incomplete field."""
     from scp.core.crypto_verifier import CryptoResult
@@ -183,22 +141,12 @@ def test_b7_crypto_result_has_sources_incomplete():
                      sources_queried=[], sources_succeeded=[], sources_failed=[],
                      all_values=[], strategy='t', conflict_detected=False, reason='t')
     assert hasattr(r, 'sources_incomplete')
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_b8_conversion_unknown_scale_returns_none():
     """B8: Unknown temperature scale returns None, not ValueError."""
     from scp.data_sources.conversion import ConversionDataSource
     conv = ConversionDataSource()
     assert conv.convert_temperature(100, 'celsius', 'romer') is None
     assert conv.convert_temperature(100, 'romer', 'celsius') is None
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_b8_conversion_known_scales_still_work():
     """B8: Known scales still convert correctly (no regression)."""
     from scp.data_sources.conversion import ConversionDataSource
@@ -206,11 +154,6 @@ def test_b8_conversion_known_scales_still_work():
     assert conv.convert_temperature(0, 'celsius', 'fahrenheit') == 32.0
     assert conv.convert_temperature(100, 'celsius', 'kelvin') == 373.15
     assert round(conv.convert_temperature(32, 'fahrenheit', 'celsius'), 2) == 0.0
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 def test_b9_medical_static_db_has_disclaimer_and_low_conf():
     """B9: Medical static DB has source_date, disclaimer, low static_confidence."""
     from scp.data_sources.medical import MedicalDataSource

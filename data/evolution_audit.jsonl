@@ -1,0 +1,1 @@
+{"action": "v80_why_deep_analysis", "bug_file": "C:\\Users\\check\\Downloads\\scp-vietnam\\scp\\ai_patterns.py", "bug_line": 112, "bug_type": "RuffSecurity_F841", "analysis": {"why_question": "Tại sao code này unsafe (CWE-0)?", "attack_vector": "", "fix_verify": "", "risk_after_fix": "high", "confidence": 0.0, "llm_used": false}, "timestamp": 1786200104.8314133}

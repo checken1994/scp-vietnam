@@ -21,22 +21,14 @@ from __future__ import annotations
 
 import logging
 import time
-<<<<<<< HEAD
-from typing import Any
-=======
 from typing import Any, Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.runtime.parallel_pipeline")
 
 
 async def parallel_judge(judge, question: str, ai_answer: str = "",
                          cycle_count: int = 0, source: str = "",
-<<<<<<< HEAD
-                         v98_context: dict = None) -> Any:
-=======
                          v98_context: Optional[dict] = None) -> Any:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     """Run judge with parallel stages using asyncio.gather.
 
     [OPT-36] Parallel stages:

@@ -57,13 +57,10 @@ from typing import Optional  # [V104.34 #43] was: missing → NameError
 
 logger = logging.getLogger(__name__)
 
-<<<<<<< HEAD
-=======
 # [V104.34 #44] Max in-memory errors before auto-trim. Exported for tests + config.
 # Was: hardcoded inside class → tests couldn't import. Now module-level constant.
 ERRORSTORE_MAX_SIZE = 10000
 
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 # [Task 10-B] Re-export extracted helpers + constants — backward compat.
 # Tất cả code moved vào brain/index_parts/. ErrorStoreIndex class below
 # delegates to these functions via thin wrappers.

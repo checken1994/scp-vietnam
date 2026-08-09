@@ -212,11 +212,7 @@ class ClaimExtractor:
                     text=m.group(0),
                     entity=m.group(1).strip(),
                     relation=relation,
-<<<<<<< HEAD
-                    target=m.group(2).strip() if m.lastindex >= 2 else "",
-=======
                     target=m.group(2).strip() if (m.lastindex is not None and m.lastindex >= 2) else "",
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
                     confidence=0.5,
                 ))
 

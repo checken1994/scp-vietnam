@@ -32,10 +32,7 @@ import shutil  # [FALSE-POS-FIX] F402: moved module-level (was local import insi
 import sqlite3
 import time
 from pathlib import Path
-<<<<<<< HEAD
-=======
 from typing import Optional
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 
 logger = logging.getLogger("scp.core.startup_optimizer")
 
@@ -96,11 +93,7 @@ def optimize_sqlite_wal(db_path: str = "data/v13.db") -> dict:
     return result
 
 
-<<<<<<< HEAD
-def rotate_jsonl(file_path: str, max_records: int = None) -> dict:
-=======
 def rotate_jsonl(file_path: str, max_records: Optional[int] = None) -> dict:
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
     """V104.3.2: Giữ max_records gần nhất của JSONL.
 
     Returns: {before_count, after_count, before_size, after_size}
@@ -190,11 +183,7 @@ def cleanup_data_directory(data_dir: str = "data") -> dict:
 
 async def deferred_background_start(
     judge,
-<<<<<<< HEAD
-    delay_seconds: int = None,
-=======
     delay_seconds: Optional[int] = None,
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
 ) -> None:
     """V104.3.4: Start background schedulers sau delay (default 60s).
 

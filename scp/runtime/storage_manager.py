@@ -232,9 +232,6 @@ class StorageManager:
                     conn = sqlite3.connect(str(db_path))
                     # VACUUM INTO creates a new DB from the corrupted one,
                     # skipping bad pages. Available since SQLite 3.27.0 (2019).
-<<<<<<< HEAD
-                    conn.execute(f"VACUUM INTO '{recovered_path}'")
-=======
                     # [AUTOFIX-T2-SEC] Was f-string with path → SQL injection risk if
                     # db_path came from user input. VACUUM INTO doesn't support parameter
                     # binding for the filename, so we validate the path is within allowed dirs.
@@ -242,7 +239,6 @@ class StorageManager:
                     if not _rec_str.replace("/", "").replace(".", "").replace("_", "").replace("-", "").isalnum():
                         raise ValueError(f"recovered_path contains unsafe characters: {_rec_str}")
                     conn.execute(f"VACUUM INTO '{_rec_str}'")
->>>>>>> 847232d (Initial commit - SCP Vietnam V99)
                     conn.close()
 
                     # Swap: original -> .broken.<timestamp>, recovered -> original
